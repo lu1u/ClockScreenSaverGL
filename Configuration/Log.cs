@@ -1,0 +1,78 @@
+﻿
+using System;
+using System.IO;
+
+namespace ClockScreenSaverGL.Config
+{
+	public class Log : IDisposable
+    {
+        private static Log _instance;
+        public const string CAT = "Log";
+		private CategorieConfiguration c;
+        bool LOG_VERBOSE ;
+        bool LOG_WARNING ;
+		bool LOG_ERROR;
+        TextWriter _tw;
+
+        private Log()
+        {
+            _tw = new StreamWriter(getLogName(), true);
+			c = Configuration.getCategorie(CAT);
+			LOG_VERBOSE = c.getParametre("Verbose", false);
+			LOG_WARNING = c.getParametre("Warning", false);
+			LOG_ERROR = c.getParametre("Error", true);
+		}
+
+        private string getLogName()
+        {
+            string res = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(),
+             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name);
+
+            if (!Directory.Exists(res))
+                Directory.CreateDirectory(res);
+
+            return Path.Combine(res, System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log");
+        }
+
+        public static Log getInstance()
+        {
+            if (_instance == null)
+                return _instance = new Log();
+
+            return _instance;
+        }
+
+        public void verbose(string message)
+        {
+            if (LOG_VERBOSE)
+                _tw.WriteLine("V:" + date() + " " + message);
+        }
+
+        public void warning(string message)
+        {
+            if (LOG_WARNING)
+                _tw.WriteLine("W:" + date() + " " + message);
+        }
+        public void error(string message)
+        {
+            if (LOG_ERROR)
+                _tw.WriteLine("E:" + date() + " " + message);
+        }
+
+        private string date()
+        {
+            return DateTime.Now.ToString();
+        }
+
+        public void Dispose()
+        {
+            _tw.Flush();
+            _tw.Close();
+        }
+
+        public void flush()
+        {
+            _tw.Flush();
+        }
+    }
+}
