@@ -11,7 +11,6 @@ using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
@@ -21,24 +20,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     public class DateTexte : Texte
     {
         const string CAT = "DateTexte";
-		protected CategorieConfiguration c;
-		private string _date; // Sera initialise dans OnDateChange
+        protected CategorieConfiguration c;
+        private string _date; // Sera initialise dans OnDateChange
 
 
-        public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte) : base(gl )
+        public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte) : base(gl)
         {
-			getConfiguration();
-			_alpha = c.getParametre("Alpha", (byte)160);
-			_fonte = CreerFonte(tailleFonte);
-			_trajectoire = new TrajectoireDiagonale(Px, Py, c.getParametre("VX", -17), 0);
-		}
+            getConfiguration();
+            _alpha = c.getParametre("Alpha", (byte)160);
+            _fonte = CreerFonte(tailleFonte);
+            _trajectoire = new TrajectoireDiagonale(Px, Py, c.getParametre("VX", -17), 0);
+        }
 
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null )
-			{
-				c = Configuration.getCategorie(CAT);
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+            }
             return c;
         }
         protected override SizeF getTexte(Temps maintenant, out string texte)

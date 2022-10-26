@@ -3,12 +3,11 @@
  * Inspire de http://www.jgallant.com/blog/
  */
 
+using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using SharpGL;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.Config;
-using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 {

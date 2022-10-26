@@ -34,7 +34,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes
         protected Bande(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, int largeur) :
             base(gl)
         {
-			getConfiguration();
+            getConfiguration();
             _valeurMax = valMax;
             _largeurCase = largeurcase;
             //_hauteurFonte = hauteurfonte;

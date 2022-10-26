@@ -4,29 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     class Escaliers : MateriauGlobal, IDisposable
     {
-        const float DEUX_PI = (float)(Math.PI * 2.0);
-
+        
         #region Parametres
         const String CAT = "Escaliers";
-		CategorieConfiguration c;
-		int NB_ESCALIERS;
-		float RATIO_COULEUR_MIN;
-		float RATIO_COULEUR_MAX;
-		float MIN_TAILLE_X;
+        CategorieConfiguration c;
+        int NB_ESCALIERS;
+        float RATIO_COULEUR_MIN;
+        float RATIO_COULEUR_MAX;
+        float MIN_TAILLE_X;
         float MAX_TAILLE_X;
         float MIN_TAILLE_Y;
         float MAX_TAILLE_Y;
         float MIN_TAILLE_Z;
-		float MAX_TAILLE_Z;
-		float VITESSE_ROTATION;
-		float SEUIL_DECALAGE;
-		float ACCELERATION_DECALAGE;
+        float MAX_TAILLE_Z;
+        float VITESSE_ROTATION;
+        float SEUIL_DECALAGE;
+        float ACCELERATION_DECALAGE;
         #endregion
 
         // Palier en cours
@@ -59,7 +57,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Escaliers(OpenGL gl) : base(gl)
         {
 
-			getConfiguration();
+            getConfiguration();
             _angleVue = 3.14f;
             _genLists = gl.GenLists(1);
 
@@ -149,23 +147,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public override CategorieConfiguration getConfiguration()
         {
-			if (c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				NB_ESCALIERS = c.getParametre("NbEscaliers", 500);
-				RATIO_COULEUR_MIN = c.getParametre("Ratio Couleur Min", 0.95f, (a) => { RATIO_COULEUR_MIN = (float)Convert.ToDouble(a); });
-				RATIO_COULEUR_MAX = c.getParametre("Ratio Couleur Max", 1.05f, (a) => { RATIO_COULEUR_MAX = (float)Convert.ToDouble(a); });
-				MIN_TAILLE_X = c.getParametre("Min tailleX", 0.3f);
-				MAX_TAILLE_X = c.getParametre("Max tailleX", 0.8f);
-				MIN_TAILLE_Y = c.getParametre("Min tailleY", 0.1f);
-				MAX_TAILLE_Y = c.getParametre("Max tailleY", 0.2f);
-				MIN_TAILLE_Z = c.getParametre("Min tailleZ", 0.2f);
-				MAX_TAILLE_Z = c.getParametre("Max tailleZ", 0.5f);
-				VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-				SEUIL_DECALAGE = c.getParametre("Seuil Decalage", 0.01f, (a) => { SEUIL_DECALAGE = (float)Convert.ToDouble(a); });
-				ACCELERATION_DECALAGE = c.getParametre("Acceleration Decalage", 0.9f, (a) => { ACCELERATION_DECALAGE = (float)Convert.ToDouble(a); });
-			}
-			return c;
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                NB_ESCALIERS = c.getParametre("NbEscaliers", 500);
+                RATIO_COULEUR_MIN = c.getParametre("Ratio Couleur Min", 0.95f, (a) => { RATIO_COULEUR_MIN = (float)Convert.ToDouble(a); });
+                RATIO_COULEUR_MAX = c.getParametre("Ratio Couleur Max", 1.05f, (a) => { RATIO_COULEUR_MAX = (float)Convert.ToDouble(a); });
+                MIN_TAILLE_X = c.getParametre("Min tailleX", 0.3f);
+                MAX_TAILLE_X = c.getParametre("Max tailleX", 0.8f);
+                MIN_TAILLE_Y = c.getParametre("Min tailleY", 0.1f);
+                MAX_TAILLE_Y = c.getParametre("Max tailleY", 0.2f);
+                MIN_TAILLE_Z = c.getParametre("Min tailleZ", 0.2f);
+                MAX_TAILLE_Z = c.getParametre("Max tailleZ", 0.5f);
+                VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                SEUIL_DECALAGE = c.getParametre("Seuil Decalage", 0.01f, (a) => { SEUIL_DECALAGE = (float)Convert.ToDouble(a); });
+                ACCELERATION_DECALAGE = c.getParametre("Acceleration Decalage", 0.9f, (a) => { ACCELERATION_DECALAGE = (float)Convert.ToDouble(a); });
+            }
+            return c;
         }
 
         public override void Dispose()
@@ -186,8 +184,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
             gl.Enable(OpenGL.GL_DEPTH);
-			gl.Enable(OpenGL.GL_CULL_FACE);
-			gl.CullFace(OpenGL.GL_BACK);
+            gl.Enable(OpenGL.GL_CULL_FACE);
+            gl.CullFace(OpenGL.GL_BACK);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             LIGHTPOS[1] = yCible + 10;
 
@@ -196,7 +194,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.ShadeModel(OpenGL.GL_SMOOTH);
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
             gl.LookAt(0, 2, -8, 0, 0, 0, 0, 1, 0);
-  
+
             gl.Rotate(0, _angleVue, 0);
             gl.Translate(-xCible, -yCible, -zCible);
             changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, 20.0f);
@@ -223,7 +221,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_LIGHTING);
-            
+
             using (new Viewport2D(gl, -1.0f, -1.0f, 1.0f, 1.0f))
             {
                 gl.Begin(OpenGL.GL_QUAD_STRIP);

@@ -7,7 +7,6 @@
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
 using SharpGL;
-using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
 {
@@ -17,9 +16,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     public sealed class BandeHeure : BandeVerticale
     {
         public BandeHeure(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur )
+            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur)
         {
-			_alpha = c.getParametre("AlphaHeure", (byte)40);
+            _alpha = c.getParametre("AlphaHeure", (byte)40);
         }
 
         protected override void getValue(Temps maintenant, out float value, out float decalage)

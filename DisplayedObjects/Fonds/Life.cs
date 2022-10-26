@@ -6,14 +6,12 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
-using System;
-using System.Drawing;
-
-using System.Runtime.CompilerServices;
 using ClockScreenSaverGL.Config;
-
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using System;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {

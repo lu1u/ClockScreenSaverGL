@@ -37,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
             for (var i = 0; i < width; i++)
                 for (var j = 0; j < height; j++)
                     for (var k = 0; k < length; k++)
-                        values[i, j, k] = Generate(i * scale, j * scale, k * scale)  * 0.5f + 0.5f;
+                        values[i, j, k] = Generate(i * scale, j * scale, k * scale) * 0.5f + 0.5f;
             return values;
         }
 

@@ -6,7 +6,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
     {
         private DateTime _derniere = DateTime.Now;
         float _minX, _maxX, _minY, _maxY;
-        public ModificateurRebond( float minX, float maxX, float minY, float maxY)
+        public ModificateurRebond(float minX, float maxX, float minY, float maxY)
         {
             _minX = minX;
             _maxX = maxX;
@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                 {
                     s._particules[i].x += (s._particules[i].vx * maintenant.intervalleDepuisDerniereFrame);
 
-                    if ((s._particules[i].x  - s._particules[i].taille < _minX) && (s._particules[i].vx < 0))
+                    if ((s._particules[i].x - s._particules[i].taille < _minX) && (s._particules[i].vx < 0))
                         s._particules[i].vx = Math.Abs(s._particules[i].vx);
                     else
                         if (((s._particules[i].x + s._particules[i].taille) > _maxX) && (s._particules[i].vx > 0))

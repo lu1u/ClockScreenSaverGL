@@ -1,11 +1,7 @@
-﻿using System;
-
-using GLfloat = System.Single;
-using SharpGL;
-using System.Drawing;
-using SharpGL.SceneGraph.Assets;
+﻿using SharpGL;
+using System;
 using System.Collections.Generic;
-using ClockScreenSaverGL.Config;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
@@ -24,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         //uint _genLists = 0;
         public Boids(OpenGL gl) : base(gl)
         {
-			getConfiguration();
+            getConfiguration();
             _boids = new List<Boid>();
             InitBoids(_boids);
         }
@@ -136,14 +132,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _vitesseAnimation = FloatRandom(0.7f, 1.3f);
                 float angle = FloatRandom(0, TWO_PI);
                 float vitesse = FloatRandom(-MAX_SPEED, MAX_SPEED);
-                _Vitesse = new Vecteur3D((float)Math.Cos(angle)*vitesse, (float)Math.Sin(angle)*vitesse);
+                _Vitesse = new Vecteur3D((float)Math.Cos(angle) * vitesse, (float)Math.Sin(angle) * vitesse);
                 _Position = new Vecteur3D(x, y, z);
             }
 
             // We accumulate a new acceleration each time based on three rules
             public void flock(List<Boid> boids)
             {
-                Vecteur3D separation, alignement, cohesion  ;
+                Vecteur3D separation, alignement, cohesion;
                 flocking(boids, out separation, out alignement, out cohesion);
 
                 // Arbitrarily weight these forces

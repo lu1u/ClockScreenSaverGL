@@ -1,10 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-using GLfloat = System.Single;
+using System;
+using System.Drawing;
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
@@ -50,7 +48,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _texture = new Texture();
             _texture.Create(gl, c.getParametre("Nuages", Configuration.getImagePath("nuages.png")));
         }
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             _nuages = null;
             c = getConfiguration();

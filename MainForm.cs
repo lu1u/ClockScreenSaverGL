@@ -2,19 +2,8 @@
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects;
 using ClockScreenSaverGL.DisplayedObjects.Fonds;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes;
-using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
 using ClockScreenSaverGL.DisplayedObjects.PanneauActualites;
-using ClockScreenSaverGL.DisplayedObjects.Saisons;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
 /*
@@ -32,8 +21,6 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Turing;
 
 namespace ClockScreenSaverGL
 {
@@ -46,43 +33,28 @@ namespace ClockScreenSaverGL
 
         #region Parametres
         public const string CAT = "Main";
-        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
         const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
         const string PARAM_FONDDESAISON = "FondDeSaison";
         const string PARAM_TYPEFOND = "TypeFond";
-        static readonly int PRINTEMPS = c.getParametre("Printemps", 80);
-        static readonly int ETE = c.getParametre("Ete", 172);
-        static readonly int AUTOMNE = c.getParametre("Automne", 265);
-        static readonly int HIVER = c.getParametre("Hiver", 356);
-        static bool MULTISAMPLE = c.getParametre("Multisample", true);
+
         #endregion
 
-        CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
+        CouleurGlobale _couleur = new CouleurGlobale(c.getParametre("Couleur Globale Hue", 0.5f), c.getParametre("Couleur Globale Saturation", 0.5f), c.getParametre("Couleur Globale Luminance", 0.5f));        // La couleur de base pour tous les affichages
         private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
-        //private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
 
         private bool _fondDeSaison;                           // Vrai si on doit commencer par le fond 'de saison'
         DateTime _derniereFrame = DateTime.Now;                // Heure de la derniere frame affichee
-        DateTime _debut = DateTime.Now;
         Temps _temps;
         private bool wireframe = false;
         int INDICE_FOND;
         int INDICE_TRANSITION;
+        int noFrame = 0;
 
-        #region Fonds
-        enum FONDS
-        {
-            ESPACE, TROISDPIPES, COURONNES, GRILLE, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE,LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS,
-            MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, /*MOIRE,*/ ADN, SINUSOIDE
-        };
 
-        const FONDS PREMIER_FOND = FONDS.ESPACE;
-        const FONDS DERNIER_FOND = FONDS.SINUSOIDE;
-        #endregion
 
-        enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 };
+
 #if TRACER
         bool _afficheDebug = c.getParametre("Debug", true);
         DateTime lastFrame = DateTime.Now;
@@ -119,7 +91,6 @@ namespace ClockScreenSaverGL
                 InitializeComponent();
 
                 _temps = new Temps(DateTime.Now, _derniereFrame);
-                _fondDeSaison = c.getParametre(PARAM_FONDDESAISON, true);
             }
             catch (Exception ex)
             {
@@ -165,123 +136,22 @@ namespace ClockScreenSaverGL
         /// Creer l'objet qui anime le fond d'ecran
         /// </summary>
         /// <returns></returns>
-        private Fond createBackgroundObject(FONDS type, bool initial)
+        private Fond createBackgroundObject(DisplayedObjectFactory.FONDS type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
             if (!initial)
                 gl.PopAttrib();
 
-            gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
-            Fond ret = getObjetFond(type, initial);
-            ret.Init(gl);
+            //gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
+            Fond ret = DisplayedObjectFactory.getObjetFond(gl, type, initial, _fondDeSaison);
+            ret.Initialisation(gl);
             return ret;
         }
 
-        private Fond getObjetFond(FONDS Type, bool initial)
-        {
-            OpenGL gl = openGLControl.OpenGL;
-            if (_fondDeSaison && initial)
-            {
-                // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
-                // Note: il n'apparaissent plus dans le cycle de changement du fond
-                switch (getSaison())
-                {
-                    case SAISON.HIVER:
-                        return new Hiver(gl);
-                    case SAISON.PRINTEMPS:
-                        return new Printemps(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case SAISON.ETE:
-                        return new Ete(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case SAISON.AUTOMNE:
-                        return new Automne(gl);
-                }
-            }
-
-            //Type = FONDS.SINUSOIDE ;
-
-            switch (Type)
-            {
-                case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.ENCRE: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.BACTERIES: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.LIFE: return new Life(gl);
-                case FONDS.NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.COURONNES: return new Couronnes(gl);
-                case FONDS.COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.ESPACE: return new Espace(gl);
-                case FONDS.TUNNEL: return new Tunnel(gl);
-                case FONDS.CARRE_ESPACE: return new CarresEspace(gl);
-                case FONDS.PARTICULES_GRAVITATION: return new GravitationParticules(gl);
-                case FONDS.NUAGES: return new Nuages2(gl);
-                case FONDS.TERRE: return new TerreOpenGL(gl);
-                case FONDS.PARTICULES1: return new ParticulesGalaxie(gl);
-                case FONDS.PARTICULES_PLUIE: return new FontaineParticulesPluie(gl);
-                case FONDS.FUSEES: return new ParticulesFusees(gl);
-                case FONDS.MULTICHAINES: return new MultiplesChaines(gl);
-                case FONDS.VIELLES_TELES: return new ViellesTeles(gl);
-                case FONDS.ARTIFICE: return new FeuDArtifice(gl);
-                case FONDS.ATTRACTEUR: return new AttracteurParticules(gl);
-                case FONDS.GRAVITE: return new Gravitation(gl);
-                case FONDS.REBOND: return new RebondParticules(gl);
-                case FONDS.ENGRENAGES: return new Engrenages(gl);
-                case FONDS.CUBES: return new Cubes(gl);
-                case FONDS.NEBULEUSE: return new Nebuleuse(gl);
-                case FONDS.ADN: return new ADN(gl);
-                case FONDS.BOIDS_OISEAUX: return new BoidsOiseaux(gl);
-                case FONDS.BOIDS_POISSONS: return new BoidsPoissons(gl);
-                case FONDS.MOLECULE: return new Molecule(gl);
-                case FONDS.MYRIADE: return new Myriade(gl);
-                case FONDS.CONSOLE: return new VielleConsole(gl);
-                case FONDS.GRILLE: return new Grille(gl);
-                case FONDS.ESCALIER: return new Escaliers(gl);
-                case FONDS.MOTO: return new Moto(gl);
-                case FONDS.MARCHING_CUBES: return new MarchingCubes(gl);
-                case FONDS.TRIANGLES: return new Triangles(gl);
-                case FONDS.EPICYCLE: return new Epicycle(gl);
-                case FONDS.DOUBLE_PENDULE: return new PenduleDouble(gl);
-                case FONDS.TROISDPIPES: return new TroisDPipes(gl);
-                //case FONDS.MOIRE: return new Moire(gl);
-                case FONDS.TURING: return new MachineDeTuring(gl);
-                case FONDS.SINUSOIDE: return new Sinusoides(gl);
-                default:
-                    return new Metaballes(gl);
-            }
-
-        }
 
 
-        /// <summary>
-        /// Retourne la saison, (calcul tres approximatif)
-        /// </summary>
-        /// <returns></returns>
-        private static SAISON getSaison()
-        {
-            int forceSaison = c.getParametre("Force saison", -1);
-            if (forceSaison != -1)
-                // Forcage de la saison
-                return (SAISON)forceSaison;
 
-            DateTime date = DateTime.Now;
 
-            int quantieme = date.DayOfYear;
-            // Hiver : jusqu'a l'equinoxe de printemps
-            if (quantieme < PRINTEMPS)
-                return SAISON.HIVER;
-
-            // Printemps: jusqu'au solstice d'ete
-            if (quantieme <= ETE)
-                return SAISON.PRINTEMPS;
-
-            // Ete: jusqu'a l'equinoxe d'automne
-            if (quantieme < AUTOMNE)
-                return SAISON.ETE;
-
-            // Automne : jusqu'au solstice d'hiver
-            if (quantieme < HIVER)
-                return SAISON.AUTOMNE;
-
-            return SAISON.HIVER;
-        }
 
         /// <summary>
         /// Chargement de la fenetre et de ses composants
@@ -294,7 +164,6 @@ namespace ClockScreenSaverGL
             {
                 UpdateStyles();
                 Cursor.Hide();
-                _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
                 timerChangeFond.Interval = c.getParametre(PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
                 timerChangeFond.Enabled = true;
@@ -337,7 +206,7 @@ namespace ClockScreenSaverGL
                 console.AddLigne(Color.White, (1000.0 / NbMillisec).ToString("0.0") + " FPS\n\n");
                 console.AddLigne(Color.White, "Couleur: " + _couleur.ToString() + "\n\n");
                 //console.AddLigne(Color.White, "CPU " + cpuCounter.NextValue().ToString("00") + "%\n");
-                console.AddLigne(Color.White, "Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n");
+                //console.AddLigne(Color.White, "Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n");
                 console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
             }
             catch (Exception)
@@ -358,12 +227,9 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void moveAll()
+        void deplaceTous()
         {
             _couleur.AvanceCouleur();
-
-            _temps = new Temps(DateTime.Now, _derniereFrame);
-
             Rectangle bnd = Bounds;
             foreach (DisplayedObject b in _listeObjets)
                 b.Deplace(_temps, bnd);
@@ -385,22 +251,42 @@ namespace ClockScreenSaverGL
 
         void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
         {
+            Debug.WriteLine("onOpenGLDraw");
+            _temps = new Temps(DateTime.Now, _derniereFrame);
+            noFrame++;
+
+            if (!_initTermine)
+            {
+                Debug.WriteLine("Init pas terminé");
+                return;
+            }
+
+            deplaceTous();
+
+            //if (_frameInitiale)
+            //{
+            //    Debug.WriteLine("Frame Initiale");
+            //    _frameInitiale = false;
+            //    _derniereFrame = DateTime.Now;
+            //    return;
+            //}
+
+
             OpenGL gl = openGLControl.OpenGL;
 
 #if TRACER
             if (_afficheDebug)
                 remplitDebug(gl);
 #endif
-            // Get the OpenGL object, just to clean up the code.
-            Color Couleur = _couleur.GetRGB();
+            Color Couleur = _couleur.GetARGB();
 
             gl.MatrixMode(OpenGL.GL_PROJECTION);                        // Select The Projection Matrix
             gl.LoadIdentity();                                   // Reset The Projection Matrix
             gl.Perspective(60, Bounds.Width / (float)Bounds.Height, .1f, 1000f);
             gl.MatrixMode(OpenGL.GL_MODELVIEW);                         // Select The Modelview Matrix
             gl.LoadIdentity();
-            gl.Disable(OpenGL.GL_MULTISAMPLE);
-            gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_FASTEST);
+            //gl.Disable(OpenGL.GL_MULTISAMPLE);
+            //gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_FASTEST);
 
             // Deplacer et Afficher tous les objets
             if (_effacerFond)
@@ -414,19 +300,17 @@ namespace ClockScreenSaverGL
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
             }
 
-            //Log log = Log.getInstance();
-
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
             {
-                //DateTime av = DateTime.Now;
-                gl.PushMatrix();
-                gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_CURRENT_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
-                b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
-                gl.PopAttrib();
-                gl.PopMatrix();
-                //DateTime ap = DateTime.Now;
-                //Debug.WriteLine("Affichage " + b.GetType().Name + " " + (ap-av).TotalSeconds + "s" );
+                using (var v = new Chronometre("Affichage " + b.GetType().Name))
+                {
+                    gl.PushMatrix();
+                    gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_CURRENT_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
+                    b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
+                    gl.PopAttrib();
+                    gl.PopMatrix();
+                }
             }
 
             if (wireframe)
@@ -444,8 +328,6 @@ namespace ClockScreenSaverGL
             }
 
             _panneau.AfficheOpenGL(gl, _temps, Bounds, Couleur);
-            gl.Finish();
-            moveAll();
         }
 
         /// <summary>
@@ -455,10 +337,13 @@ namespace ClockScreenSaverGL
         /// <param name="e"></param>
         void onOpenGLInitialized(object sender, System.EventArgs e)
         {
-            createAllObjects();
+            Debug.WriteLine("onOpenGLInitialized");
+            _initTermine = false;
 
             OpenGL gl = openGLControl.OpenGL;
             gl.Clear(0);
+            createAllObjects();
+            _initTermine = true;
         }
 
 
@@ -484,10 +369,10 @@ namespace ClockScreenSaverGL
             _fondDeSaison = c.getParametre(PARAM_FONDDESAISON, true);
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
             INDICE_FOND = 0;
-            _listeObjets.Add( createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), true));
-
+            _listeObjets.Add(createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), true));
+            //
             INDICE_TRANSITION = 1;
-            _listeObjets.Add( new Transition(gl));
+            _listeObjets.Add(new Transition(gl));
 
             // Copyright
             if (c.getParametre("Copyright", true))
@@ -496,38 +381,37 @@ namespace ClockScreenSaverGL
             if (c.getParametre("Citation", true))
                 _listeObjets.Add(new Citations(gl, this, 200, 200));
 
-           _listeObjets.Add(new Actualites(gl));
-           //////  Meteo
-           _listeObjets.Add(new PanneauInfos(gl));
+            _listeObjets.Add(new Actualites(gl));
+            _listeObjets.Add(new PanneauInfos(gl, Bounds));
 
-            for (int i = 1; i < _listeObjets.Count; i++)
+            using (var c = new Chronometre("Initialisations"))
             {
-                Stopwatch w = new Stopwatch();
-                w.Start();
-                _listeObjets[i].Initialisation(gl);
-                w.Stop();
-                long l = w.ElapsedMilliseconds;
-                Debug.WriteLine("Duree initialisation " + _listeObjets[i].GetType().Name  + " = " + l + "ms");
-
+                for (int i = 1; i < _listeObjets.Count; i++)
+                {
+                    using (var v = new Chronometre("Init " + _listeObjets[i].GetType().Name))
+                    {
+                        _listeObjets[i].Initialisation(gl);
+                    }
+                }
             }
-            _panneau = PanneauMessage.instance ;
+            _panneau = PanneauMessage.instance;
 
             log.verbose(">>> Fin initialisation");
         }
 
         void onTimerChangeBackground(object sender, EventArgs e)
         {
-            FONDS Type = (FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
             Type = ProchainFond(Type);
             ChangeFond(Type);
         }
 
-        private static FONDS ProchainFond(FONDS type)
+        private static DisplayedObjectFactory.FONDS ProchainFond(DisplayedObjectFactory.FONDS type)
         {
-            if (type == DERNIER_FOND)
-                return PREMIER_FOND;
+            if (type == DisplayedObjectFactory.DERNIER_FOND)
+                return DisplayedObjectFactory.PREMIER_FOND;
             else
-                return (FONDS)((int)type + 1);
+                return (DisplayedObjectFactory.FONDS)((int)type + 1);
         }
 
         private void onKeyDown(object sender, KeyEventArgs e)
@@ -543,11 +427,10 @@ namespace ClockScreenSaverGL
                     case Keys.F5: _couleur.ChangeValue(1); break;
                     case Keys.F6: _couleur.ChangeValue(-1); break;
 
-                    //case Keys.H: _afficherAide = !_afficherAide; break;
                     case DisplayedObject.TOUCHE_REINIT:
                         _panneau.SetMessage(openGLControl.OpenGL, "Réinitialisation du fond d'écran");
-                        _listeObjets[0].Dispose();
-                        _listeObjets[0] =  createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                        //_listeObjets[0].Dispose();
+                        _listeObjets[0] = createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
                         timerChangeFond.Stop();
                         timerChangeFond.Start();
                         break;
@@ -562,13 +445,17 @@ namespace ClockScreenSaverGL
                         wireframe = !wireframe;
                         break;
 
+                    case DisplayedObject.TOUCHE_AIDE:
+                        _panneau.SetMessage(openGLControl.OpenGL, DisplayedObject.MESSAGE_AIDE);
+                        break;
+
                     case DisplayedObject.TOUCHE_DE_SAISON:
                         {
                             _panneau.SetMessage(openGLControl.OpenGL, "Fond de saison");
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
                             c.setParametre(PARAM_FONDDESAISON, _fondDeSaison);
-                            _listeObjets[0] =  createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                            _listeObjets[0] = createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
                     case DisplayedObject.TOUCHE_PROCHAIN_FOND:
@@ -576,7 +463,7 @@ namespace ClockScreenSaverGL
                             _panneau.SetMessage(openGLControl.OpenGL, "Prochain fond");
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
-                            FONDS Type = (FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
                             Type = ProchainFond(Type);
                             ChangeFond(Type);
                         }
@@ -588,18 +475,23 @@ namespace ClockScreenSaverGL
 
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
-                            FONDS Type = (FONDS)c.getParametre(PARAM_TYPEFOND, 0);
-                            if (Type == PREMIER_FOND)
-                                Type = DERNIER_FOND;
+                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+                            if (Type == DisplayedObjectFactory.PREMIER_FOND)
+                                Type = DisplayedObjectFactory.DERNIER_FOND;
                             else
                                 Type--;
                             ChangeFond(Type);
                         }
                         break;
+
+                    case DisplayedObject.TOUCHE_FIGER_FOND:
+                        timerChangeFond.Enabled = !timerChangeFond.Enabled;
+                        _panneau.SetMessage(openGLControl.OpenGL, "Figer fond");
+                        break;
 #if TRACER
-                    case Keys.D:
+                    case DisplayedObject.TOUCHE_DEBUG:
                         {
-                            _panneau.SetMessage(openGLControl.OpenGL, "Debug");
+                            _panneau.SetMessage(openGLControl.OpenGL, "Console");
                             _afficheDebug = !_afficheDebug;
                             c.setParametre("Debug", _afficheDebug);
                         }
@@ -623,16 +515,14 @@ namespace ClockScreenSaverGL
             }
         }
 
-        private void ChangeFond(FONDS type)
+        private void ChangeFond(DisplayedObjectFactory.FONDS type)
         {
             c.setParametre(PARAM_TYPEFOND, (int)type);
             // Remplacer le premier objet de la liste par le nouveau fond
             DisplayedObject dO = _listeObjets[INDICE_FOND];
             DisplayedObject tr = _listeObjets[INDICE_TRANSITION];
             if (tr is Transition)
-            {
-                ((Transition)tr).InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetRGB());
-            }
+                ((Transition)tr).InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetARGB());
 
             _listeObjets[INDICE_FOND] = createBackgroundObject(type, false);
         }
@@ -641,8 +531,9 @@ namespace ClockScreenSaverGL
         //it is impossible for the cursor to be at that position. That way, we
         //know if this variable has been set yet.
         Point OriginalLocation = new Point(int.MaxValue, int.MaxValue);
-        private Font _fontHelp;
-        private bool _effacerFond = true ;
+        private bool _effacerFond = true;
+        private bool _initTermine = false;
+        //private bool _frameInitiale = true;
 
         public void OnMouseMove(object sender, MouseEventArgs e)
         {
@@ -664,6 +555,10 @@ namespace ClockScreenSaverGL
 
         private void onFormClosed(object sender, FormClosedEventArgs e)
         {
+            c.setParametre("Couleur Globale Hue", (float)_couleur.hue);
+            c.setParametre("Couleur Globale Saturation", (float)_couleur.saturation);
+            c.setParametre("Couleur Globale Luminance", (float)_couleur.luminance);
+
             Configuration.Instance.flush();
         }
     }

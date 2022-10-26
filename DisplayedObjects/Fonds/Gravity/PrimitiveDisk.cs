@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpGL;
+﻿using SharpGL;
 using SharpGL.SceneGraph.Quadrics;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
@@ -39,14 +35,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 _disc.Transformation.TranslateX = (float)_position.x;
                 _disc.Transformation.TranslateY = (float)_position.y;
                 _disc.Transformation.TranslateZ = (float)_position.z;
-                _disc.Transformation.ScaleX =_taille;
+                _disc.Transformation.ScaleX = _taille;
                 _disc.Transformation.ScaleY = _taille;
                 _disc.Transformation.ScaleZ = _taille;
                 _disc.Transformation.RotateX = (float)_rotation.x - 90;
                 _disc.Transformation.RotateY = (float)_rotation.y;
                 _disc.Transformation.RotateZ = (float)_rotation.z;
                 _disc.Slices = (int)(Details * Gravitation.DETAILS);
-               
+
                 setAttributes(gl);
 
                 _disc.PushObjectSpace(gl);

@@ -291,8 +291,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 }
 
 
-                _bitmap = new Bitmap((int)Math.Max(tailleNom.Width, Math.Max(tailleDesc.Width, tailleEtats.Width)), 
-                    (int)(tailleNom.Height+tailleDesc.Height + tailleEtats.Height), PixelFormat.Format32bppArgb);
+                _bitmap = new Bitmap((int)Math.Max(tailleNom.Width, Math.Max(tailleDesc.Width, tailleEtats.Width)),
+                    (int)(tailleNom.Height + tailleDesc.Height + tailleEtats.Height), PixelFormat.Format32bppArgb);
 
                 using (Graphics g = Graphics.FromImage(_bitmap))
                 {
@@ -301,7 +301,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                     float Y = 0;
                     g.DrawString(nom, f, Brushes.White, 0, Y);
                     Y += tailleNom.Height;
-                    if (description.Length>0)
+                    if (description.Length > 0)
                     {
                         g.DrawString(description, fDesc, Brushes.White, 0, Y);
                         Y += tailleDesc.Height;

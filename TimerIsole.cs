@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL
         /// Constructeur
         /// </summary>
         /// <param name="intervalle">Intervalle en millisecondes</param>
-        public TimerIsole( double intervalle, bool initial = false )
+        public TimerIsole(double intervalle, bool initial = false)
         {
             _intervalle = intervalle;
             _prochainTick = DateTime.Now.AddMilliseconds(intervalle);

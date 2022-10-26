@@ -63,7 +63,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         /// Initialisation de la machine
         /// </summary>
         /// <param name="gl"></param>
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             c = getConfiguration();
             InitOrdonnateur();

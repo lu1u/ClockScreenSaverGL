@@ -1,16 +1,13 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurFeuArtifice: Emetteur2D
+    class EmetteurFeuArtifice : Emetteur2D
     {
         readonly int NB_PARTICULES = 1000;
-        
+
         static RectangleF bounds = new Rectangle(-1, -1, 2, 2);
         float _taille;
         float _vitesseParticule;
@@ -21,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             NB_PARTICULES = nbParticules;
             _taille = taille;
             _vitesseParticule = vitesseParticule;
-            _timer = new TimerIsole(r.Next(100,2000), true);
+            _timer = new TimerIsole(r.Next(100, 2000), true);
         }
         public override void Deplace(SystemeParticules2D.SystemeParticules2D s, Temps maintenant, Color couleur)
         {
@@ -40,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                     s._particules[indice].finVie = maintenant.totalMilliSecondes + 2000;
 
                     float vitesse = DisplayedObject.FloatRandom(0.01f, 1.0f) * _vitesseParticule;
-                    float angle = DisplayedObject.FloatRandom(0, (float)Math.PI*2.0f);
+                    float angle = DisplayedObject.FloatRandom(0, (float)Math.PI * 2.0f);
 
                     s._particules[indice].vx = (float)Math.Sin(angle) * vitesse;
                     s._particules[indice].vy = (float)Math.Cos(angle) * vitesse;
@@ -59,7 +56,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             }
         }
 
-        
+
     }
 
 

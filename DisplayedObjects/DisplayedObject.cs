@@ -6,14 +6,16 @@
  * 
  * Class de base pour tous les objets affichés à l'écran
  */
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Imaging;
-using System.Text;
-using SharpGL;
-using System.Diagnostics;
 using ClockScreenSaverGL.Config;
+using SharpGL;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
@@ -28,17 +30,38 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const Keys TOUCHE_ADDITIVE = Keys.A;
         public const Keys TOUCHE_CITATION = Keys.C;
         public const Keys TOUCHE_DE_SAISON = Keys.S;
-        public const Keys TOUCHE_DEEZER = Keys.D;
         public const Keys TOUCHE_INVERSER = Keys.I;
         public const Keys TOUCHE_NEGATIF = Keys.N;
         public const Keys TOUCHE_PARTICULES = Keys.P;
+        public const Keys TOUCHE_FIGER_FOND = Keys.T;
         public const Keys TOUCHE_PROCHAIN_FOND = Keys.F;
         public const Keys TOUCHE_FOND_PRECEDENT = Keys.V;
         public const Keys TOUCHE_REINIT = Keys.R;
         public const Keys TOUCHE_WIREFRAME = Keys.W;
         public const Keys TOUCHE_EFFACER_FOND = Keys.E;
+        public const Keys TOUCHE_AIDE = Keys.H;
+        public const Keys TOUCHE_DEBUG = Keys.D;
+        public const string MESSAGE_AIDE = "A: mode additif\n"
+            + "C: change citation\n"
+            + "S: premier fond de saison\n"
+            + "I: inverse couleurs\n"
+            + "N:négatif\n"
+            + "P: nb particules\n"
+            + "T: fige fond actuel\n"
+            + "F: prochain fond\n"
+            + "V: fond précédent\n"
+            + "R: réinitialise le fond\n"
+            + "W: fil de fer\n"
+            + "E: effacer fond\n"
+            + "D: infos debug et configuration";
+
+        public const float PI = (float)Math.PI;
+        public const float DEUX_PI = (float)(2.0 * Math.PI);
+        public const float PI_SUR_DEUX = (float)(0.5 * Math.PI);
+        public const float RADIAN_TO_DEG = 180.0f / (float)Math.PI;
 
         static readonly public Random r = new Random();
+        static protected bool _initASynchroneTerminé = false;
         #endregion Public Fields
 
         #region Protected Fields
@@ -64,17 +87,29 @@ namespace ClockScreenSaverGL.DisplayedObjects
         #endregion Protected Constructors
 
         #region Public Methods
-        public virtual void Init(OpenGL gl)
-        {
 
+        
+        protected virtual void Init(OpenGL gl) {}
+        protected virtual void InitAsynchrone() { }
+
+        private void BackgroundInit()
+        {
+            InitAsynchrone();
+            _initASynchroneTerminé = true;
         }
 
-        public virtual void Initialisation(OpenGL gl)
+        public  void Initialisation(OpenGL gl)
         {
+            _initASynchroneTerminé = false;
+
             RenderStart(CHRONO_TYPE.INIT);
             Init(gl);
             RenderStop(CHRONO_TYPE.INIT);
+
+            Thread a = new Thread(BackgroundInit);
+            a.Start();
         }
+
         /// <summary>
         /// Retourne la copie de la bitmap, version desaturee
         /// </summary>
@@ -178,14 +213,18 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="color"></param>
         /// <param name="alpha"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color getCouleurAvecAlpha(Color color, byte alpha)
         {
             return Color.FromArgb(alpha, color.R, color.G, color.B);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
         {
             float a = (float)alpha / 255.0f;
+            if (a < 0) a = 0;
+            if (a > 1.0f) a = 1.0f;
 
             return Color.FromArgb(255, (byte)((float)color.R * a), (byte)((float)color.G * a), (byte)((float)color.B * a));
         }
@@ -196,6 +235,16 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 return 1;
             else
                 return -1;
+        }
+
+        public static void DessineCercle(OpenGL gl, float x, float y, float taille, int details)
+        {
+            gl.Begin(OpenGL.GL_TRIANGLE_FAN);
+            gl.Vertex(x, y); // center of circle
+            for (int i = 0; i <= details; i++)
+                gl.Vertex(x + (taille * Math.Cos(i * DEUX_PI / details)), y + (taille * Math.Sin(i * DEUX_PI / details)));
+
+            gl.End();
         }
 
         /// <summary>
@@ -245,6 +294,18 @@ namespace ClockScreenSaverGL.DisplayedObjects
         }
 
         #endregion Public Methods
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float SignePlus(float v)
+        {
+            return v >= 0 ? v : -v;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float SigneMoins(float v)
+        {
+            return v <= 0 ? v : -v;
+        }
+
 
         #region Protected Methods
 
@@ -340,22 +401,14 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <returns></returns>
         protected uint createEmptyTexture(int LARGEUR_TEXTURE, int HAUTEUR_TEXTURE)
         {
-            Stopwatch w = new Stopwatch();
-            w.Start();
             uint[] txtnumber = new uint[1];                     // Texture ID
-
-            // Create Storage Space For Texture Data (128x128x4)
-            //byte[] data = new byte[((LARGEUR_TEXTURE * HAUTEUR_TEXTURE) * 4 * sizeof(uint))];
 
             _gl.GenTextures(1, txtnumber);					// Create 1 Texture
             _gl.BindTexture(OpenGL.GL_TEXTURE_2D, txtnumber[0]);			// Bind The Texture
-            _gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, 4, LARGEUR_TEXTURE, LARGEUR_TEXTURE, 0, OpenGL.GL_RGB, OpenGL.GL_UNSIGNED_BYTE, (byte[])null);			// Build Texture Using Information In data
+            _gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, 4, LARGEUR_TEXTURE, HAUTEUR_TEXTURE, 0, OpenGL.GL_RGB, OpenGL.GL_UNSIGNED_BYTE, (byte[])null);			// Build Texture Using Information In data
             _gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
             _gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
 
-            w.Stop();
-            long l = w.ElapsedMilliseconds;
-            Debug.WriteLine("Duree createEmptyTexture " + LARGEUR_TEXTURE + "x" + HAUTEUR_TEXTURE + "=" + l + "ms");
             return txtnumber[0];						// Return The Texture ID
         }
 
@@ -431,7 +484,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         long moyennedureeD = 0;
         long moyennedureeR = 0;
         protected enum CHRONO_TYPE { RENDER, DEPLACE, INIT };
-        public virtual String DumpRender()
+        public virtual string DumpRender()
         {
             moyennedureeR = ((moyennedureeR * 10) + chronoRender.ElapsedTicks) / 11;
             moyennedureeD = ((moyennedureeD * 10) + chronoDeplace.ElapsedTicks) / 11;

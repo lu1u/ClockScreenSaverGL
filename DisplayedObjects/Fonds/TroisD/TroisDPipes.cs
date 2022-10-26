@@ -4,7 +4,6 @@ using SharpGL.SceneGraph.Quadrics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Animation 3D Pipes historique de windowsd
@@ -13,8 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     class TroisDPipes : MateriauGlobal, IDisposable
     {
-        private const float DEUX_PI = (float)(Math.PI * 2.0);
-        private const string CAT = "TroisDPipes";
+         private const string CAT = "TroisDPipes";
         private CategorieConfiguration c;
 
         const int HAUT = 1 << 1;
@@ -89,7 +87,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return c;
         }
 
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             c = getConfiguration();
             LIGHTPOS[0] = TAILLE * 2;
@@ -390,13 +388,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private void renderSphere(OpenGL gl, float X, float Y, float Z, float diametre)
         {
             gl.PushMatrix();
-            
+
             gl.Translate(X, Y, Z);
             _sphere.Radius = diametre;
             _sphere.PushObjectSpace(gl);
             _sphere.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             _sphere.PopObjectSpace(gl);
-            
+
             gl.PopMatrix();
             //float alpha, beta; // Storage for coordinates and angles        
             //float x, y, z;

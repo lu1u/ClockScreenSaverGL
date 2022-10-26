@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 {
     public class Particule2D : IComparable
     {
         public bool active = false;
-        public double debutVie ;
-        public double finVie ;
+        public double debutVie;
+        public double finVie;
         public float x, y;
         public float taille;
         public float vx, vy;
@@ -30,7 +27,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             }
         }
 
-        public static double tempsEnMillisecondes( DateTime t )
+        public static double tempsEnMillisecondes(DateTime t)
         {
             return t.Subtract(Temps.BASEDATE).TotalMilliseconds;
         }

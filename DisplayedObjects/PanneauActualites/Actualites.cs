@@ -1,9 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 /// <summary>
 /// Affichage des actualites, extraites de flux RSS
@@ -24,7 +24,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         public int TAILLE_SOURCE;
         public int TAILLE_TITRE;
         public int TAILLE_DESCRIPTION;
-        public static bool AFFICHE_DESCRIPTION;
+        public bool AFFICHE_DESCRIPTION;
         public bool AFFICHE_IMAGES;
         public float SATURATION_IMAGES;
         public float LIGHT_FACTOR;
@@ -32,8 +32,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         #endregion
 
         private float _decalageX = SystemInformation.VirtualScreen.Width;
-        public static int _derniereAffichee;
-
+        
         private ActuFactory _actuFactory;
 
         /// <summary>
@@ -51,9 +50,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             _actuFactory = new ActuFactory();
         }
 
-        public override void Init(OpenGL gl)
+        protected override void InitAsynchrone()
         {
-            _actuFactory.Init(gl);
+            _actuFactory.Init();
         }
 
 
@@ -96,54 +95,37 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             couleur = CouleurGlobale.Light(couleur, LIGHT_FACTOR);
+            using (var v = new Viewport2D(gl, 0, 0, tailleEcran.Width, tailleEcran.Bottom))
+            {
+                gl.Disable(OpenGL.GL_LIGHTING);
+                gl.Disable(OpenGL.GL_DEPTH);
+                gl.Enable(OpenGL.GL_BLEND);
+                gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
-            gl.PushMatrix();
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PushMatrix();
-            gl.LoadIdentity();
-            gl.Ortho2D(0, tailleEcran.Width, 0, tailleEcran.Height);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+                gl.Disable(OpenGL.GL_TEXTURE_2D);
+                gl.Color(0.0f, 0.0f, 0.0f, 0.5f); // Fond sombre
+                gl.Rect(tailleEcran.Left, tailleEcran.Top + HAUTEUR_BANDEAU, tailleEcran.Right, tailleEcran.Top);
 
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_DEPTH);
-            gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+                float x = tailleEcran.Left + _decalageX;
 
-            gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Color(0.1f, 0.1f, 0.1f, 0.55f); // Fond sombre
-            gl.Rect(tailleEcran.Left, tailleEcran.Top + HAUTEUR_BANDEAU, tailleEcran.Right, tailleEcran.Top);
+                gl.Enable(OpenGL.GL_TEXTURE_2D);
+                gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
 
-            float x = tailleEcran.Left + _decalageX;
-            _derniereAffichee = 0;
-
-            #region LignesActu
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
-
-            if (_actuFactory._lignes != null)
-                try
-                {
-                    foreach (LigneActu l in _actuFactory._lignes)
+                if (_actuFactory._lignes != null)
+                    try
                     {
-                        l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, AFFICHE_DESCRIPTION);
-                        x += l.largeur;
-                        _derniereAffichee++;
-                        if (x > tailleEcran.Right)
-                            break;
+                        foreach (LigneActu l in _actuFactory._lignes)
+                        {
+                            l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, AFFICHE_DESCRIPTION);
+                            x += l.largeur;
+                            if (x > tailleEcran.Right)
+                                break;
+                        }
                     }
-                }
-                catch (Exception)
-                {
-                }
-
-
-            #endregion
-
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PopMatrix();
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-            gl.PopMatrix();
-
+                    catch (Exception)
+                    {
+                    }
+            }
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif

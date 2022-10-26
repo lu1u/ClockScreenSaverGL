@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurRecentre: Modificateur
+    class ModificateurRecentre : Modificateur
     {
         private DateTime _derniere = DateTime.Now;
         private float _vitesse;
@@ -14,7 +11,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
             _vitesse = vitesse;
         }
 
-        public override void Applique(SystemeParticules2D s, Temps maintenant )
+        public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             int indice = 0;
             float tailleMax = -1;

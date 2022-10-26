@@ -1,26 +1,22 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity;
+﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using SharpGL;
+using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
-using SharpGL.SceneGraph.Assets;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
-using ClockScreenSaverGL.Config;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     public class ViellesTeles : Fond
     {
         public const String CAT = "ToTexture";
-		static CategorieConfiguration c;
-		protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
+        static CategorieConfiguration c;
+        protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
         protected float[] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
         protected float[] COL_SPECULAR = { 0.7f, 0.7f, 0.7f, 1.0f };
         protected float[] COL_COLOR = { 0.7f, 0.7f, 0.7f };
@@ -44,9 +40,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null)
-				c = Configuration.getCategorie(CAT);
-			return c;
+            if (c == null)
+                c = Configuration.getCategorie(CAT);
+            return c;
         }
         const int NB_QUADS = 10;
         List<Quad> quads = new List<Quad>();
@@ -54,7 +50,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public ViellesTeles(OpenGL gl) : base(gl)
         {
             _objet = InitObjet(gl);
-            
+
             Quad quad = new Quad();
             quad.position = new Vecteur3D(5f, 0.8f, -3);
             quad.angle = new Vecteur3D(0, -45, 0);
@@ -74,7 +70,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             quads.Add(quad);
 
             tv = new Texture();
-            tv.Create(gl, Config.Configuration.getImagePath(r.Next(2) == 0? "tv1.png" : "tv2.png"));
+            tv.Create(gl, Config.Configuration.getImagePath(r.Next(2) == 0 ? "tv1.png" : "tv2.png"));
         }
 
         /// <summary>
@@ -82,7 +78,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="gl"></param>
         /// <returns></returns>
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
         }
@@ -122,11 +118,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
             base.Deplace(maintenant, tailleEcran);
-            
+
             _objet.Deplace(maintenant, tailleEcran);
 
             //foreach (Quad q in quads)
-             //q.position.RotateY(25 * maintenant._intervalle);
+            //q.position.RotateY(25 * maintenant._intervalle);
         }
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)

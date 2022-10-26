@@ -7,10 +7,9 @@
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
 
-using System.Drawing;
-using System.Threading.Tasks;
 using ClockScreenSaverGL.Config;
 using SharpGL;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
 {
@@ -20,26 +19,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
     public abstract class BandeHorizontale : Bande
     {
         public const string CAT = "BandeHorizontale";
-		protected CategorieConfiguration c;
-		private OpenGLFonte _glFonte;
+        protected CategorieConfiguration c;
+        private OpenGLFonte _glFonte;
 
         protected BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur)
             : base(gl, valMax, intervalle, largeurcase, origineX, largeur)
 
-        {								
-			getConfiguration();
-			_glFonte = new OpenGLFonte(gl, "0123456789", _hauteurFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre( "VY", 20f ) );
+        {
+            getConfiguration();
+            _glFonte = new OpenGLFonte(gl, "0123456789", _hauteurFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
+            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre("VY", 20f));
             _taillebande = new SizeF(largeur, _hauteurFonte * 2);
         }
 
         public override CategorieConfiguration getConfiguration()
         {
-			if  ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				_hauteurFonte = c.getParametre("TailleFonte", 30);
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                _hauteurFonte = c.getParametre("TailleFonte", 30);
+            }
             return c;
         }
 
@@ -85,7 +84,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
                 {
                     gl.Begin(OpenGL.GL_LINES);
                     gl.Vertex(X, Y);
-                    gl.Vertex( X, Y + _hauteurFonte / 2);
+                    gl.Vertex(X, Y + _hauteurFonte / 2);
                     gl.End();
                 }
 
@@ -97,11 +96,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
             }
 
             // Repere de l'origine
-            gl.Vertex(_origine , Y - 4);
-            gl.Vertex(_origine , Y + _hauteurFonte * 2 + 4);
+            gl.Vertex(_origine, Y - 4);
+            gl.Vertex(_origine, Y + _hauteurFonte * 2 + 4);
             gl.End();
 #if TRACER
-                RenderStop(CHRONO_TYPE.RENDER);
+            RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
     }

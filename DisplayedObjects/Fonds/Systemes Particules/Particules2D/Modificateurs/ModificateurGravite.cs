@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
+﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurGravite: Modificateur
+    class ModificateurGravite : Modificateur
     {
         private float _gX, _gY;
-        public ModificateurGravite( float gX, float gY )
+        public ModificateurGravite(float gX, float gY)
         {
             _gX = gX;
             _gY = gY;
@@ -23,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                 if (s._particules[i].active)
                 {
                     s._particules[i].vx += dX;
-                    s._particules[i].vy += dY ;
+                    s._particules[i].vy += dY;
                 }
 
         }

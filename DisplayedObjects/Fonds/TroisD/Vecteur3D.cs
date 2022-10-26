@@ -76,40 +76,40 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             }
         }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Vertex(OpenGL gl) => gl.Vertex(x, y, z);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Vertex(OpenGL gl) => gl.Vertex(x, y, z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Normal(OpenGL gl) => gl.Normal(x, y, z);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Normal(OpenGL gl) => gl.Normal(x, y, z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public Vecteur3D operator *(float f, Vecteur3D v)     //produit par un réel
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public Vecteur3D operator *(float f, Vecteur3D v)     //produit par un réel
         { return new Vecteur3D(v.x * f, v.y * f, v.z * f); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vecteur3D operator *(Vecteur3D v, float f)     //le prod par un float est commutatif !!!
-        { return new Vecteur3D (v.x*f, v.y*f, v.z*f); }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vecteur3D operator *(Vecteur3D v, float f)     //le prod par un float est commutatif !!!
+        { return new Vecteur3D(v.x * f, v.y * f, v.z * f); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Vecteur3D operator /(Vecteur3D v, float f) =>  (v * (1 / f));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vecteur3D operator /(Vecteur3D v, float f) => (v * (1 / f));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public float operator *(Vecteur3D v, Vecteur3D w)     //produit scalaire
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public float operator *(Vecteur3D v, Vecteur3D w)     //produit scalaire
         { return v.prodscal(w); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public Vecteur3D operator +(Vecteur3D v, Vecteur3D w) => new Vecteur3D(v.x + w.x, v.y + w.y, v.z + w.z);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public Vecteur3D operator +(Vecteur3D v, Vecteur3D w) => new Vecteur3D(v.x + w.x, v.y + w.y, v.z + w.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public Vecteur3D operator -(Vecteur3D v, Vecteur3D w)     //différence vectorielle
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public Vecteur3D operator -(Vecteur3D v, Vecteur3D w)     //différence vectorielle
         { return new Vecteur3D(v.x - w.x, v.y - w.y, v.z - w.z); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public Vecteur3D operator -(Vecteur3D v)     //negatif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public Vecteur3D operator -(Vecteur3D v)     //negatif
         { return new Vecteur3D(-v.x, -v.y, -v.z); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public Vecteur3D operator ^(Vecteur3D v, Vecteur3D w)     //produit vectoriel
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public Vecteur3D operator ^(Vecteur3D v, Vecteur3D w)     //produit vectoriel
         {
             Vecteur3D z = new Vecteur3D(
                 v.y * w.z - w.y * v.z,
@@ -118,8 +118,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             );
             return z;
         }
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Vecteur3D Cross(Vecteur3D w)     //produit vectoriel
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Vecteur3D Cross(Vecteur3D w)     //produit vectoriel
         {
             Vecteur3D z = new Vecteur3D((this.y * w.z) - (w.y * this.z),
                 (this.z * w.x) - (w.z * x),
@@ -128,12 +128,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return z;
         }
 
-		/**
+        /**
          * Limit the magnitude of this vector 
          * @param max the maximum Length to limit this vector 
          */
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Limiter(float max)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Limiter(float max)
         {
             if (Longueur() > max)
             {
@@ -165,7 +165,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
          */
         public float Heading2D()
         {
-            return - (float)Math.Atan2(-y, x);
+            return -(float)Math.Atan2(-y, x);
         }
         ///////////////////////////////////////////////////////////////////////////////
         // Rotaton du vecteur autour de l'axe des Y
@@ -204,14 +204,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return (float)Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
         }
 
-		public static Vecteur3D normale(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
-		{
-			Vecteur3D v = new Vecteur3D();
-			v.x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
-			v.y = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z);
-			v.z = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x);
-			v.Normalize();
-			return v;
-		}
-	}
+        public static Vecteur3D normale(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
+        {
+            Vecteur3D v = new Vecteur3D();
+            v.x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
+            v.y = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z);
+            v.z = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x);
+            v.Normalize();
+            return v;
+        }
+    }
 }

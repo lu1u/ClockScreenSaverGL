@@ -1,5 +1,4 @@
-﻿using ClockScreenSaverGL.Config;
-using SharpGL;
+﻿using SharpGL;
 using System;
 using System.Drawing;
 
@@ -115,7 +114,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
             gl.Translate(0, 0, TRANSLATE_Z);
             gl.Rotate(_angleVue / 2.0f, _angleVue, _angleVue / 3.0f);
             gl.CallList(_genLists);
-            
+
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif

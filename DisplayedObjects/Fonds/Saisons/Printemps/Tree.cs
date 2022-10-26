@@ -57,7 +57,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
         private void GenereFeuilles(List<Cible> Leaves, float X, float Y, int Largeur, int Hauteur, int NbFeuilles)
         {
-            float angleX, dx, dy,angleZ, dz ;
+            float angleX, dx, dy, angleZ, dz;
             for (int i = 0; i < NbFeuilles; i++)
             {
                 angleX = r.Next(0, (int)(Math.PI * 400.0)) / 100.0f;
@@ -67,7 +67,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
                 dz = r.Next(0, Hauteur * 10) / 10.0f;
 
                 Leaves.Add(new Cible(new Vecteur3D(X + (float)Math.Sin(angleX) * dx,
-                                    Y + (float)Math.Cos(angleX) * dy,(float)Math.Sin(angleZ) * dz)));
+                                    Y + (float)Math.Cos(angleX) * dy, (float)Math.Sin(angleZ) * dz)));
             }
         }
 

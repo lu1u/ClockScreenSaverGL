@@ -62,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             modeles.Add(new Modele3D(gl, "Io", 0.45f, 3.6f, "io.png", mat, 0, 0, null));
             modeles.Add(new Modele3D(gl, "Ganymede", 5.2f, 1.49f, "ganymede.png", mat, 0, 0, null));
             modeles.Add(new Modele3D(gl, "Europa", 3.1f, 1.48f, "europa.png", mat, 0, 0, null));
-            modeles.Add(new Modele3D(gl, "Callisto",  4.8f, 1.47f, "callisto.png", mat,0, 0, null));
+            modeles.Add(new Modele3D(gl, "Callisto", 4.8f, 1.47f, "callisto.png", mat, 0, 0, null));
             modeles.Add(new Modele3D(gl, "Pluton", 2f, 0.2f, "pluto.png", mat, 0, 0, null));
             SATELLITE_MIN = 9;
             SATELLITE_MAX = 14;

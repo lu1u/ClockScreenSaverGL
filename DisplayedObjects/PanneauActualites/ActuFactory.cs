@@ -14,34 +14,35 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         public const string EXTENSION_IMAGES = "jpg";
 
         public List<LigneActu> _lignes = new List<LigneActu>();
-        
+
         public ActuFactory()
         {
-            
+
         }
 
-        internal void Init(OpenGL gl)
+        internal void Init()
         {
-           try
+            try
             {
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                string repertoire = Path.Combine(Config.Configuration.getDataDirectory(), "Actualites");
-                string[] fichiers = Directory.GetFiles(repertoire, $"*.{EXTENSION_ACTUALITES}");
-                if (fichiers != null)
+                using (var c = new Chronometre("Init Actufactory"))
                 {
-                    Array.Sort(fichiers, delegate (string O1, string O2)
+                    string repertoire = Path.Combine(Config.Configuration.getDataDirectory(), "Actualites");
+                    string[] fichiers = Directory.GetFiles(repertoire, $"*.{EXTENSION_ACTUALITES}");
+                    if (fichiers != null)
                     {
-                        return -String.Compare(O1, O2);
-                    });
-                    foreach (string fichier in fichiers)
-                    {
-                        string image = Path.ChangeExtension(fichier, EXTENSION_IMAGES);
-                        _lignes.Add(new LigneActu(fichier, image));
+                        Array.Sort(fichiers, delegate (string O1, string O2)
+                        {
+                            return -string.Compare(O1, O2);
+                        });
+                        foreach (string fichier in fichiers)
+                        {
+                            string image = Path.ChangeExtension(fichier, EXTENSION_IMAGES);
+                            LigneActu l = new LigneActu(fichier, image);
+                            // Les textures seront creees au moment du premier affichage pour accelecer le démarrage l.CreerTexture(gl, true);
+                            _lignes.Add(l);
+                        }
                     }
                 }
-                sw.Stop();
-                Debug.WriteLine("Init actufactory " + sw.ElapsedMilliseconds + "ms");
             }
             catch (Exception)
             {

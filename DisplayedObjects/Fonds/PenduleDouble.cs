@@ -1,10 +1,9 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -82,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="gl"></param>
         /// <returns></returns>
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             _timerTrace = new TimerIsole(DELAI_TRACE, true);
             _longueur = new float[NB_PENDULES];
@@ -250,10 +249,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     float taille = (float)Math.Sqrt(_masse[i]);
                     x += (float)Math.Sin(_angle[i]) * _longueur[i];
                     y += (float)Math.Cos(_angle[i]) * _longueur[i];
-                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE*taille, y + TAILLE_PENDULE*taille);
-                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE*taille, y - TAILLE_PENDULE*taille);
-                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE*taille, y - TAILLE_PENDULE*taille);
-                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE*taille, y + TAILLE_PENDULE*taille);
+                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
+                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
+                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
+                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
                 }
                 gl.End();
             }

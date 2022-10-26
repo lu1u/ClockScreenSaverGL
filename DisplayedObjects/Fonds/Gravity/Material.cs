@@ -1,15 +1,11 @@
 ﻿using SharpGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
     public class Material
     {
-        public int shininess = 5 ;
-        public float [] color = {1.0f, 1.0f, 1.0f, 1.0f };
+        public int shininess = 5;
+        public float[] color = { 1.0f, 1.0f, 1.0f, 1.0f };
         public float[] ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
         public float[] diffuse = { 0.1f, 0.1f, 0.1f, 1.0f };
         public float[] specular = { 0.8f, 0.8f, 0.8f, 1.0f };
@@ -22,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             setSpecular(spec);
             shininess = sh;
         }
-        public void setAmbient( float r, float g, float b )
+        public void setAmbient(float r, float g, float b)
         {
             ambient[0] = r;
             ambient[1] = g;

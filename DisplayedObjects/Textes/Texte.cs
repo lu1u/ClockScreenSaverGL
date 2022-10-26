@@ -5,12 +5,12 @@
  * Heure: 09:50
  * Classe de base pour les objets graphiques de type texte
  */
-using System;
-using System.Drawing;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using System;
+using System.Drawing;
 using System.Drawing.Imaging;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         protected byte _alpha;
         protected Bitmap _bitmap;
         protected Texture _texture = new Texture();
-        
+
         /// <summary>
         /// Constructeur
         /// Initialise la trajectoire, la fonte et le niveau de transparence
@@ -32,9 +32,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         /// <param name="Vy"></param>
         /// <param name="tailleFonte"></param>
         /// <param name="alpha"></param>
-        public Texte(OpenGL gl ): base(gl)
+        public Texte(OpenGL gl) : base(gl)
         {
-           
+
         }
 
 
@@ -62,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         /// </summary>
         /// <param name="maintenant"></param>
         /// <returns></returns>
-        protected abstract SizeF getTexte(Temps maintenant, out string texte );
+        protected abstract SizeF getTexte(Temps maintenant, out string texte);
         protected virtual bool TexteChange() { return false; }
         protected virtual void drawOpenGL(OpenGL gl, Rectangle tailleEcran, Color couleur, Temps maintenant)
         {
@@ -83,17 +83,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
         protected virtual void CreateBitmap(OpenGL gl, Temps maintenant)
         {
-            _bitmap?.Dispose();
+            using (var c = new Chronometre("Texte CreateBitmap"))
+            {
+                _bitmap?.Dispose();
 
-            string texte;
-            _taille = getTexte(maintenant, out texte);
+                string texte;
+                _taille = getTexte(maintenant, out texte);
 
-            _bitmap = new Bitmap((int)_taille.Width, (int)_taille.Height, PixelFormat.Format32bppArgb);
+                _bitmap = new Bitmap((int)_taille.Width, (int)_taille.Height, PixelFormat.Format32bppArgb);
 
-            using (Graphics g = Graphics.FromImage(_bitmap))
-                g.DrawString(texte, _fonte, Brushes.White, 0, 0);
+                using (Graphics g = Graphics.FromImage(_bitmap))
+                    g.DrawString(texte, _fonte, Brushes.White, 0, 0);
 
-            _texture.Create(gl, _bitmap);
+                _texture.Create(gl, _bitmap);
+            }
         }
 
         protected virtual Font CreerFonte(int tailleFonte)
@@ -126,7 +129,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-        
+
         public override void Dispose()
         {
             base.Dispose();

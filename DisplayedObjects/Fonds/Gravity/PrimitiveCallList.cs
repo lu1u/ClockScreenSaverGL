@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpGL;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
-    public class PrimitiveCallList: Primitive3D
+    public class PrimitiveCallList : Primitive3D
     {
         uint _callList;
         Vecteur3Ddbl _rotation;
         float _rayonMax;
-        public PrimitiveCallList(uint CallList, Vecteur3Ddbl position, float rayonMax, Vecteur3Ddbl rotation): base(position)
+        public PrimitiveCallList(uint CallList, Vecteur3Ddbl position, float rayonMax, Vecteur3Ddbl rotation) : base(position)
         {
             _callList = CallList;
             _rotation = rotation;

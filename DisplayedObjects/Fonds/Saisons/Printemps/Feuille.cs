@@ -1,8 +1,6 @@
-﻿using ClockScreenSaverGL.Config;
-using SharpGL;
+﻿using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
@@ -10,9 +8,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     class Feuille
     {
         static Random r = new Random();
-        const int NB_TYPES_FEUILLES =2;
+        const int NB_TYPES_FEUILLES = 2;
         static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-        static Bitmap _b ;
+        static Bitmap _b;
         public Vecteur3D Position { get; set; }
         public float _taille;
         private static Texture _texture;
@@ -20,9 +18,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
 
         static Feuille()
-            {
+        {
             InitTexture();
-            }
+        }
         public Feuille(Vecteur3D position)
         {
             Position = position;
@@ -140,7 +138,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         //}
         public void Draw(OpenGL gl, float dx, float dy)
         {
-            if ( _texture== null)
+            if (_texture == null)
             {
                 _texture = new Texture();
                 _texture.Create(gl, _b);// RotateImage(_b, r.Next(-45, 90)));
@@ -148,13 +146,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
             _texture.Bind(gl);
             gl.PushMatrix();
-            gl.Translate(Position.X + dx, Position.Y + dy  , 0);
-            gl.Rotate(0, 0, _angle + dy*0.5f);
+            gl.Translate(Position.X + dx, Position.Y + dy, 0);
+            gl.Rotate(0, 0, _angle + dy * 0.5f);
             gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 0.0f); gl.Vertex(- (_taille / 2), - (_taille / 2));
-            gl.TexCoord(0.0f, 1.0f); gl.Vertex(- (_taille / 2), + (_taille / 2));
-            gl.TexCoord(1.0f, 1.0f); gl.Vertex(+ (_taille / 2), + (_taille / 2));
-            gl.TexCoord(1.0f, 0.0f); gl.Vertex(+ (_taille / 2), - (_taille / 2));
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-(_taille / 2), -(_taille / 2));
+            gl.TexCoord(0.0f, 1.0f); gl.Vertex(-(_taille / 2), +(_taille / 2));
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(+(_taille / 2), +(_taille / 2));
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(+(_taille / 2), -(_taille / 2));
             gl.End();
             gl.PopMatrix();
         }

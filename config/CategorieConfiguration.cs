@@ -2,7 +2,6 @@
 /// Categorie de configuration ( = un fichier de conf, = un objet affiche)
 ///
 
-using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Collections.Generic;
@@ -28,13 +27,12 @@ namespace ClockScreenSaverGL.Config
         public string _fileName, _nom;
         private bool _propre = true;
         private SortedDictionary<string, Parametre> _valeurs = new SortedDictionary<string, Parametre>();
-        //public delegate void ParametreChange(string nom);
-        //private ParametreChange _parametreChange;
+
         private string keyCourante;
 
         #endregion Private Fields
 
-        // La valeur courante, modifiee interactivement
+
 
         #region Public Constructors
 
@@ -60,15 +58,6 @@ namespace ClockScreenSaverGL.Config
 
         #endregion Private Destructors
 
-        /// <summary>
-        /// Change le 'listener', delegate qui va etre appele en cas de changement
-        /// interactif d'un parametre
-        /// </summary>
-        /// <param name="p"></param>
-        /*public void setListenerParametreChange(ParametreChange p)
-        {
-            _parametreChange = p;
-        }*/
 
         #region Public Methods
 
@@ -96,18 +85,18 @@ namespace ClockScreenSaverGL.Config
         {
             string[] res = new string[_valeurs.Count];
             int i = 0;
-            foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom))
+            foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
             {
                 char couleur;
                 if (keyCourante == null)
-                    keyCourante = p.nom;
+                    keyCourante = p._nom;
 
                 if (p.modifiable)
-                    couleur = p.nom.Equals(keyCourante) ? 'Y' : 'G';
+                    couleur = p._nom.Equals(keyCourante) ? 'Y' : 'G';
                 else
-                    couleur = p.nom.Equals(keyCourante) ? 'W' : 'r';
+                    couleur = p._nom.Equals(keyCourante) ? 'W' : 'r';
 
-                res[i] = couleur + p.nom + " = " + p.valueToString();
+                res[i] = couleur + p._nom + " = " + p.valueToString();
                 i++;
             }
             return res;
@@ -129,13 +118,13 @@ namespace ClockScreenSaverGL.Config
             c.AddLigne(Color.LightGreen, "Les valeurs en gris nécessitent de redémarrer le fond (touche R)");
             c.AddLigne(Color.LightGreen, "");
 
-            foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom))
+            foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
                 if (p._type != Parametre.TYPE_PARAMETRE.T_STRING)
                 {
                     if (p.modifiable)
-                        c.AddLigne(p.nom.Equals(keyCourante) ? Color.Yellow : Color.Green, p.nom + " = " + p.valueToString());
+                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.Yellow : Color.Green, p._nom + " = " + p.valueToString());
                     else
-                        c.AddLigne(p.nom.Equals(keyCourante) ? Color.White : Color.Gray, p.nom + " = " + p.valueToString());
+                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.White : Color.Gray, p._nom + " = " + p.valueToString());
                 }
         }
 #endif
@@ -144,7 +133,7 @@ namespace ClockScreenSaverGL.Config
         /// </summary>
         public void flush()
         {
-            if (!_propre)
+            if (OnDoitEcrire())
             {
                 using (TextWriter tw = new StreamWriter(_fileName))
                 {
@@ -154,11 +143,26 @@ namespace ClockScreenSaverGL.Config
                     tw.WriteLine("# (c) Lucien Pilloni 2014");
                     tw.WriteLine("# ----------------------------------------");
                     tw.WriteLine("");
-                    foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom))
-                        p.ecritDansFichier(tw);
+                    foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
+                        if ( p._utilisé)
+                            p.ecritDansFichier(tw);
+
+                    tw.Close();
                 }
                 _propre = true;
             }
+        }
+
+        private bool OnDoitEcrire()
+        {
+            if (!_propre)
+                return true;
+
+            foreach (Parametre p in _valeurs.Values)
+                if (!p._utilisé)
+                    return true;
+
+            return false;
         }
 
         /// <summary>
@@ -171,8 +175,8 @@ namespace ClockScreenSaverGL.Config
         {
             // Tableau des clefs
             List<string> clefs = new List<string>();
-            foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom)/*.Where(p => p._modifiable)*/)
-                clefs.Add(p.nom);
+            foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom)/*.Where(p => p._modifiable)*/)
+                clefs.Add(p._nom);
 
             if (clefs.Count == 0)
                 return k == Keys.NumPad2 || k == Keys.NumPad8 || k == Keys.NumPad4 || k == Keys.NumPad6;
@@ -289,8 +293,17 @@ namespace ClockScreenSaverGL.Config
                     while ((line = file.ReadLine()) != null)
                         if ((line.Length > 0) && (!line.StartsWith(DEBUT_COMMENTAIRE))) // Commentaire
                         {
-                            Parametre parametre = new Parametre(line);
-                            _valeurs.Add(parametre.nom, parametre);
+                            try
+                            {
+                                Parametre parametre = new Parametre(line);
+                                _valeurs.Add(parametre._nom, parametre);
+                            }
+                            catch( Exception e)
+                            {
+                                Log.instance.error("Exception dans CategorieConfiguration.LireFichier " + filename);
+                                Log.instance.error(line);
+                                Log.instance.error(e.Message);
+                            }
                         }
                 }
             }
@@ -339,11 +352,11 @@ namespace ClockScreenSaverGL.Config
             if (_valeurs.ContainsKey(valueName))
                 _valeurs.Remove(valueName);
 
-            Parametre par = new Parametre(valueName, type, defaut);
-            _valeurs.Add(valueName, par);
+            Parametre parametre = new Parametre(valueName, type, defaut);
+            parametre._utilisé = true;
+            _valeurs.Add(valueName, parametre);
 
             _propre = false;
-            //_parametreChange?.Invoke(valueName);
         }
 
         #endregion setParametre
@@ -398,13 +411,15 @@ namespace ClockScreenSaverGL.Config
                     return defaut;
                 p._defaut = defaut;
                 p._action = actionModif;
+                p._utilisé = true;
                 return p._value;
             }
 
-            _valeurs.Add(nom, new Parametre(nom, type, defaut, actionModif));
+            p = new Parametre(nom, type, defaut, actionModif);
+            p._utilisé = true;                      // Le parametre etait manquant dans le fichier, il faut l'ajouter a la prochaine ecriture
+            _valeurs.Add(nom, p);
             _propre = false;
 
-            //_parametreChange?.Invoke(nom);
             return defaut;
         }
 

@@ -10,14 +10,14 @@ namespace ClockScreenSaverGL.Trajectoires
 
         private float _centreX, _centreY, _rayonX, _rayonY, _vitesseAngulaire, _angle;
 
-        public TrajectoireOvale( float CentreX, float CentreY, float rayonX, float rayonY, float vitesseAngulaire, float angleInitial )
+        public TrajectoireOvale(float CentreX, float CentreY, float rayonX, float rayonY, float vitesseAngulaire, float angleInitial)
         {
             _centreX = CentreX;
             _centreY = CentreY;
             _rayonX = rayonX;
             _rayonY = rayonY;
             _vitesseAngulaire = vitesseAngulaire;
-           _angle = angleInitial;
+            _angle = angleInitial;
             CalculePosition();
         }
 

@@ -8,7 +8,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         double[,] g_frustumPlanes = new double[6, 4];
 
-        public FrustumCulling( OpenGL gl)
+        public FrustumCulling(OpenGL gl)
         {
             float[] p = new float[16];   // projection matrix
             float[] mv = new float[16];  // model-view matrix
@@ -198,7 +198,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return false;
         }
 
-        public void isVisibleBas( Vecteur3D p)
+        public void isVisibleBas(Vecteur3D p)
         {
 
         }

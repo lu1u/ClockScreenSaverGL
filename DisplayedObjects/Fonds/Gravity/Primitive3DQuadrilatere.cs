@@ -1,9 +1,4 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using SharpGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
@@ -20,11 +15,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
         public override void dessine(OpenGL gl)
         {
-            if (isVisible(p1,p2,p3,p4))
+            if (isVisible(p1, p2, p3, p4))
             {
                 setAttributes(gl);
                 gl.Begin(OpenGL.GL_QUADS);
-                if (TEXTURE!=null)
+                if (TEXTURE != null)
                 {
                     gl.TexCoord(0.0f, 1.0f); gl.Vertex(p1.tabd);
                     gl.TexCoord(0.0f, 0.01f); gl.Vertex(p2.tabd);

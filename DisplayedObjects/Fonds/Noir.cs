@@ -6,25 +6,23 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
-using System;
-using System.Drawing;
-using System.Collections.Generic;
 using SharpGL;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-	/// <summary>
-	/// Description of Noir.
-	/// </summary>
-	public class Noir: Couleur
-	{
-		public Noir(OpenGL gl, int Cx, int Cy): base( gl, Cx, Cy)
-		{
-		}
+    /// <summary>
+    /// Description of Noir.
+    /// </summary>
+    public class Noir : Couleur
+    {
+        public Noir(OpenGL gl, int Cx, int Cy) : base(gl, Cx, Cy)
+        {
+        }
 
         protected override Color getCouleur(Color couleur)
         {
-            return Color.Black ;
+            return Color.Black;
         }
     }
 }

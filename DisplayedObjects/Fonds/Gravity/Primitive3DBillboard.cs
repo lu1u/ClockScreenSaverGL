@@ -1,13 +1,9 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
-    sealed public class Primitive3DBillboard: Primitive3D
+    sealed public class Primitive3DBillboard : Primitive3D
     {
         double _taille;
         public Primitive3DBillboard(OpenGL gl, Vecteur3Ddbl position, double taille) : base(position)

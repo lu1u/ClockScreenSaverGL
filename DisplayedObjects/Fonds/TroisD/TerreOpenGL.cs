@@ -2,15 +2,13 @@
  * Affiche une mappemonde
  */
 
-using System;
-using System.Drawing;
+using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using SharpGL.SceneGraph.Quadrics;
-using SharpGL.SceneGraph.Evaluators;
-using System.Windows.Forms;
-using ClockScreenSaverGL.Config;
-using System.Threading.Tasks;
+using System;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
@@ -18,20 +16,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         #region Parametres
         const string CAT = "TerreOpenGl";
-		CategorieConfiguration c;
-		int NB_TRANCHES;
-		int NB_MERIDIENS;
-		float VITESSE;
-		float LONGITUDE_DRAPEAU;
-		float LATITUDE_DRAPEAU;
-		int DETAILS_DRAPEAU;
+        CategorieConfiguration c;
+        int NB_TRANCHES;
+        int NB_MERIDIENS;
+        float VITESSE;
+        float LONGITUDE_DRAPEAU;
+        float LATITUDE_DRAPEAU;
+        int DETAILS_DRAPEAU;
         #endregion
 
-        Texture _textureTerre = new Texture();
+        TextureAsynchrone _tA;
         Sphere _sphere = new Sphere();
 
         float _rotation = 270;
-		float[] _zDrapeau;
+        float[] _zDrapeau;
         int _frame = 0;
         /// <summary>
         /// Constructeur: preparer les objets OpenGL
@@ -39,8 +37,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="gl"></param>
         public TerreOpenGL(OpenGL gl) : base(gl)
         {
-			getConfiguration();
-            _textureTerre.Create(gl, c.getParametre( "Terre", Config.Configuration.getImagePath( "terre.png" ) ) );
+            getConfiguration();
+            //_textureTerre.Create(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
+            _tA = new TextureAsynchrone(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;
@@ -51,30 +50,30 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _sphere.TextureCoords = true;
             _sphere.Transformation.RotateX = -90;
 
-			_zDrapeau = new float[DETAILS_DRAPEAU];
-			for (int i = 0; i < DETAILS_DRAPEAU; i++)
+            _zDrapeau = new float[DETAILS_DRAPEAU];
+            for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 _zDrapeau[i] = 0.002f * (float)Math.Sin(i * 4.0 * Math.PI / DETAILS_DRAPEAU);
-            
+
         }
 
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				NB_TRANCHES = c.getParametre("NbTranches", 64);
-				NB_MERIDIENS = c.getParametre("NbMeridiens", 64);
-				VITESSE = c.getParametre("Vitesse", 5f);
-				LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, (a) => { LONGITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Longitude du drapeau + correction en fonction de la texture
-				LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, (a) => { LATITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Latitude du drapeau
-				DETAILS_DRAPEAU = c.getParametre("Details drapeau", 10);
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                NB_TRANCHES = c.getParametre("NbTranches", 64);
+                NB_MERIDIENS = c.getParametre("NbMeridiens", 64);
+                VITESSE = c.getParametre("Vitesse", 5f);
+                LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, (a) => { LONGITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Longitude du drapeau + correction en fonction de la texture
+                LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, (a) => { LATITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Latitude du drapeau
+                DETAILS_DRAPEAU = c.getParametre("Details drapeau", 10);
+            }
             return c;
         }
         public override void Dispose()
         {
             base.Dispose();
-            _textureTerre?.Destroy(_gl);
+            //_textureTerre?.Destroy(_gl);
             _sphere.DestroyInContext(_gl);
         }
 
@@ -90,6 +89,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
+            if (!_tA.Pret)
+                return;
+
             float[] lcol = { 1, 1, 1, 1 };
             gl.ClearColor(0, 0, 0, 0);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
@@ -99,9 +101,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.CullFace(OpenGL.GL_BACK);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-            //gl.Enable(OpenGL.GL_DEPTH);
-            //gl.Enable(OpenGL.GL_DEPTH_TEST);
-            
+
             setGlobalMaterial(gl, couleur);
 
             // Rotations, translation
@@ -114,7 +114,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             //gl.Color(col);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
-            _textureTerre.Bind(gl);
+            _tA.texture.Bind(gl);
             _sphere.PushObjectSpace(gl);
             _sphere.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             _sphere.PopObjectSpace(gl);
@@ -140,20 +140,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 gl.Begin(OpenGL.GL_QUAD_STRIP);
                 for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 {
-                    gl.Normal(0,_zDrapeau[i],  0);
+                    gl.Normal(0, _zDrapeau[i], 0);
                     gl.Vertex(1.15f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                     gl.Vertex(1.19f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                 }
                 gl.End();
             }
-            
+
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
 
-        
+
         /// <summary>
         /// Faire tourner le globe
         /// </summary>

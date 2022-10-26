@@ -1,10 +1,6 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
@@ -20,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         TimerIsole _timer;
         int _nbBras;
 
-        public EmetteurGalaxie(float taille, float vitesseAngle, float vitesseParticule, int nbBras )
+        public EmetteurGalaxie(float taille, float vitesseAngle, float vitesseParticule, int nbBras)
         {
             traj = new TrajectoireDiagonale(
                 DisplayedObject.FloatRandom(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MAX_X) * 0.9f,
@@ -38,8 +34,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             angle += _vitesseAngle * maintenant.intervalleDepuisDerniereFrame;
             // Ajouter une particule ?            
             if (_timer.Ecoule())
-                for ( int i = 0; i < _nbBras;i++)
-                    Ajoute(s, angle + ((double)i*(Math.PI*2.0)/(double)_nbBras), maintenant.totalMilliSecondes, couleur);
+                for (int i = 0; i < _nbBras; i++)
+                    Ajoute(s, angle + ((double)i * (Math.PI * 2.0) / (double)_nbBras), maintenant.totalMilliSecondes, couleur);
         }
 
         private void Ajoute(SystemeParticules2D.SystemeParticules2D s, double angleBras, double maintenant, Color couleur)

@@ -1,9 +1,5 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 {
@@ -23,10 +19,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
         TimerIsole _timer = new TimerIsole(10);
 
-        public EmetteurFusee(float taille, float vitesseAngle,float vitesseParticule, float vitesseFusee)
+        public EmetteurFusee(float taille, float vitesseAngle, float vitesseParticule, float vitesseFusee)
         {
             _vitesseAngle = vitesseAngle * DisplayedObject.FloatRandom(0.5f, 2.0f) * DisplayedObject.SigneRandom();
-            _taille = taille * DisplayedObject.FloatRandom(0.5f, 1.5f) ;
+            _taille = taille * DisplayedObject.FloatRandom(0.5f, 1.5f);
             _vitesseParticule = vitesseParticule;
             _vitesse = vitesseFusee;
             _angle = DisplayedObject.FloatRandom(0, (float)Math.PI * 2) * DisplayedObject.SigneRandom();
@@ -35,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
         }
         public override void Deplace(SystemeParticules2D s, Temps maintenant, Color couleur)
         {
-            _pX += (float)Math.Sin(_angle) * _vitesse * maintenant.intervalleDepuisDerniereFrame ;
+            _pX += (float)Math.Sin(_angle) * _vitesse * maintenant.intervalleDepuisDerniereFrame;
             _pY += (float)Math.Cos(_angle) * _vitesse * maintenant.intervalleDepuisDerniereFrame;
             _angle += _vitesseAngle * maintenant.intervalleDepuisDerniereFrame;
             DisplayedObject.Varie(ref _vitesseAngle, -4, 4, 25, maintenant.intervalleDepuisDerniereFrame);
@@ -66,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 _angle += (float)Math.PI;
 
             // Ajouter une particule ?            
-            if( _timer.Ecoule())
+            if (_timer.Ecoule())
             {
                 int indice = s.FindUnusedParticle();
                 s._particules[indice].x = _pX;
@@ -87,7 +83,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 s._particules[indice].active = true;
             }
 
-            
+
         }
     }
 

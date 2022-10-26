@@ -1,10 +1,9 @@
-﻿using System;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using SharpGL;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.Config;
-using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -22,11 +21,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float TAILLE_Y;
         private float FORCE;
         private float AMORTISSEMENT;
+        private float CHANGE_COULEUR;
         private readonly Triangle[] _triangles;
         private readonly float MIN_X = 0.0f;
         private readonly float MAX_X = 1.0f;
         private readonly float MIN_Y = 0.0f;
         private readonly float MAX_Y = 0.7f;
+
         private int NB_PLUS_PROCHES = 3;
         private int indicePointEnCours = 0;
         private class Triangle
@@ -36,11 +37,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             public float _vx;
             public float _vy;
             public List<Distance> _plusProches;
+            public float changeCouleur;
             public Triangle(float x, float y)
             {
                 _x = x;
                 _y = y;
                 _plusProches = new List<Distance>();
+                changeCouleur = FloatRandom(-1.0f, 1.0f);
             }
         }
         private class Distance
@@ -69,6 +72,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 LARGEUR_LIGNE = c.getParametre("Largeur lignes", 2.0f, a => { LARGEUR_LIGNE = (float)Convert.ToDouble(a); });
                 TAILLE_X = c.getParametre("Taille X", 0.0005f, a => { TAILLE_X = (float)Convert.ToDouble(a); });
                 TAILLE_Y = c.getParametre("Taille Y", 0.0005f, a => { TAILLE_Y = (float)Convert.ToDouble(a); });
+                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -103,11 +107,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Disable(OpenGL.GL_ALPHA_TEST);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Color(couleur.R, couleur.G, couleur.B, (byte)255);
 
             using (new Viewport2D(gl, MIN_X, MIN_Y, MAX_X, MAX_Y))
             {
                 // Points de reference
+                gl.Color(couleur.R, couleur.G, couleur.B, (byte)255);
                 gl.Begin(OpenGL.GL_QUADS);
                 foreach (Triangle p in _triangles)
                 {
@@ -122,23 +126,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Enable(OpenGL.GL_BLEND);
 
                 // Polygones
-                foreach (Triangle p in _triangles)
+                Color cG = Color.FromArgb(64, couleur.R, couleur.G, couleur.B);
+                foreach (Triangle o in _triangles)
                 {
-                    gl.Color(couleur.R, couleur.G, couleur.B, (byte)64);
+                    setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
                     gl.Begin(OpenGL.GL_TRIANGLE_FAN);
-                    gl.Vertex(p._x, p._y);
-                    for (int i = 0; i < p._plusProches.Count; i++)
-                        gl.Vertex(_triangles[p._plusProches[i]._indice]._x, _triangles[p._plusProches[i]._indice]._y);
+                    gl.Vertex(o._x, o._y);
+                    for (int i = 0; i < o._plusProches.Count; i++)
+                        gl.Vertex(_triangles[o._plusProches[i]._indice]._x, _triangles[o._plusProches[i]._indice]._y);
                     gl.End();
                 }
 
                 // Bords des polygones
                 gl.LineWidth(LARGEUR_LIGNE);
+                gl.Color(couleur.R, couleur.G, couleur.B, (byte)255);
                 using (new PolygonMode(gl, OpenGL.GL_LINE, LARGEUR_LIGNE))
                 {
                     foreach (Triangle p in _triangles)
                     {
-                        gl.Color(couleur.R, couleur.G, couleur.B, (byte)255);
                         gl.Begin(OpenGL.GL_LINE_LOOP);
 
                         gl.Vertex(p._x, p._y);
@@ -162,15 +167,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             // Deplace les points
             foreach (Triangle p in _triangles)
             {
-                //Varie(ref p._vx, -1, 1, 0.01f, maintenant.intervalleDepuisDerniereFrame);
-                //Varie(ref p._vy, -1, 1, 0.01f, maintenant.intervalleDepuisDerniereFrame);
                 Vecteur2D v = new Vecteur2D(p._x, p._y);
                 // Essayer de garder la bonne distance de chaque point connecté
-                foreach( Distance d in p._plusProches)
+                foreach (Distance d in p._plusProches)
                 {
                     Vecteur2D v2 = new Vecteur2D(_triangles[d._indice]._x, _triangles[d._indice]._y);
                     Vecteur2D diff = v - v2;
-                    float distance = DISTANCE_CIBLE - diff.Longueur() ;
+                    float distance = DISTANCE_CIBLE - diff.Longueur();
                     diff.Normalize();
                     diff.multiplier_par(distance * FORCE);
                     p._vx += diff.x;

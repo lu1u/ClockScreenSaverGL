@@ -53,7 +53,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
                 PointF per1, per2, per3, per4;
 
-                calculePerpendiculaires(p1, p2, Size,  out per1, out per2, out per3, out per4);
+                calculePerpendiculaires(p1, p2, Size, out per1, out per2, out per3, out per4);
                 gl.Vertex(per1.X, per1.Y);
                 gl.Vertex(per2.X, per2.Y);
                 gl.Vertex(per3.X, per3.Y);

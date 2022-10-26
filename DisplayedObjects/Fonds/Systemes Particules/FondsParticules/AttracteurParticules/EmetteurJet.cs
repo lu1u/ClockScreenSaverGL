@@ -1,17 +1,13 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurJet: Emetteur2D
+    class EmetteurJet : Emetteur2D
     {
-        readonly int NB_PARTICULES =1000;
-        
-        static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y, 
+        readonly int NB_PARTICULES = 1000;
+
+        static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y,
             SystemeParticules2D.SystemeParticules2D.LARGEUR, SystemeParticules2D.SystemeParticules2D.HAUTEUR);
         static SizeF tailleEmetteur = new SizeF(0.2f, 0.2f);
         float _taille;
@@ -50,14 +46,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                     s._particules[indice]._couleur[0] = couleur.R / 512.0f;
                     s._particules[indice]._couleur[1] = couleur.G / 512.0f;
                     s._particules[indice]._couleur[2] = couleur.B / 512.0f;
-                    s._particules[indice]._couleur[3] = 1 ;
+                    s._particules[indice]._couleur[3] = 1;
                     s._particules[indice]._couleurIndividuelle = true;
                 }
                 s._trier = true;
             }
         }
 
-        
+
     }
 
 

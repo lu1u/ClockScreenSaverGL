@@ -2,36 +2,35 @@
 using SharpGL;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
     class BoidsPoissons : Boids
     {
         const String CAT = "Boids Poissons";
-		static CategorieConfiguration c;
+        static CategorieConfiguration c;
 
-		int NB;
-		float FOG_DENSITY;
+        int NB;
+        float FOG_DENSITY;
 
-        readonly float HAUTEUR_CORPS ;
-        readonly float LONGUEUR_TETE ;
+        readonly float HAUTEUR_CORPS;
+        readonly float LONGUEUR_TETE;
         readonly float LONGUEUR_CORPS;
         readonly float LONGUEUR_QUEUE;
-		readonly float HAUTEUR_QUEUE;
+        readonly float HAUTEUR_QUEUE;
 
 
         public BoidsPoissons(OpenGL gl) : base(gl)
         {
-			getConfiguration();
-			HAUTEUR_CORPS = 0.5f * TAILLE;
-			LONGUEUR_TETE = 0.75f * TAILLE;
-			LONGUEUR_CORPS = 1.25f * TAILLE;
-			LONGUEUR_QUEUE = -0.35f * TAILLE;
-			HAUTEUR_QUEUE = 0.35f * TAILLE;
-			NB_BOIDS = NB;	 
+            getConfiguration();
+            HAUTEUR_CORPS = 0.5f * TAILLE;
+            LONGUEUR_TETE = 0.75f * TAILLE;
+            LONGUEUR_CORPS = 1.25f * TAILLE;
+            LONGUEUR_QUEUE = -0.35f * TAILLE;
+            HAUTEUR_QUEUE = 0.35f * TAILLE;
+            NB_BOIDS = NB;
 
-			LIGHTPOS[0] = 0;
+            LIGHTPOS[0] = 0;
             LIGHTPOS[1] = MAX_Y;
             LIGHTPOS[0] = 0;
         }
@@ -47,19 +46,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
 
-				NB = c.getParametre("Nb", 400);
-				FOG_DENSITY = c.getParametre("Fog density", 0.015f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-				MAX_SPEED = c.getParametre("Max Speed", 0.95f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
-				MAX_FORCE = c.getParametre("Max force", 0.011f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
-				TAILLE = c.getParametre("Taille", 0.17f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
-				DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
-				SEPARATION = c.getParametre("Separation", 3.7f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
-				VITESSE_ANIMATION = c.getParametre("Vitesse animation", 0.9f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
-			}
+                NB = c.getParametre("Nb", 400);
+                FOG_DENSITY = c.getParametre("Fog density", 0.015f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                MAX_SPEED = c.getParametre("Max Speed", 0.95f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
+                MAX_FORCE = c.getParametre("Max force", 0.011f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
+                TAILLE = c.getParametre("Taille", 0.17f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
+                DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
+                SEPARATION = c.getParametre("Separation", 3.7f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
+                VITESSE_ANIMATION = c.getParametre("Vitesse animation", 0.9f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
+            }
             return c;
         }
 
@@ -73,9 +72,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         {
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
 
-           /* gl.Translate(0, 0, -MAX_Z * 1.5f);
-            gl.Rotate(_angleCamera, _angleCamera, _angleCamera);
-            */
+            /* gl.Translate(0, 0, -MAX_Z * 1.5f);
+             gl.Rotate(_angleCamera, _angleCamera, _angleCamera);
+             */
             gl.Disable(OpenGL.GL_ALPHA_TEST);
             gl.Disable(OpenGL.GL_CULL_FACE);
             gl.Disable(OpenGL.GL_BLEND);
@@ -113,7 +112,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 Vecteur3D.X.Normal(gl); gl.Vertex(LONGUEUR_TETE, TAILLE * -0.05f, 0);
             }
             gl.End();
-            
+
             gl.Begin(OpenGL.GL_TRIANGLE_FAN);
             {
                 // Corps Gauche
@@ -140,20 +139,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         protected override Boid newBoid()
         {
-			return new BoidPoisson(FloatRandom(-MAX_X, MAX_X), FloatRandom(-MAX_Y, MAX_Y), FloatRandom(-MAX_Z, MAX_Z), TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE);
+            return new BoidPoisson(FloatRandom(-MAX_X, MAX_X), FloatRandom(-MAX_Y, MAX_Y), FloatRandom(-MAX_Z, MAX_Z), TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE);
         }
 
         protected class BoidPoisson : Boid
         {
-			float TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE ;
-			public BoidPoisson(float x, float y, float z, float taille, float longueurTete, float hauteurCorps, float longueurCorps, float longueurQueue, float hauteurQueue ) : base(x, y, z)
+            float TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE;
+            public BoidPoisson(float x, float y, float z, float taille, float longueurTete, float hauteurCorps, float longueurCorps, float longueurQueue, float hauteurQueue) : base(x, y, z)
             {
-				TAILLE = taille;
-				LONGUEUR_TETE = longueurTete;
-				LONGUEUR_CORPS = longueurCorps;
-				HAUTEUR_CORPS = hauteurCorps;
-				LONGUEUR_QUEUE = longueurQueue;
-				HAUTEUR_QUEUE = hauteurQueue;
+                TAILLE = taille;
+                LONGUEUR_TETE = longueurTete;
+                LONGUEUR_CORPS = longueurCorps;
+                HAUTEUR_CORPS = hauteurCorps;
+                LONGUEUR_QUEUE = longueurQueue;
+                HAUTEUR_QUEUE = hauteurQueue;
             }
 
             public override void dessine(OpenGL gl)

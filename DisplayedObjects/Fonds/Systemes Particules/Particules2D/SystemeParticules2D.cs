@@ -10,7 +10,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 {
     public abstract class SystemeParticules2D : Fond, IDisposable
     {
-        public  int NB_MAX_PARTICULES = 50000;
+        public int NB_MAX_PARTICULES = 50000;
         readonly float SEUIL_ALPHA = 0.005f;
         public const uint PARTICULES_BLEND_NORMAL = OpenGL.GL_ONE_MINUS_SRC_ALPHA;
         public const uint PARTICULES_BLEND_ADDITIVE = OpenGL.GL_ONE;
@@ -51,8 +51,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
         {
             get { return _nbImages; }
             private set { _nbImages = value; }
-        } 
-        
+        }
+
         // Nombres d'images differentes contenues dans la texture
         public uint AttributBlend
         {
@@ -82,8 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
         public SystemeParticules2D(OpenGL gl) : base(gl)
         {
-			getConfiguration();
-            //NB_MAX_PARTICULES = NbMaxParticules;
+            getConfiguration();
             _particules = new Particule2D[NB_MAX_PARTICULES];
             for (int i = 0; i < NB_MAX_PARTICULES; i++)
                 _particules[i] = new Particule2D();
@@ -175,7 +174,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 col[2] = couleur.B / 256.0f;
             }
 
-            col[3] = 1.0f;
+            col[3] = couleur.A / 256.0f;
 
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);

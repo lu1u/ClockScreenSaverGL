@@ -21,12 +21,12 @@ namespace ClockScreenSaverGL
     {
         private int _ageLune = -1;
         DateTime _maintenant;
-		byte ALPHA_AIGUILLES;
+        byte ALPHA_AIGUILLES;
 
-		public Lune(byte alpha)
-		{
-			ALPHA_AIGUILLES = alpha;
-		}
+        public Lune(byte alpha)
+        {
+            ALPHA_AIGUILLES = alpha;
+        }
         private static int JulianDate(int d, int m, int y)
         {
             int mm, yy;
@@ -92,8 +92,8 @@ namespace ClockScreenSaverGL
             int lune = (int)Math.Round(CalcMoonAge(_maintenant) / 29.530588853 * 26);
 
             string nomFichier = Path.Combine(Config.Configuration.getImagesDirectory() + "\\Lunes");
-			nomFichier += "\\Lune" + lune.ToString("D2") + ".png";
-			Image bmp = Image.FromFile(nomFichier);
+            nomFichier += "\\Lune" + lune.ToString("D2") + ".png";
+            Image bmp = Image.FromFile(nomFichier);
             //switch (lune)
             //{
             //    case 0: bmp = Ressources.Lune00; break;

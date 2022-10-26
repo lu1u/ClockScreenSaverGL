@@ -1,9 +1,8 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using System;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -82,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="gl"></param>
         /// <returns></returns>
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
             _timerTrace = new TimerIsole(DELAI_TRACE, true);
             _nbSegments = r.Next(NBMIN_SEGMENTS, NBMAX_SEGMENTS + 1);
@@ -192,7 +191,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                 // Dessine les segments traceurs
                 PointF[] p = getMultilinePolygon();
-                gl.Color(1.0f*ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT);
+                gl.Color(1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT);
                 gl.Begin(OpenGL.GL_TRIANGLES);
                 for (int i = 0; i < _nbSegments; i++)
                 {
@@ -238,7 +237,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     for (int i = 0; i < _nbTraces; i++)
                     {
-                        gl.Color( 1.0f, 1.0f, 1.0f, (float)i / (float)_nbTraces);
+                        gl.Color(1.0f, 1.0f, 1.0f, (float)i / (float)_nbTraces);
                         //gl.Color(_couleurs[i].R/255.0f, _couleurs[i].G/255.0f, _couleurs[i].B/255.0f, (float)i / (float)_nbTraces);
                         gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
@@ -347,7 +346,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
         public override String DumpRender()
         {
-            string res = base.DumpRender() + " Nb Traces:" + _nbTraces ;
+            string res = base.DumpRender() + " Nb Traces:" + _nbTraces;
 
             for (int i = 0; i < _nbSegments; i++)
                 res += ", " + _longueurSegments[i] + "/" + _vitesseSegments[i];

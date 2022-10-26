@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Turing;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
@@ -22,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         protected CategorieConfiguration c;
         private Texture _texture = null;
         private Bitmap _bitmap;
-        Interpolateur _interpolateur ;
+        Interpolateur _interpolateur;
 
         public CategorieConfiguration getConfiguration()
         {
@@ -61,13 +57,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
                     gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
                     _texture.Bind(gl);
-                    float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1.0f -  _interpolateur.interpolationAccelere() };
+                    float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1.0f - _interpolateur.interpolationAccelere() };
                     gl.Color(col);
                     gl.Begin(OpenGL.GL_QUADS);
-                    gl.TexCoord(0, 0.0f); gl.Vertex(-0.5f, 0.5f, 0);
-                    gl.TexCoord(0, 1.0f); gl.Vertex(-0.5f, -0.5f, 0);
-                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(0.5f, -0.5f, 0);
-                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(0.5f, 0.5f, 0);
+                    gl.TexCoord(0, 0.0f); gl.Vertex(-0.25f, 0.25f, 0);
+                    gl.TexCoord(0, 1.0f); gl.Vertex(-0.25f, -0.25f, 0);
+                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(0.25f, -0.25f, 0);
+                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(0.25f, 0.25f, 0);
                     gl.End();
                 }
 
@@ -81,11 +77,11 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _bitmap?.Dispose();
 
             SizeF taille;
-            Font fonte = new Font(FontFamily.GenericSansSerif, 32, FontStyle.Bold, GraphicsUnit.Pixel);
+            Font fonte = new Font(FontFamily.GenericSansSerif, 64, FontStyle.Bold, GraphicsUnit.Pixel);
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 taille = g.MeasureString(message, fonte);
 
-            _bitmap = new Bitmap((int)Math.Max(taille.Width, 600), (int)Math.Max(taille.Height, 600), PixelFormat.Format32bppArgb);
+            _bitmap = new Bitmap((int)Math.Max(taille.Width, 300), (int)Math.Max(taille.Height, 300), PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(_bitmap))
             {

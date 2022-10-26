@@ -21,27 +21,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
         /// <param name="premiere"></param>
         /// <param name="deuxieme"></param>
         /// <param name="intervalle"></param>
-        private void collision(ref Particule2D premiere, ref Particule2D deuxieme, float intervalle )
+        private void collision(ref Particule2D premiere, ref Particule2D deuxieme, float intervalle)
         {
             float sommeTailles = premiere.taille + deuxieme.taille;
             if (abs(premiere.x - deuxieme.x) > sommeTailles || abs(premiere.y - deuxieme.y) > sommeTailles)
                 // Particules eloignees
                 return;
 
-            double distance = calculeDistance(premiere.x, premiere.y, deuxieme.x, deuxieme.y); 
+            double distance = calculeDistance(premiere.x, premiere.y, deuxieme.x, deuxieme.y);
             if (distance > sommeTailles)
                 // Particules eloignees
                 return;
-        
-            double distanceApres = calculeDistance(premiere.x + premiere.vx*intervalle, premiere.y + premiere.vy * intervalle, deuxieme.x + deuxieme.vx * intervalle, deuxieme.y + deuxieme.vy * intervalle);
+
+            double distanceApres = calculeDistance(premiere.x + premiere.vx * intervalle, premiere.y + premiere.vy * intervalle, deuxieme.x + deuxieme.vx * intervalle, deuxieme.y + deuxieme.vy * intervalle);
             if (distanceApres > distance)
                 // Particules deja en eloignement
                 return;
 
-            float vX1 = (premiere.vx * (premiere.taille - deuxieme.taille) +(2.0f * deuxieme.taille * deuxieme.vx)) / (premiere.taille + deuxieme.taille);
-            float vY1 = (premiere.vy * (premiere.taille - deuxieme.taille) +(2.0f * deuxieme.taille * deuxieme.vy)) / (premiere.taille + deuxieme.taille);
-            float vX2 = (deuxieme.vx * (deuxieme.taille - premiere.taille) +(2.0f * premiere.taille * premiere.vx)) / (premiere.taille + deuxieme.taille);
-            float vY2 = (deuxieme.vy * (deuxieme.taille - premiere.taille) +(2.0f * premiere.taille * premiere.vy)) / (premiere.taille + deuxieme.taille);
+            float vX1 = (premiere.vx * (premiere.taille - deuxieme.taille) + (2.0f * deuxieme.taille * deuxieme.vx)) / (premiere.taille + deuxieme.taille);
+            float vY1 = (premiere.vy * (premiere.taille - deuxieme.taille) + (2.0f * deuxieme.taille * deuxieme.vy)) / (premiere.taille + deuxieme.taille);
+            float vX2 = (deuxieme.vx * (deuxieme.taille - premiere.taille) + (2.0f * premiere.taille * premiere.vx)) / (premiere.taille + deuxieme.taille);
+            float vY2 = (deuxieme.vy * (deuxieme.taille - premiere.taille) + (2.0f * premiere.taille * premiere.vy)) / (premiere.taille + deuxieme.taille);
 
             premiere.vx = vX1;
             premiere.vy = vY1;
@@ -57,7 +57,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
         /// <param name="x2"></param>
         /// <param name="y2"></param>
         /// <returns></returns>
-        private double calculeDistance( float x1, float y1, float x2, float y2)
+        private double calculeDistance(float x1, float y1, float x2, float y2)
         {
             return Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
         }

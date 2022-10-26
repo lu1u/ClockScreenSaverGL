@@ -1,15 +1,10 @@
-﻿using System;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.Config;
-using SharpGL;
-using SharpGL.SceneGraph.Assets;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -83,12 +78,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
                 // Dessine le moire
-                using ( Pen p = new Pen( Color.White, LARGEUR_MOIRE))
-                for (int x = 0; x < LARGEUR_BITMAP; x += ECART_MOIRE)
-                {
-                    //g.FillRectangle(Brushes.Yellow, x, 0, LARGEUR_MOIRE, HAUTEUR_BITMAP);
-                    g.DrawLine(p, x, 0, x, HAUTEUR_BITMAP);
-                }
+                using (Pen p = new Pen(Color.White, LARGEUR_MOIRE))
+                    for (int x = 0; x < LARGEUR_BITMAP; x += ECART_MOIRE)
+                    {
+                        //g.FillRectangle(Brushes.Yellow, x, 0, LARGEUR_MOIRE, HAUTEUR_BITMAP);
+                        g.DrawLine(p, x, 0, x, HAUTEUR_BITMAP);
+                    }
             }
 
             _textureMoire = new Texture();

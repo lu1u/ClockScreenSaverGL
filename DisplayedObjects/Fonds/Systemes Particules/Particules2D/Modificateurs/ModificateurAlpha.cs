@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurAlpha: Modificateur
+    class ModificateurAlpha : Modificateur
     {
         const float SEUIL = 0.001f;
         private DateTime _derniere = DateTime.Now;
@@ -17,7 +14,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
             _eliminerSiSeuil = eliminerSiSeuil;
         }
 
-        public override void Applique(SystemeParticules2D s, Temps maintenant )
+        public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             float dAlpha = (_dAlpha) * maintenant.intervalleDepuisDerniereFrame;
             int NbParticules = s._nbParticules;

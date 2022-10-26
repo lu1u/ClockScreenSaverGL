@@ -45,7 +45,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
 
 
-    protected static Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
+        protected static Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
             Vecteur3D v = new Vecteur3D();
             v.x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
@@ -80,37 +80,37 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
         }
 
-		public void dessineAxe(OpenGL gl, float taille)
-		{
-			gl.Begin(OpenGL.GL_LINES);
-			{ // X
-				gl.Color(1.0f, 0.0f, 0.0f, 0.75f);
-				gl.Vertex(0, 0, 0); gl.Vertex(taille, 0, 0);
-				gl.Vertex(taille, 0, 0); gl.Vertex(taille * 0.8f, taille * 0.2f, 0);
-				gl.Vertex(taille, 0, 0); gl.Vertex(taille * 0.8f, taille * -0.2f, 0);
+        public void dessineAxe(OpenGL gl, float taille)
+        {
+            gl.Begin(OpenGL.GL_LINES);
+            { // X
+                gl.Color(1.0f, 0.0f, 0.0f, 0.75f);
+                gl.Vertex(0, 0, 0); gl.Vertex(taille, 0, 0);
+                gl.Vertex(taille, 0, 0); gl.Vertex(taille * 0.8f, taille * 0.2f, 0);
+                gl.Vertex(taille, 0, 0); gl.Vertex(taille * 0.8f, taille * -0.2f, 0);
 
-				gl.Vertex(taille * 1.1, taille * 0.05f, taille * 0.05f); gl.Vertex(taille * 1.1, taille * -0.05f, taille * -0.05f);
-				gl.Vertex(taille * 1.1, taille * 0.05f, taille * -0.05f); gl.Vertex(taille * 1.1, taille * -0.05f, taille * 0.05f);
-			}
-			{ // Y : vert
-				gl.Color(0.0f, 1.0f, 0.0f, 0.75f);
-				gl.Vertex(0, 0, 0); gl.Vertex(0, taille, 0);
-				gl.Vertex(0, taille, 0); gl.Vertex(taille * 0.2f, taille * 0.8f, 0);
-				gl.Vertex(0, taille, 0); gl.Vertex(taille * -0.2f, taille * 0.8f, 0);
-			}
-			{ // Z
-				gl.Color(0.0f, 0.0f, 1.0f, 0.75f);
-				gl.Vertex(0, 0, 0); gl.Vertex(0, 0, taille);
-				gl.Vertex(0, 0, taille); gl.Vertex(taille *  0.2f, 0, taille * 0.8f);
-				gl.Vertex(0, 0, taille); gl.Vertex(taille * -0.2f, 0, taille * 0.8f);
+                gl.Vertex(taille * 1.1, taille * 0.05f, taille * 0.05f); gl.Vertex(taille * 1.1, taille * -0.05f, taille * -0.05f);
+                gl.Vertex(taille * 1.1, taille * 0.05f, taille * -0.05f); gl.Vertex(taille * 1.1, taille * -0.05f, taille * 0.05f);
+            }
+            { // Y : vert
+                gl.Color(0.0f, 1.0f, 0.0f, 0.75f);
+                gl.Vertex(0, 0, 0); gl.Vertex(0, taille, 0);
+                gl.Vertex(0, taille, 0); gl.Vertex(taille * 0.2f, taille * 0.8f, 0);
+                gl.Vertex(0, taille, 0); gl.Vertex(taille * -0.2f, taille * 0.8f, 0);
+            }
+            { // Z
+                gl.Color(0.0f, 0.0f, 1.0f, 0.75f);
+                gl.Vertex(0, 0, 0); gl.Vertex(0, 0, taille);
+                gl.Vertex(0, 0, taille); gl.Vertex(taille * 0.2f, 0, taille * 0.8f);
+                gl.Vertex(0, 0, taille); gl.Vertex(taille * -0.2f, 0, taille * 0.8f);
 
-				gl.Vertex(taille * 0.05f, taille * 0.05f, taille * 1.1); gl.Vertex(taille * -0.05f, taille * -0.05f, taille * 1.1f);
-				gl.Vertex(taille * -0.05f, taille * 0.05f, taille * 1.1); gl.Vertex(taille * 0.05f, taille * 0.05f, taille * 1.1f);
-				gl.Vertex(taille *  -0.05f, taille * -0.05f, taille * 1.1); gl.Vertex(taille * 0.05f, taille * -0.05f, taille * 1.1f);
+                gl.Vertex(taille * 0.05f, taille * 0.05f, taille * 1.1); gl.Vertex(taille * -0.05f, taille * -0.05f, taille * 1.1f);
+                gl.Vertex(taille * -0.05f, taille * 0.05f, taille * 1.1); gl.Vertex(taille * 0.05f, taille * 0.05f, taille * 1.1f);
+                gl.Vertex(taille * -0.05f, taille * -0.05f, taille * 1.1); gl.Vertex(taille * 0.05f, taille * -0.05f, taille * 1.1f);
 
-			}
-			gl.End();
-		}
+            }
+            gl.End();
+        }
 
     }
 

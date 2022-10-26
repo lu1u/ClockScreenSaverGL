@@ -1,9 +1,6 @@
-﻿
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
 using SharpGL;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
@@ -36,16 +33,9 @@ namespace ClockScreenSaverGL.DisplayedObjects
         // </summary>
         // <param name="gl"></param>
         // <returns></returns>
-        public override void Init(OpenGL gl)
+        protected override void Init(OpenGL gl)
         {
-            
-           //Stopwatch w = new Stopwatch();
-           //w.Start();
-           _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
-           //w.Stop();
-           //long l = w.ElapsedMilliseconds;
-           //Debug.WriteLine("Duree createEmptyTexture depuis Transition" + LARGEUR_TEXTURE + "x" + HAUTEUR_TEXTURE + "=" + l + "ms");
-        
+            _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);            
         }
 
         public override CategorieConfiguration getConfiguration()

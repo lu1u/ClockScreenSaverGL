@@ -1,11 +1,8 @@
 ﻿using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL
 {
@@ -29,7 +26,7 @@ namespace ClockScreenSaverGL
         static string getListeCaracteresUniques(string s)
         {
             string res = "";
-            foreach(char c in s)
+            foreach (char c in s)
             {
                 if (res.IndexOf(c) == -1)
                     res += c;
@@ -93,32 +90,32 @@ namespace ClockScreenSaverGL
             return _hauteurSymbole;
         }
 
-        public void drawOpenGL( OpenGL gl, char texte, float X, float Y, float R, float G, float B )
+        public void drawOpenGL(OpenGL gl, char texte, float X, float Y, float R, float G, float B)
         {
             float[] col = { R, G, B, 1.0f };
-            gl.Color( col );
-            gl.PushAttrib( OpenGL.GL_ENABLE_BIT );
-            gl.Enable( OpenGL.GL_TEXTURE_2D );
-            gl.Enable( OpenGL.GL_BLEND );
-            gl.BlendFunc( OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA );
-            _texture.Bind( gl );
+            gl.Color(col);
+            gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            _texture.Bind(gl);
             float XGauche = X;
-            gl.Begin( OpenGL.GL_QUADS );          
+            gl.Begin(OpenGL.GL_QUADS);
 
-                int Indice = getSymboleIndex(texte);
-                if ( Indice != -1 )
-                {
-                    float largeurChiffre = _xCaractere[Indice + 1] - _xCaractere[Indice];
-                    float xTexture = _xCaractere[Indice] / largeurTexture;
-                    float xSuivant = _xCaractere[Indice + 1] / largeurTexture ;
+            int Indice = getSymboleIndex(texte);
+            if (Indice != -1)
+            {
+                float largeurChiffre = _xCaractere[Indice + 1] - _xCaractere[Indice];
+                float xTexture = _xCaractere[Indice] / largeurTexture;
+                float xSuivant = _xCaractere[Indice + 1] / largeurTexture;
 
-                    gl.TexCoord( xTexture, 0.0f ); gl.Vertex( X, Y + _hauteurSymbole );
-                    gl.TexCoord( xTexture, 1.0f ); gl.Vertex( X, Y );
-                    gl.TexCoord( xSuivant, 1.0f ); gl.Vertex( X + largeurChiffre, Y );
-                    gl.TexCoord( xSuivant, 0.0f ); gl.Vertex( X + largeurChiffre, Y + _hauteurSymbole );
+                gl.TexCoord(xTexture, 0.0f); gl.Vertex(X, Y + _hauteurSymbole);
+                gl.TexCoord(xTexture, 1.0f); gl.Vertex(X, Y);
+                gl.TexCoord(xSuivant, 1.0f); gl.Vertex(X + largeurChiffre, Y);
+                gl.TexCoord(xSuivant, 0.0f); gl.Vertex(X + largeurChiffre, Y + _hauteurSymbole);
 
-                    X += largeurChiffre;
-                }
+                X += largeurChiffre;
+            }
             gl.End();
             gl.PopAttrib();
         }
@@ -128,18 +125,18 @@ namespace ClockScreenSaverGL
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, couleur.A / 256.0f };
             gl.Color(col);
             gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
-			gl.Disable(OpenGL.GL_LIGHTING);
-			gl.Disable(OpenGL.GL_COLOR_MATERIAL);
-			gl.Enable(OpenGL.GL_TEXTURE_2D);
-			
-			gl.Enable(OpenGL.GL_BLEND);
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_COLOR_MATERIAL);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+
+            gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             _texture.Bind(gl);
             float XGauche = X;
             gl.Begin(OpenGL.GL_QUADS);
             for (int i = 0; i < texte.Length; i++)
             {
-                if ( texte[i] == '\n')
+                if (texte[i] == '\n')
                 {
                     X = XGauche;
                     Y += Hauteur();
@@ -150,12 +147,12 @@ namespace ClockScreenSaverGL
                 {
                     float largeurChiffre = _xCaractere[Indice + 1] - _xCaractere[Indice];
                     float xTexture = _xCaractere[Indice] / largeurTexture;
-                    float xSuivant = _xCaractere[Indice + 1] / largeurTexture ;
+                    float xSuivant = _xCaractere[Indice + 1] / largeurTexture;
 
-                    gl.TexCoord(xTexture, 0.0f); gl.Vertex(X, Y + _hauteurSymbole,0);
-                    gl.TexCoord(xTexture, 1.0f); gl.Vertex(X, Y,0);
-                    gl.TexCoord(xSuivant , 1.0f); gl.Vertex(X + largeurChiffre, Y,0);
-                    gl.TexCoord(xSuivant , 0.0f); gl.Vertex(X + largeurChiffre, Y + _hauteurSymbole,0);
+                    gl.TexCoord(xTexture, 0.0f); gl.Vertex(X, Y + _hauteurSymbole, 0);
+                    gl.TexCoord(xTexture, 1.0f); gl.Vertex(X, Y, 0);
+                    gl.TexCoord(xSuivant, 1.0f); gl.Vertex(X + largeurChiffre, Y, 0);
+                    gl.TexCoord(xSuivant, 0.0f); gl.Vertex(X + largeurChiffre, Y + _hauteurSymbole, 0);
 
                     X += largeurChiffre;
                 }

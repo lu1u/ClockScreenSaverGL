@@ -99,8 +99,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                     float textCoordDroite = (1.0f / NB_SYMBOLES) * (type + 1);
 
                     gl.TexCoord(textCoordGauche, 1.0f); gl.Vertex(xGauche, -HAUTEUR_RUBAN, 0);
-                    gl.TexCoord(textCoordGauche, 0.0f); gl.Vertex(xGauche, HAUTEUR_RUBAN , 0);
-                    gl.TexCoord(textCoordDroite, 0.0f); gl.Vertex(xDroite, HAUTEUR_RUBAN , 0);
+                    gl.TexCoord(textCoordGauche, 0.0f); gl.Vertex(xGauche, HAUTEUR_RUBAN, 0);
+                    gl.TexCoord(textCoordDroite, 0.0f); gl.Vertex(xDroite, HAUTEUR_RUBAN, 0);
                     gl.TexCoord(textCoordDroite, 1.0f); gl.Vertex(xDroite, -HAUTEUR_RUBAN, 0);
                 }
             }

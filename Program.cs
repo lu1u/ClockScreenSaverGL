@@ -11,15 +11,15 @@ using System.Windows.Forms;
 
 namespace ClockScreenSaverGL
 {
-	/// <summary>
-	/// Class with program entry point.
-	/// </summary>
-	internal sealed class Program
-	{
-		/// <summary>
-		/// Program entry point.
-		/// </summary>
-		[STAThread]
+    /// <summary>
+    /// Class with program entry point.
+    /// </summary>
+    internal sealed class Program
+    {
+        /// <summary>
+        /// Program entry point.
+        /// </summary>
+        [STAThread]
         static void Main(string[] args)
         {
             if (args.Length > 0)
@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL
         {
 
             //loops through all the computer's screens (monitors)
-           // foreach (Screen screen in Screen.AllScreens)
+            // foreach (Screen screen in Screen.AllScreens)
             {
                 /*Rectangle r = screen.Bounds  ;
             	r.Inflate( r.Width / 4, r.Height/4 )  ;

@@ -1,12 +1,11 @@
 ﻿/*
  * Affiche du texte sur une console text a l'ancienne
  */
+using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
 using System.Drawing;
-using SharpGL;
-using ClockScreenSaverGL.Config;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -18,26 +17,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         const string NO_LIGNE = "Numero Ligne";
         const string DEBUT_BALISE = "<<<";
         const string FIN_BALISE = ">>>";
-        public readonly char[] SEPARATOR = {';' };
+        public readonly char[] SEPARATOR = { ';' };
 
         #region Parametres
         public const string CAT = "VielleConsole";
-		private CategorieConfiguration c;
-		int NB_LIGNES	;
-        int NB_COLONNES ;
-		int TAILLE_CHAR;
-        float rR ;
-        float rG ;
-		float rB;
-		int noLigne;
+        private CategorieConfiguration c;
+        int NB_LIGNES;
+        int NB_COLONNES;
+        int TAILLE_CHAR;
+        float rR;
+        float rG;
+        float rB;
+        int noLigne;
         #endregion
 
         private class Caractere
         {
-            public char caractere= ' ' ;
+            public char caractere = ' ';
             public float rR = 1.0f, rG = 1.0f, rB = 1.0f;
             public bool clignotant = false;
-            internal void Affecte( Caractere car)
+            internal void Affecte(Caractere car)
             {
                 caractere = car.caractere;
                 rR = car.rR;
@@ -48,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
 
         OpenGLFonte fonte;
-        Caractere [,] console;
+        Caractere[,] console;
         int curseurX = 0;
         int curseurY = 0;
         TimerIsole timer = new TimerIsole(1);
@@ -56,7 +55,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         bool clignotantEnCours = false;
         string script;
         int posScript = 0;
-        readonly int TAILLE_DEBUT_BALISE = DEBUT_BALISE.Length ;
+        readonly int TAILLE_DEBUT_BALISE = DEBUT_BALISE.Length;
         readonly int TAILLE_FIN_BALISE = FIN_BALISE.Length;
         bool clignotant = false;
 
@@ -64,28 +63,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 		/// Constructeur
 		/// </summary>
 		/// <param name="gl"></param>
-        public VielleConsole( OpenGL gl ) : base( gl )
+        public VielleConsole(OpenGL gl) : base(gl)
         {
-			getConfiguration();
-            script = File.ReadAllText( Configuration.getDataDirectory() + @"\script console.txt" );
-            fonte = new OpenGLFonte( gl, OpenGLFonte.CARACTERES, TAILLE_CHAR, FontFamily.GenericMonospace, FontStyle.Bold );
+            getConfiguration();
+            script = File.ReadAllText(Configuration.getDataDirectory() + @"\script console.txt");
+            fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, TAILLE_CHAR, FontFamily.GenericMonospace, FontStyle.Bold);
             console = new Caractere[NB_LIGNES, NB_COLONNES];
-            for ( int i = 0; i < NB_LIGNES; i++ )
-                for ( int j = 0; j < NB_COLONNES; j++ )
+            for (int i = 0; i < NB_LIGNES; i++)
+                for (int j = 0; j < NB_COLONNES; j++)
                 {
                     console[i, j] = new Caractere();
                 }
 
-            posScript = chercheDebutLigne( noLigne );
+            posScript = chercheDebutLigne(noLigne);
         }
 
-        private int chercheDebutLigne( int noLigne )
+        private int chercheDebutLigne(int noLigne)
         {
             int ligneCourante = 0;
             int pos = 0;
-            while( (pos < script.Length) && (ligneCourante < noLigne))
+            while ((pos < script.Length) && (ligneCourante < noLigne))
             {
-                if ( script[pos] == '\n' )
+                if (script[pos] == '\n')
                     ligneCourante++;
                 pos++;
             }
@@ -95,128 +94,128 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				NB_LIGNES = c.getParametre("NB Lignes", 40);
-				NB_COLONNES = c.getParametre("NB Colonnes", 120);
-				TAILLE_CHAR = c.getParametre("Taille caracteres", 16);
-				rR = c.getParametre("R", 0.5f, a => { rR = (float)Convert.ToDouble(a); });
-				rG = c.getParametre("G", 0.5f, a => { rG = (float)Convert.ToDouble(a); });
-				rB = c.getParametre("B", 0.5f, a => { rB = (float)Convert.ToDouble(a); });
-				noLigne = c.getParametre(NO_LIGNE, 0);
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                NB_LIGNES = c.getParametre("NB Lignes", 40);
+                NB_COLONNES = c.getParametre("NB Colonnes", 120);
+                TAILLE_CHAR = c.getParametre("Taille caracteres", 16);
+                rR = c.getParametre("R", 0.5f, a => { rR = (float)Convert.ToDouble(a); });
+                rG = c.getParametre("G", 0.5f, a => { rG = (float)Convert.ToDouble(a); });
+                rB = c.getParametre("B", 0.5f, a => { rB = (float)Convert.ToDouble(a); });
+                noLigne = c.getParametre(NO_LIGNE, 0);
+            }
             return c;
         }
 
-        public override void AfficheOpenGL( OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur )
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
-            RenderStart( CHRONO_TYPE.RENDER );
+            RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            gl.ClearColor( 0, 0, 0, 1 );
-            gl.Clear( OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT );
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
 
             gl.PushMatrix();
-            gl.MatrixMode( OpenGL.GL_PROJECTION );
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
             gl.LoadIdentity();
-            gl.Ortho2D( 0, NB_COLONNES * TAILLE_CHAR, 0, NB_LIGNES * TAILLE_CHAR );
-            gl.MatrixMode( OpenGL.GL_MODELVIEW );
+            gl.Ortho2D(0, NB_COLONNES * TAILLE_CHAR, 0, NB_LIGNES * TAILLE_CHAR);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
-            gl.Disable( OpenGL.GL_LIGHTING );
-            gl.Disable( OpenGL.GL_DEPTH );
-            gl.Disable( OpenGL.GL_DEPTH_TEST );
-            gl.Disable( OpenGL.GL_ALPHA_TEST );
-            gl.Disable( OpenGL.GL_BLEND );
-            for ( int l = 0; l < NB_LIGNES; l++ )
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Disable(OpenGL.GL_DEPTH_TEST);
+            gl.Disable(OpenGL.GL_ALPHA_TEST);
+            gl.Disable(OpenGL.GL_BLEND);
+            for (int l = 0; l < NB_LIGNES; l++)
             {
-                for ( int c = 0; c < NB_COLONNES; c++ )
-                    if ( console[l, c].caractere != ' ' )
-                        if ( clignotantEnCours || (!console[l,c].clignotant))
-                    {
-                        fonte.drawOpenGL( gl, console[l, c].caractere, c * TAILLE_CHAR, (NB_LIGNES - (l + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2), 
-                            console[l, c].rR * couleur.R/256.0f, 
-                            console[l, c].rG * couleur.G/256.0f, 
-                            console[l, c].rB * couleur.B/256.0f);
-                    }
+                for (int c = 0; c < NB_COLONNES; c++)
+                    if (console[l, c].caractere != ' ')
+                        if (clignotantEnCours || (!console[l, c].clignotant))
+                        {
+                            fonte.drawOpenGL(gl, console[l, c].caractere, c * TAILLE_CHAR, (NB_LIGNES - (l + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2),
+                                console[l, c].rR * couleur.R / 256.0f,
+                                console[l, c].rG * couleur.G / 256.0f,
+                                console[l, c].rB * couleur.B / 256.0f);
+                        }
             }
 
-            if ( clignotantEnCours )
-                fonte.drawOpenGL( gl, "_", curseurX * TAILLE_CHAR, (NB_LIGNES - (curseurY + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2), couleur );
+            if (clignotantEnCours)
+                fonte.drawOpenGL(gl, "_", curseurX * TAILLE_CHAR, (NB_LIGNES - (curseurY + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2), couleur);
 
 
-            gl.MatrixMode( OpenGL.GL_PROJECTION );
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
-            gl.MatrixMode( OpenGL.GL_MODELVIEW );
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
             gl.PopMatrix();
 #if TRACER
-            RenderStop( CHRONO_TYPE.RENDER );
+            RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
 
-        public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 
 #if TRACER
-            RenderStart( CHRONO_TYPE.DEPLACE );
+            RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            base.Deplace( maintenant, tailleEcran );
-            if ( timer.Ecoule() )
+            base.Deplace(maintenant, tailleEcran);
+            if (timer.Ecoule())
             {
                 // Ajoute un caractere
-                if ( posScript >= script.Length )
+                if (posScript >= script.Length)
                 {
                     posScript = 0;
                     noLigne = 0;
-                    c.setParametre( NO_LIGNE, noLigne );
+                    c.setParametre(NO_LIGNE, noLigne);
                 }
 
                 TraiteBalise();
 
-                Ajoute( script[posScript] );
+                Ajoute(script[posScript]);
                 posScript++;
             }
 
-            if ( timerCurseur.Ecoule() )
+            if (timerCurseur.Ecoule())
                 clignotantEnCours = !clignotantEnCours;
 #if TRACER
-            RenderStop( CHRONO_TYPE.DEPLACE );
+            RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
         }
 
         private void TraiteBalise()
         {
-            if ( posScript > script.Length - TAILLE_DEBUT_BALISE + TAILLE_FIN_BALISE )
+            if (posScript > script.Length - TAILLE_DEBUT_BALISE + TAILLE_FIN_BALISE)
                 return;
 
-            if ( script.Substring( posScript ).StartsWith( DEBUT_BALISE ) )
+            if (script.Substring(posScript).StartsWith(DEBUT_BALISE))
             {
-                int  indiceFin = script.IndexOf(FIN_BALISE, posScript+TAILLE_DEBUT_BALISE);
-                if ( indiceFin != -1 )
+                int indiceFin = script.IndexOf(FIN_BALISE, posScript + TAILLE_DEBUT_BALISE);
+                if (indiceFin != -1)
                 {
 
-                    string code = script.Substring(posScript+TAILLE_DEBUT_BALISE, indiceFin-(posScript+TAILLE_DEBUT_BALISE));
+                    string code = script.Substring(posScript + TAILLE_DEBUT_BALISE, indiceFin - (posScript + TAILLE_DEBUT_BALISE));
                     posScript = indiceFin + TAILLE_FIN_BALISE;
-                    string []morceaux = code.Split(SEPARATOR);
-                    if ( morceaux?.Length > 0 )
+                    string[] morceaux = code.Split(SEPARATOR);
+                    if (morceaux?.Length > 0)
                     {
-                        switch ( morceaux[0].ToUpper() )
+                        switch (morceaux[0].ToUpper())
                         {
                             case "COLOR":
-                                if ( morceaux.Length > 3 )
+                                if (morceaux.Length > 3)
                                 {
-                                    rR = (float) Double.Parse( morceaux[1] );
-                                    rG = (float) Double.Parse( morceaux[2] );
-                                    rB = (float) Double.Parse( morceaux[3] );
+                                    rR = (float)Double.Parse(morceaux[1]);
+                                    rG = (float)Double.Parse(morceaux[2]);
+                                    rB = (float)Double.Parse(morceaux[3]);
                                 }
                                 break;
 
                             case "BLINK":
                                 {
-                                    if ( morceaux.Length>1)
-                                        switch( morceaux[1].ToUpper())
+                                    if (morceaux.Length > 1)
+                                        switch (morceaux[1].ToUpper())
                                         {
                                             case "OUI":
                                             case "YES":
@@ -239,24 +238,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private void Scroll()
         {
             // Scroller
-            for ( int i = 0; i < NB_LIGNES - 1; i++ )
-                for ( int j = 0; j < NB_COLONNES; j++ )
+            for (int i = 0; i < NB_LIGNES - 1; i++)
+                for (int j = 0; j < NB_COLONNES; j++)
                     console[i, j].Affecte(console[i + 1, j]);
 
-            for ( int i = 0; i < NB_COLONNES; i++ )
+            for (int i = 0; i < NB_COLONNES; i++)
                 console[NB_LIGNES - 1, i].caractere = ' ';
         }
-        private void Ajoute( char v )
+        private void Ajoute(char v)
         {
-            switch ( v )
+            switch (v)
             {
                 case '\n':
                     curseurX = 0;
                     noLigne++;
-                    c.setParametre( NO_LIGNE, noLigne );
+                    c.setParametre(NO_LIGNE, noLigne);
                     c.flush();
 
-                    if ( curseurY < NB_LIGNES - 1 )
+                    if (curseurY < NB_LIGNES - 1)
                         curseurY++;
                     else
                         Scroll();
@@ -264,12 +263,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                 default:
 
-                    if ( curseurX < NB_COLONNES - 1 )
+                    if (curseurX < NB_COLONNES - 1)
                         curseurX++;
                     else
                     {
                         curseurX = 0;
-                        if ( curseurY < NB_LIGNES - 1 )
+                        if (curseurY < NB_LIGNES - 1)
                             curseurY++;
                         else
                             Scroll();

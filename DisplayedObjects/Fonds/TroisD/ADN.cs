@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
@@ -13,12 +12,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
 
         const String CAT = "ADN";
-		 CategorieConfiguration c;
-		float RAYON_SPHERE;
-		float LONGUEUR_RAYON;
-		int NB_ETAGES;
-		float MIN_Y;
-		float MAX_Y;
+        CategorieConfiguration c;
+        float RAYON_SPHERE;
+        float LONGUEUR_RAYON;
+        int NB_ETAGES;
+        float MIN_Y;
+        float MAX_Y;
 
         private class Etage
         {
@@ -34,7 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         float _angle = 0;
         public ADN(OpenGL gl) : base(gl)
         {
-			getConfiguration();
+            getConfiguration();
             float y = MAX_Y;
             float angle = 0;
             for (int i = 0; i < NB_ETAGES; i++)
@@ -77,18 +76,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public override CategorieConfiguration getConfiguration()
         {
 
-			if ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, (a) => { RAYON_SPHERE = (float)Convert.ToDouble(a); });
-				LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, (a) => { LONGUEUR_RAYON = (float)Convert.ToDouble(a); });
-				NB_ETAGES = c.getParametre("Nb Etages", 20);
-				MIN_Y = c.getParametre("MinY", -18.0f, (a) => { MIN_Y = (float)Convert.ToDouble(a); });
-				MAX_Y = c.getParametre("Max", 18.0f, (a) => { MAX_Y = (float)Convert.ToDouble(a); });
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, (a) => { RAYON_SPHERE = (float)Convert.ToDouble(a); });
+                LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, (a) => { LONGUEUR_RAYON = (float)Convert.ToDouble(a); });
+                NB_ETAGES = c.getParametre("Nb Etages", 20);
+                MIN_Y = c.getParametre("MinY", -18.0f, (a) => { MIN_Y = (float)Convert.ToDouble(a); });
+                MAX_Y = c.getParametre("Max", 18.0f, (a) => { MAX_Y = (float)Convert.ToDouble(a); });
+            }
             return c;
         }
-        public override bool ClearBackGround(OpenGL gl, Color c)
+        public override bool ClearBackGround(OpenGL gl, Color couleur)
         {
             gl.ClearColor(0, 0, 0, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);

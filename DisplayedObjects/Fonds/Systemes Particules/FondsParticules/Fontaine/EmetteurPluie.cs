@@ -1,9 +1,6 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
@@ -34,12 +31,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
                 s._particules[indice].vx = (float)DisplayedObject.FloatRandom(-1f, 1f) * _vitesseX;
                 s._particules[indice].vy = (float)DisplayedObject.FloatRandom(-0f, 2f) * _vitesseY;
-                s._particules[indice].taille = 0.02f ;
+                s._particules[indice].taille = 0.02f;
                 s._particules[indice].textureIndex = r.Next(0, s.nbImages);
                 s._particules[indice].active = true;
 
                 s._trier = true;
-            }            
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             _demarré = false;
         }
 
-        public Interpolateur( int nbMillisecondes)
+        public Interpolateur(int nbMillisecondes)
         {
             _duree = new TimeSpan(0, 0, 0, 0, nbMillisecondes);
             _demarré = false;

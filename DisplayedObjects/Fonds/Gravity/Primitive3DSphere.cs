@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpGL;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using SharpGL;
 using SharpGL.SceneGraph.Quadrics;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
@@ -47,8 +42,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 _sphere.Transformation.RotateX = (float)_rotation.x - 90;
                 _sphere.Transformation.RotateY = (float)_rotation.y;
                 _sphere.Transformation.RotateZ = (float)_rotation.z;
-                _sphere.Slices = (int)(Details*Gravitation.DETAILS);
-                _sphere.Stacks = (int)(Details* Gravitation.DETAILS);
+                _sphere.Slices = (int)(Details * Gravitation.DETAILS);
+                _sphere.Stacks = (int)(Details * Gravitation.DETAILS);
 
                 setAttributes(gl);
 

@@ -1,6 +1,5 @@
 ﻿#region Using directives
 
-using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -14,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ClockScreenSaverGL")]
-[assembly: AssemblyCopyright("Copyright 2015")]
+[assembly: AssemblyCopyright("Copyright 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

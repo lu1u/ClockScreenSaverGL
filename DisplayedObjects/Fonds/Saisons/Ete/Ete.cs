@@ -1,12 +1,11 @@
-﻿using System;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.Config;
-using SharpGL;
-using SharpGL.SceneGraph.Assets;
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 {
     internal class Ete : Fond

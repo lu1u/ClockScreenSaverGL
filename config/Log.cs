@@ -6,7 +6,7 @@ namespace ClockScreenSaverGL.Config
     /// <summary>
     /// Journal de traces
     /// </summary>
-    public class Log 
+    public class Log
     {
         private static Log _instance;
         public const string CAT = "Log";

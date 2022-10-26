@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                             if (dist > (s._particules[i].taille + s._particules[j].taille) * SEUIL)
                             {
                                 // ================================================== Calcul de la distance
-                                float Distance = (float)Math.Sqrt((distX*distX)+(distY*distY));
+                                float Distance = (float)Math.Sqrt((distX * distX) + (distY * distY));
                                 float DistanceCube = Distance * Distance * Distance;
 
                                 if (DistanceCube != 0)
@@ -63,8 +63,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                             {
                                 // Particule rentrent en contact -> fusionnent
                                 float masseTotale = s._particules[i].taille + s._particules[j].taille;
-                                s._particules[i].vx = ((s._particules[i].vx * s._particules[i].taille) + (s._particules[j].vx * s._particules[j].taille)) / masseTotale ;
-                                s._particules[i].vy = ((s._particules[i].vy * s._particules[i].taille) + (s._particules[j].vy * s._particules[j].taille)) / masseTotale ;
+                                s._particules[i].vx = ((s._particules[i].vx * s._particules[i].taille) + (s._particules[j].vx * s._particules[j].taille)) / masseTotale;
+                                s._particules[i].vy = ((s._particules[i].vy * s._particules[i].taille) + (s._particules[j].vy * s._particules[j].taille)) / masseTotale;
                                 s._particules[i].taille = (float)Math.Sqrt((s._particules[i].taille * s._particules[i].taille) + (s._particules[j].taille * s._particules[j].taille));
                                 s._particules[j].active = false;
                             }

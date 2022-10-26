@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
-using ClockScreenSaverGL.Config;
+﻿using ClockScreenSaverGL.Config;
 using SharpGL;
-
+using System;
+using System.Drawing;
 using GLfloat = System.Single;
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
 {
@@ -31,9 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
         public MarchingCubes(OpenGL gl) : base(gl)
         {
             getConfiguration();
-            //initCalculs();
-            //_cubes = Noise.Calc3D(TAILLE_X, TAILLE_Y, TAILLE_Z, 1.0f);
-            _cubes = new float[TAILLE_X, TAILLE_Y, TAILLE_Z];
+             _cubes = new float[TAILLE_X, TAILLE_Y, TAILLE_Z];
 
             PerlinNoise p = new PerlinNoise(TAILLE_X);
             for (int x = 0; x < TAILLE_X; x++)
@@ -53,12 +48,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
         {
             liste = gl.GenLists(1);
             gl.NewList(liste, OpenGL.GL_COMPILE);
-            float tX = 2.0f / TAILLE_X;
-            float tY = 2.0f / TAILLE_Y;
-            float tZ = 2.0f / TAILLE_Z;
-            //gl.Begin(OpenGL.GL_TRIANGLES);
             nbVertex = Generate(gl, _cubes, SEUIL, TAILLE_X, TAILLE_Y, TAILLE_Z);
-            //gl.End();
             gl.EndList();
             changement = false;
         }
@@ -155,13 +145,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
 
         }
 
-        private void dessineCroix(OpenGL gl, Vecteur3D position)
-        {
-            gl.Translate(position.x, position.y, position.z);
-            gl.Begin(OpenGL.GL_LINES);
-            gl.End();
-            gl.Translate(-position.x, -position.y, -position.z);
-        }
 
 
 

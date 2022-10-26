@@ -56,7 +56,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         public void trace(OpenGL gl, Rectangle tailleEcran, float X = 0, float Y = 0)
         {
-            using (Viewport2D v = new Viewport2D(gl, 0, 0, tailleEcran.Width , tailleEcran.Height ))
+            using (Viewport2D v = new Viewport2D(gl, 0, 0, tailleEcran.Width, tailleEcran.Height))
             {
                 gl.Disable(OpenGL.GL_LIGHTING);
                 gl.Disable(OpenGL.GL_DEPTH);

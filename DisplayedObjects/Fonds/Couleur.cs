@@ -6,51 +6,49 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
-using System.Collections.Generic;
-using System.Drawing;
-
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Bandes;
 using SharpGL;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-	/// <summary>
-	/// Description of Couleur.
-	/// </summary>
-	public class Couleur : Fond
+    /// <summary>
+    /// Description of Couleur.
+    /// </summary>
+    public class Couleur : Fond
     {
         const string CAT = "Couleur";
-		protected CategorieConfiguration c;
-		byte _fondCouleur;
+        protected CategorieConfiguration c;
+        byte _fondCouleur;
 
         protected List<Bande> listeObjets = new List<Bande>();
 
-        public Couleur(OpenGL gl, int Cx, int Cy): base(gl)
+        public Couleur(OpenGL gl, int Cx, int Cy) : base(gl)
         {
-			getConfiguration();
+            getConfiguration();
             int CentreX = Cx / 2;
             int CentreY = Cy / 2;
 
-            listeObjets.Add(new Bandes.BandeHorizontale.BandeSeconde( gl, 50, CentreX, CentreY, Cx));
-            listeObjets.Add(new Bandes.BandeHorizontale.BandeMinute( gl, 80, CentreX, CentreY + listeObjets[0]._hauteurFonte * 2, Cx));
-            listeObjets.Add(new Bandes.BandeHorizontale.BandeHeure( gl, 120, CentreX, CentreY + listeObjets[0]._hauteurFonte * 4, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeSeconde(gl, 50, CentreX, CentreY, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeMinute(gl, 80, CentreX, CentreY + listeObjets[0]._hauteurFonte * 2, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeHeure(gl, 120, CentreX, CentreY + listeObjets[0]._hauteurFonte * 4, Cx));
 
             // Bandes verticales
-            listeObjets.Add(new Bandes.BandeVerticale.BandeHeure( gl, 120, CentreY, CentreX, Cx));
-            listeObjets.Add(new Bandes.BandeVerticale.BandeMinute( gl, 80, CentreY, CentreX + listeObjets[3]._hauteurFonte * 2, Cx));
-            listeObjets.Add(new Bandes.BandeVerticale.BandeSeconde( gl, 50, CentreY, CentreX + listeObjets[3]._hauteurFonte * 4, Cx));
+            listeObjets.Add(new Bandes.BandeVerticale.BandeHeure(gl, 120, CentreY, CentreX, Cx));
+            listeObjets.Add(new Bandes.BandeVerticale.BandeMinute(gl, 80, CentreY, CentreX + listeObjets[3]._hauteurFonte * 2, Cx));
+            listeObjets.Add(new Bandes.BandeVerticale.BandeSeconde(gl, 50, CentreY, CentreX + listeObjets[3]._hauteurFonte * 4, Cx));
 
         }
 
         public override CategorieConfiguration getConfiguration()
         {
-			if ( c == null)
-			{
-				c = Configuration.getCategorie(CAT);
-				_fondCouleur = c.getParametre("Valeur", (byte)100);
-			}
+            if (c == null)
+            {
+                c = Configuration.getCategorie(CAT);
+                _fondCouleur = c.getParametre("Valeur", (byte)100);
+            }
             return c;
         }
 
@@ -75,7 +73,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Disable(OpenGL.GL_DEPTH);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Enable(OpenGL.GL_BLEND);
-            
+
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
             gl.LineWidth(4);
@@ -98,7 +96,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             Color c = getCouleur(couleur);
             gl.ClearColor(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1.0f);
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT );
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
             return true;
         }
 

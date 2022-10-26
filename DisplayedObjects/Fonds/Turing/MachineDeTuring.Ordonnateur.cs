@@ -25,7 +25,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         public class Etat
         {
             public Instruction[] _instructions = new Instruction[NB_INSTRUCTIONS];
-            public string _commentaire = "" ;
+            public string _commentaire = "";
         }
 
         private List<string> _fichiers;
@@ -175,7 +175,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         private Etat getEtat(string v)
         {
             Etat etat = new Etat();
-            
+
             string[] e = v.Split('|');
             if (e.Length >= 3)
             {

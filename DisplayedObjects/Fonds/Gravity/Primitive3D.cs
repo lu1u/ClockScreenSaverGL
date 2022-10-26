@@ -1,11 +1,7 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using SharpGL;
+﻿using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
@@ -38,11 +34,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         //////////////////////////////////////////////////////////////////////
         static public double CalculeNiveauDetail(Vecteur3Ddbl Position, double Taille)
         {
-			return 20;
+            return 20;
             //double DistanceCamera = (Position - Gravitation.cameraFrom).Longueur();
             ////const FLOTTANT	RayonVisible	=	(FLOTTANT)(((Taille* Largeur) / DistanceCamera)*cos(DEG_TO_RAD(AngleCamera/2.0)))  ;
             ////return RayonVisible ;
-			//
+            //
             //return (Taille / DistanceCamera) * Gravitation.NIVEAU_DETAIL / DEG_TO_RAD(Gravitation.ANGLE_VISION);
         }
         public static void InitScene(OpenGL gl)
@@ -257,13 +253,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             else
                 gl.Disable(OpenGL.GL_LIGHTING);
 
-			if (CULLFACE)
-			{
-				gl.Enable(OpenGL.GL_CULL_FACE);
-				gl.CullFace(OpenGL.GL_BACK);
-			}
-			else
-				gl.Disable(OpenGL.GL_CULL_FACE);
+            if (CULLFACE)
+            {
+                gl.Enable(OpenGL.GL_CULL_FACE);
+                gl.CullFace(OpenGL.GL_BACK);
+            }
+            else
+                gl.Disable(OpenGL.GL_CULL_FACE);
 
             if (COLOR != null)
             {

@@ -1,5 +1,4 @@
-﻿using ClockScreenSaverGL.Config;
-using SharpGL;
+﻿using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
     {
         public String _nom;
         public Texture texture;
-        public Vecteur3Ddbl _taille ;
+        public Vecteur3Ddbl _taille;
         public float _masse;
         public bool _asDesAnneaux;
         public float _rAnneauInt, _rAnneauExt;
@@ -18,14 +17,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public bool isBillboard;
         private static OpenGL _gl;
         public Material _material;
-        public Modele3D(OpenGL gl, String nom, float rayon, float masse, String texture,  Material material, float rAnneauI, float rAnneauE, String textureAnneau,bool isbb = false)
+        public Modele3D(OpenGL gl, String nom, float rayon, float masse, String texture, Material material, float rAnneauI, float rAnneauE, String textureAnneau, bool isbb = false)
         {
             _nom = nom;
             _gl = gl;
             this.texture = new Texture();
             this.texture.Create(gl, Config.Configuration.getImagePath(texture));
             _material = material;
-            _taille = new Vecteur3Ddbl( rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON);
+            _taille = new Vecteur3Ddbl(rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON);
             _masse = masse;
             if (textureAnneau == null)
             {
@@ -81,29 +80,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
             if (_asDesAnneaux)
             {
-				// Dessine des anneaux
-				//const float Details = 10;
+                // Dessine des anneaux
+                //const float Details = 10;
 
-				int NbTranches = (int)(Primitive3D.CalculeNiveauDetail(Position, _rAnneauExt) / 20.0);
+                int NbTranches = (int)(Primitive3D.CalculeNiveauDetail(Position, _rAnneauExt) / 20.0);
 
                 double angleY = 0;
-                
+
                 for (int i = 0; i < NbTranches; i++)
                 {
                     double Angle = angleY;
-                    double Cos1 =   Math.Cos(Angle);
-                    double Sin1 =   Math.Sin(Angle);
-                    double y1 = Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle- Math.PI/2.0);
+                    double Cos1 = Math.Cos(Angle);
+                    double Sin1 = Math.Sin(Angle);
+                    double y1 = Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle - Math.PI / 2.0);
 
                     double Angle2 = Angle + (float)(Math.PI * 2.0 / (double)NbTranches);
                     double Cos2 = Math.Cos(Angle2);
                     double Sin2 = Math.Sin(Angle2);
-                    double y2 =   Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle2 - Math.PI / 2.0);
+                    double y2 = Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle2 - Math.PI / 2.0);
 
                     Vecteur3Ddbl Point1 = new Vecteur3Ddbl((float)(Sin1 * _rAnneauExt), y1 * _rAnneauExt, (float)(Cos1 * _rAnneauExt));
                     Vecteur3Ddbl Point2 = new Vecteur3Ddbl((float)(Sin2 * _rAnneauExt), y2 * _rAnneauExt, (float)(Cos2 * _rAnneauExt));
                     Vecteur3Ddbl Point3 = new Vecteur3Ddbl((float)(Sin2 * _rAnneauInt), y2 * _rAnneauInt, (float)(Cos2 * _rAnneauInt));
-                    Vecteur3Ddbl Point4 = new Vecteur3Ddbl((float)(Sin1 * _rAnneauInt), y1* _rAnneauInt, (float)(Cos1 * _rAnneauInt));
+                    Vecteur3Ddbl Point4 = new Vecteur3Ddbl((float)(Sin1 * _rAnneauInt), y1 * _rAnneauInt, (float)(Cos1 * _rAnneauInt));
 
                     Point1.additionner(pos);
                     Point2.additionner(pos);

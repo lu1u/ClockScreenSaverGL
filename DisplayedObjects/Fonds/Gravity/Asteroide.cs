@@ -20,10 +20,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         private float maxTaille;
 
         uint _iGenList;
-        
-        public Asteroide(OpenGL gl, float VA, float ax, int t, float rOrbite, float posOrbite, float vOrbite, float rX, float rY, float rZ, int centrale ) : base(gl, VA, ax, t, rOrbite, posOrbite, vOrbite, rX, rY, rZ, centrale )
+
+        public Asteroide(OpenGL gl, float VA, float ax, int t, float rOrbite, float posOrbite, float vOrbite, float rX, float rY, float rZ, int centrale) : base(gl, VA, ax, t, rOrbite, posOrbite, vOrbite, rX, rY, rZ, centrale)
         {
-			rX *= (float)(modeles[_type].tailleMax()) ;
+            rX *= (float)(modeles[_type].tailleMax());
             rY *= (float)(modeles[_type].tailleMax());
             rZ *= (float)(modeles[_type].tailleMax());
             maxTaille = max(rX, max(rY, rZ));
@@ -98,7 +98,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             return rY > rZ ? rY : rZ;
         }
 
-        public override void  addPrimitives(OpenGL gl, List<Primitive3D> primitives)
+        public override void addPrimitives(OpenGL gl, List<Primitive3D> primitives)
         {
             if (Primitive3D.isVisible(_position, maxTaille))
             {
