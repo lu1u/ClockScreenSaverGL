@@ -33,6 +33,9 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const Keys TOUCHE_INVERSER = Keys.I;
         public const Keys TOUCHE_NEGATIF = Keys.N;
         public const Keys TOUCHE_PARTICULES = Keys.P;
+
+        
+
         public const Keys TOUCHE_FIGER_FOND = Keys.T;
         public const Keys TOUCHE_PROCHAIN_FOND = Keys.F;
         public const Keys TOUCHE_FOND_PRECEDENT = Keys.V;
@@ -365,7 +368,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         }
         */
 
-        static protected void DrawBitmapNuance(Graphics g, Image bmp, float x, float y, float l, float h, Color couleur)
+        static public void DrawBitmapNuance(Graphics g, Image bmp, float x, float y, float l, float h, Color couleur)
         {
             float[][] ptsArray =
                 {
@@ -383,6 +386,40 @@ namespace ClockScreenSaverGL.DisplayedObjects
             PointF[] ppt = { new PointF(x, y), new PointF(x + l, y), new PointF(x, y + h) };
             g.DrawImage(bmp, ppt, new RectangleF(0, 0, bmp.Width, bmp.Height), GraphicsUnit.Pixel, imgAttribs);
 
+        }
+
+        public static Bitmap BitmapInvert(Bitmap bOrigine)
+        {
+            Bitmap bmp = new Bitmap(bOrigine.Width, bOrigine.Height, bOrigine.PixelFormat);
+            //get image dimension
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            //negative
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    //get pixel value
+                    Color p = bOrigine.GetPixel(x, y);
+
+                    //extract ARGB value from p
+                    int a = p.A;
+                    int r = p.R;
+                    int g = p.G;
+                    int b = p.B;
+
+                    //find negative value
+                    r = 255 - r;
+                    g = 255 - g;
+                    b = 255 - b;
+
+                    //set new ARGB value in pixel
+                    bmp.SetPixel(x, y, Color.FromArgb(a, r, g, b));
+                }
+            }
+
+            return bmp;
         }
 
         /// <summary>

@@ -163,13 +163,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
             //Bitmap bmp = new Bitmap(_diametre, _diametre, PixelFormat.Format32bppArgb);
             Bitmap bmp = (Bitmap)Bitmap.FromFile(c.getParametre("Cadran", Configuration.getImagePath(REPERTOIRE_HORLOGE + @"\Cadran.png")));
 
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                DessineFondHorloge(g, bmp.Size);
-            }
+            //using (Graphics g = Graphics.FromImage(bmp))
+            //{
+            //    g.SmoothingMode = SmoothingMode.AntiAlias;
+            //    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //    g.TextRenderingHint = TextRenderingHint.AntiAlias;
+            //    DessineFondHorloge(g, bmp.Size);
+            //}
 
             Texture texture = new Texture();
             texture.Create(gl, bmp);

@@ -25,7 +25,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
         }
 
         /// <summary>
-        /// La texture OpenGL doit etre creer dans le thread principal
+        /// La texture OpenGL doit etre créée dans le thread principal
         /// </summary>
         protected override void InitSynchrone()
         {

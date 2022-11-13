@@ -116,7 +116,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     {
                         foreach (LigneActu l in _actuFactory._lignes)
                         {
-                            l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, AFFICHE_DESCRIPTION);
+                            l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU);
                             x += l.largeur;
                             if (x > tailleEcran.Right)
                                 break;

@@ -1,4 +1,5 @@
 ﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Ephemerides;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
@@ -39,9 +40,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         #endregion PARAMETRES ;
 
         private MeteoInfo _meteo;
-        private HorlogeRonde _horloge;
+        //private HorlogeRonde _horloge;
+        private Ephemeride _ephemerides;
+
         private HeureTexte _heureTexte;
-        private DateTexte _dateTexte;
+        //private DateTexte _dateTexte;
 
         private Bitmap _bitmap;
         private Texture _texture = new Texture();
@@ -54,13 +57,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             c = getConfiguration();
             _taille = new SizeF(DIAMETRE_HORLOGE + MARGE_HORLOGE * 2, SystemInformation.VirtualScreen.Height);
             int _X = (int)(tailleEcran.Width - _taille.Width);
-            _horloge = new HorlogeRonde(gl, DIAMETRE_HORLOGE, _X + (_taille.Width - DIAMETRE_HORLOGE) / 2, tailleEcran.Bottom - DIAMETRE_HORLOGE - MARGE_HORLOGE);
-            _horloge.Initialisation(gl);
 
-            _heureTexte = new HeureTexte(gl, _X + MARGE_TEXTE_HEURE, (int)(_horloge._pY - MARGE_HORLOGE - TAILLE_TEXTE_HEURE - MARGE_TEXTE_HEURE), TAILLE_TEXTE_HEURE);
+            _ephemerides = new Ephemeride(45.188529, 5.724524, 14, false);
+            //_horloge = new HorlogeRonde(gl, DIAMETRE_HORLOGE, _X + (_taille.Width - DIAMETRE_HORLOGE) / 2, tailleEcran.Bottom - DIAMETRE_HORLOGE - MARGE_HORLOGE);
+            //_horloge.Initialisation(gl);
+
+            //_heureTexte = new HeureTexte(gl, _X + MARGE_TEXTE_HEURE, (int)(_horloge._pY - MARGE_HORLOGE - TAILLE_TEXTE_HEURE - MARGE_TEXTE_HEURE), TAILLE_TEXTE_HEURE);
+            _heureTexte = new HeureTexte(gl, _X + MARGE_TEXTE_HEURE, tailleEcran.Height -  MARGE_HORLOGE - MARGE_HORLOGE - TAILLE_TEXTE_HEURE - MARGE_TEXTE_HEURE, TAILLE_TEXTE_HEURE);
             _heureTexte.Initialisation(gl);
-            _dateTexte = new DateTexte(gl, _X + MARGE_TEXTE_HEURE, (int)(_heureTexte._trajectoire._Py - TAILLE_TEXTE_HEURE - MARGE_TEXTE_HEURE), TAILLE_TEXTE_DATE);
-            _dateTexte.Initialisation(gl);
+            //_dateTexte = new DateTexte(gl, _X + MARGE_TEXTE_HEURE, (int)(_heureTexte._trajectoire._Py - TAILLE_TEXTE_HEURE - MARGE_TEXTE_HEURE), TAILLE_TEXTE_DATE);
+            //_dateTexte.Initialisation(gl);
             _meteo = new MeteoInfo();
             CreerBitmap(gl);
         }
@@ -68,6 +74,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         protected override void Init(OpenGL gl)
         {
             c = getConfiguration();
+            Bitmap bEphemeride = _ephemerides.getBitmap( 16);
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -128,8 +135,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             }
 
             _heureTexte?.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
-            _dateTexte?.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
-            _horloge?.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+            //_dateTexte?.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+            //_horloge?.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -205,9 +212,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
             _bitmap?.Dispose();
             _meteo?.Dispose();
-            _horloge?.Dispose();
+            //_horloge?.Dispose();
             _heureTexte?.Dispose();
-            _dateTexte?.Dispose();
+            //_dateTexte?.Dispose();
 
             GC.SuppressFinalize(this);
         }

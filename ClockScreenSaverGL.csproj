@@ -171,6 +171,8 @@
     <Compile Include="DisplayedObjects\Console.cs" />
     <Compile Include="DisplayedObjects\DisplayedObject.cs" />
     <Compile Include="DisplayedObjects\DisplayedObjectFactory.cs" />
+    <Compile Include="DisplayedObjects\Ephemerides\Ephemeride.cs" />
+    <Compile Include="DisplayedObjects\Ephemerides\LeverCoucherSoleil.cs" />
     <Compile Include="DisplayedObjects\Fonds\Couleur.cs" />
     <Compile Include="DisplayedObjects\Fonds\Couronnes.cs" />
     <Compile Include="DisplayedObjects\Fonds\Epicycle2.cs" />
@@ -284,12 +286,13 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\Tunnel.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Vecteur3D.cs" />
     <Compile Include="DisplayedObjects\HorlogeRonde.cs" />
-    <Compile Include="DisplayedObjects\Lune.cs" />
+    <Compile Include="DisplayedObjects\Ephemerides\Lune.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\ObjetAsynchrone.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\TextureAsynchrone.cs" />
     <Compile Include="DisplayedObjects\PanneauActualites\Actualites.cs" />
     <Compile Include="DisplayedObjects\PanneauActualites\ActuFactory.cs" />
     <Compile Include="DisplayedObjects\PanneauActualites\LigneActu.cs" />
+    <Compile Include="DisplayedObjects\PanneauInfo2.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\LignePrevisionMeteo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\PanneauInfo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\MeteoInfo.cs" />
@@ -308,7 +311,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenGLFonte.cs" />
+    <Compile Include="DisplayedObjects\OpenGLUtils\OpenGLFonte.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Temps.cs" />

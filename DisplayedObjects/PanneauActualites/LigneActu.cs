@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
@@ -26,9 +27,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         internal static int TAILLE_DESCRIPTION;
         internal static int TAILLE_SOURCE;
         private Bitmap _bitmap;
-
-        private bool initialisationencours = false;
-
+        private bool initTermine = false;
         public LigneActu(string fichier, string image)
         {
             _fichier = fichier;
@@ -36,9 +35,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             _texture = null;
 
             // Charge l'image associee
-            _bitmap = ComputeHeavyOperations();
+            Thread t = new Thread(FonctionThread);
+            t.Start();
         }
 
+        private void FonctionThread()
+        {
+            _bitmap = ComputeHeavyOperations();
+            initTermine = true;
+        }
         internal static float SATURATION_IMAGES;
         internal static int HAUTEUR_BANDEAU;
 
@@ -47,12 +52,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             //_texture?.Destroy(_gl);
         }
 
-        internal void affiche(OpenGL gl, float x, float y, bool afficheDesc)
+        internal void affiche(OpenGL gl, float x, float y)
         {
             if (_texture == null)
             {
+                if (!initTermine)
+                    return;
+
                 CreerTexture(gl);
-                return;
             }
 
             _texture.Bind(gl);
@@ -75,11 +82,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             //if (initialisationencours || _texture != null)
             //    return;
             //
-            if ( _bitmap == null)
-                _bitmap = ComputeHeavyOperations();
             Texture texture = new Texture();
-            texture.Create(gl, _bitmap);
-            _bitmap.Dispose();
+            try
+            {
+                texture.Create(gl, _bitmap);
+                _bitmap.Dispose();
+            }
+            catch(Exception)
+            { }
+
             _bitmap = null;
 
             _texture = texture;
@@ -87,10 +98,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
         private Bitmap ComputeHeavyOperations()
         {
-            if (initialisationencours)
-                return null;
-
-            initialisationencours = true;
             Bitmap bitmap;
 
             string titre, source, description, date;

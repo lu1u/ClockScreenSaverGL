@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL
     public class Lune
     {
         private int _ageLune = -1;
-        DateTime _maintenant;
+        DateTime _maintenant;   
         byte ALPHA_AIGUILLES;
 
         public Lune(byte alpha)
@@ -94,6 +94,7 @@ namespace ClockScreenSaverGL
             string nomFichier = Path.Combine(Config.Configuration.getImagesDirectory() + "\\Lunes");
             nomFichier += "\\Lune" + lune.ToString("D2") + ".png";
             Image bmp = Image.FromFile(nomFichier);
+            return (Bitmap)bmp;
             //switch (lune)
             //{
             //    case 0: bmp = Ressources.Lune00; break;
@@ -124,35 +125,34 @@ namespace ClockScreenSaverGL
             //    case 25: bmp = Ressources.Lune25; break;
             //    default: bmp = Ressources.Lune00; break;
             //}
-            Bitmap bmpRes;
-
-            // Rendre cette bitmap conforme à la transparence de l'horloge
-            if (g != null)
-                bmpRes = new Bitmap(bmp.Width, bmp.Height, g);
-            else
-                bmpRes = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppRgb);
-            using (Graphics gMem = Graphics.FromImage(bmpRes))
-            {
-
-                float[][] ptsArray =
-                {
-                new float[] {1, 0, 0, 0, 0},
-                new float[] {0, 1, 0, 0, 0},
-                new float[] {0, 0, 1, 0, 0},
-                new float[] {0, 0, 0, ALPHA_AIGUILLES/255.0f, 0},
-                new float[] {0, 0, 0, 0, 1}
-            };
-
-                ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
-                ImageAttributes imgAttribs = new ImageAttributes();
-                imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
-
-                gMem.DrawImage(bmp,
-                               new Rectangle(0, 0, (int)(bmp.Width * 0.8f), (int)(bmp.Height * 0.8f)),
-                               0, 0, bmp.Width, bmp.Height,
-                               GraphicsUnit.Pixel, imgAttribs);
-            }
-            return bmpRes;
+            //Bitmap bmpRes;
+            //
+            //// Rendre cette bitmap conforme à la transparence de l'horloge
+            //if (g != null)
+            //    bmpRes = new Bitmap(bmp.Width, bmp.Height, g);
+            //else
+            //    bmpRes = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppRgb);
+            //using (Graphics gMem = Graphics.FromImage(bmpRes))
+            //{
+            //    float[][] ptsArray =
+            //    {
+            //    new float[] {1, 0, 0, 0, 0},
+            //    new float[] {0, 1, 0, 0, 0},
+            //    new float[] {0, 0, 1, 0, 0},
+            //    new float[] {0, 0, 0, ALPHA_AIGUILLES/255.0f, 0},
+            //    new float[] {0, 0, 0, 0, 1}
+            //};
+            //
+            //    ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+            //    ImageAttributes imgAttribs = new ImageAttributes();
+            //    imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
+            //
+            //    gMem.DrawImage(bmp,
+            //                   new Rectangle(0, 0, (int)(bmp.Width * 0.8f), (int)(bmp.Height * 0.8f)),
+            //                   0, 0, bmp.Width, bmp.Height,
+            //                   GraphicsUnit.Pixel, imgAttribs);
+            //}
+            //return bmpRes;
         }
     }
 }

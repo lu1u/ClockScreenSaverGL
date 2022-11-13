@@ -382,7 +382,7 @@ namespace ClockScreenSaverGL
                 _listeObjets.Add(new Citations(gl, this, 200, 200));
 
             _listeObjets.Add(new Actualites(gl));
-            _listeObjets.Add(new PanneauInfos(gl, Bounds));
+            _listeObjets.Add(new PanneauInfo2(gl));
 
             using (var c = new Chronometre("Initialisations"))
             {
