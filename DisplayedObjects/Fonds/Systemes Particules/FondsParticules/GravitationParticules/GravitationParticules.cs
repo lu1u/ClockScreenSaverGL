@@ -9,13 +9,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
     public class GravitationParticules : SystemeParticules2D.SystemeParticules2D
     {
         #region Parametres
-        const string CAT = "GravitationParticules";
-        CategorieConfiguration c;
-
-        int TIMER_CREATE;
-        float G = 0.01f;
-        float MULT_DIST;
-        float VITESSE_RECENTRE;
+        private const string CAT = "GravitationParticules";
+        private CategorieConfiguration c;
+        private int TIMER_CREATE;
+        private float G = 0.01f;
+        private float MULT_DIST;
+        private float VITESSE_RECENTRE;
         #endregion
 
         public GravitationParticules(OpenGL gl) : base(gl)

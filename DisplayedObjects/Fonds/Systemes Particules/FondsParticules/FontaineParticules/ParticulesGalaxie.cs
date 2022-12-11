@@ -6,17 +6,17 @@ using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class ParticulesGalaxie : SystemeParticules2D.SystemeParticules2D, IDisposable
+    internal class ParticulesGalaxie : SystemeParticules2D.SystemeParticules2D, IDisposable
     {
-        const String CAT = "Particules galaxies";
-        CategorieConfiguration c;
-        int NB_EMETTEURS;
-        float ALPHA_MODIFIEUR;
-        float TAILLE_MODIFIEUR;
-        float TAILLE_PARTICULE;
-        float VITESSE_ANGLE;
-        float VITESSE_PARTICULE;
-        Texture[] _texture = new Texture[3];
+        private const String CAT = "Particules galaxies";
+        private CategorieConfiguration c;
+        private int NB_EMETTEURS;
+        private float ALPHA_MODIFIEUR;
+        private float TAILLE_MODIFIEUR;
+        private float TAILLE_PARTICULE;
+        private float VITESSE_ANGLE;
+        private float VITESSE_PARTICULE;
+        private Texture[] _texture = new Texture[3];
 
         public ParticulesGalaxie(OpenGL gl) : base(gl)
         {

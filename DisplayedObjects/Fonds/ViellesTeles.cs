@@ -15,7 +15,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     public class ViellesTeles : Fond
     {
         public const String CAT = "ToTexture";
-        static CategorieConfiguration c;
+        private static CategorieConfiguration c;
         protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
         protected float[] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
         protected float[] COL_SPECULAR = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -27,9 +27,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected float[] LIG_AMBIENT = { 0.5f, 0.5f, 0.5f };
         protected float[] LIG_DIFFUSE = { 1.0f, 1.0f, 1.0f };
         protected float RATIO_COULEUR = 1.0f / 256.0f;
-
-        const int LARGEUR_TEXTURE = 256;
-        const int HAUTEUR_TEXTURE = 256;
+        private const int LARGEUR_TEXTURE = 256;
+        private const int HAUTEUR_TEXTURE = 256;
         protected uint texture = 0;
         protected DisplayedObject _objet;
         protected Texture tv;
@@ -44,8 +43,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 c = Configuration.getCategorie(CAT);
             return c;
         }
-        const int NB_QUADS = 10;
-        List<Quad> quads = new List<Quad>();
+
+        private const int NB_QUADS = 10;
+        private List<Quad> quads = new List<Quad>();
 
         public ViellesTeles(OpenGL gl) : base(gl)
         {

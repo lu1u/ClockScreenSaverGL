@@ -28,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
         public MarchingCubes(OpenGL gl) : base(gl)
         {
             getConfiguration();
-             _cubes = new float[TAILLE_X, TAILLE_Y, TAILLE_Z];
+            _cubes = new float[TAILLE_X, TAILLE_Y, TAILLE_Z];
 
             PerlinNoise p = new PerlinNoise(TAILLE_X);
             for (int x = 0; x < TAILLE_X; x++)

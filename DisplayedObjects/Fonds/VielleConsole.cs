@@ -14,21 +14,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     /// </summary>
     public class VielleConsole : Fond, IDisposable
     {
-        const string NO_LIGNE = "Numero Ligne";
-        const string DEBUT_BALISE = "<<<";
-        const string FIN_BALISE = ">>>";
+        private const string NO_LIGNE = "Numero Ligne";
+        private const string DEBUT_BALISE = "<<<";
+        private const string FIN_BALISE = ">>>";
         public readonly char[] SEPARATOR = { ';' };
 
         #region Parametres
         public const string CAT = "VielleConsole";
         private CategorieConfiguration c;
-        int NB_LIGNES;
-        int NB_COLONNES;
-        int TAILLE_CHAR;
-        float rR;
-        float rG;
-        float rB;
-        int noLigne;
+        private int NB_LIGNES;
+        private int NB_COLONNES;
+        private int TAILLE_CHAR;
+        private float rR;
+        private float rG;
+        private float rB;
+        private int noLigne;
         #endregion
 
         private class Caractere
@@ -46,18 +46,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
-        OpenGLFonte fonte;
-        Caractere[,] console;
-        int curseurX = 0;
-        int curseurY = 0;
-        TimerIsole timer = new TimerIsole(1);
-        TimerIsole timerCurseur = new TimerIsole(200);
-        bool clignotantEnCours = false;
-        string script;
-        int posScript = 0;
-        readonly int TAILLE_DEBUT_BALISE = DEBUT_BALISE.Length;
-        readonly int TAILLE_FIN_BALISE = FIN_BALISE.Length;
-        bool clignotant = false;
+        private OpenGLFonte fonte;
+        private Caractere[,] console;
+        private int curseurX = 0;
+        private int curseurY = 0;
+        private TimerIsole timer = new TimerIsole(1);
+        private TimerIsole timerCurseur = new TimerIsole(200);
+        private bool clignotantEnCours = false;
+        private string script;
+        private int posScript = 0;
+        private readonly int TAILLE_DEBUT_BALISE = DEBUT_BALISE.Length;
+        private readonly int TAILLE_FIN_BALISE = FIN_BALISE.Length;
+        private bool clignotant = false;
 
         /// <summary>
 		/// Constructeur

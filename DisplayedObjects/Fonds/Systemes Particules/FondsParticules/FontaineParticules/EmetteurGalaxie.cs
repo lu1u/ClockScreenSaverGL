@@ -4,17 +4,17 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurGalaxie : Emetteur2D
+    internal class EmetteurGalaxie : Emetteur2D
     {
-        static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y, SystemeParticules2D.SystemeParticules2D.LARGEUR, SystemeParticules2D.SystemeParticules2D.HAUTEUR);
-        static SizeF tailleEmetteur = new SizeF(0.1f, 0.1f);
-        TrajectoireDiagonale traj;
-        float angle = 0;
-        float _taille;
-        float _vitesseAngle;
-        float _vitesseParticule;
-        TimerIsole _timer;
-        int _nbBras;
+        private static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y, SystemeParticules2D.SystemeParticules2D.LARGEUR, SystemeParticules2D.SystemeParticules2D.HAUTEUR);
+        private static SizeF tailleEmetteur = new SizeF(0.1f, 0.1f);
+        private TrajectoireDiagonale traj;
+        private float angle = 0;
+        private float _taille;
+        private float _vitesseAngle;
+        private float _vitesseParticule;
+        private TimerIsole _timer;
+        private int _nbBras;
 
         public EmetteurGalaxie(float taille, float vitesseAngle, float vitesseParticule, int nbBras)
         {
@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             // Ajouter une particule ?            
             if (_timer.Ecoule())
                 for (int i = 0; i < _nbBras; i++)
-                    Ajoute(s, angle + ((double)i * (Math.PI * 2.0) / (double)_nbBras), maintenant.totalMilliSecondes, couleur);
+                    Ajoute(s, angle + (i * (Math.PI * 2.0) / _nbBras), maintenant.totalMilliSecondes, couleur);
         }
 
         private void Ajoute(SystemeParticules2D.SystemeParticules2D s, double angleBras, double maintenant, Color couleur)

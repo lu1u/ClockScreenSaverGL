@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         private string REPERTOIRE_ETE;
         //private int NB_HERBES;
         private int NB_FLARES;
-        int NB_REFLETS;
+        private int NB_REFLETS;
         private float VX_SOLEIL;
         private float VY_SOLEIL;
         private float TAILLE_SOLEIL;
@@ -40,9 +40,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         private float _xSoleil, _ySoleil;
         // Herbes
         private float _vent = 0;
+
         //private List<Herbe> _herbes;
 
-        TimerIsole timer = new TimerIsole(500);
+        private TimerIsole timer = new TimerIsole(500);
 
         // Lens Flares (reflets du soleil sur l'objectif
         private class Flare
@@ -92,7 +93,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             _textureFond.Create(gl, c.getParametre("Fond", Config.Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png")));
             _textureFlares = new Texture();
             _textureFlares.Create(gl, c.getParametre("Flares", Config.Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png")));
-            float ratio = (float)LargeurEcran / (float)HauteurEcran;
+            float ratio = LargeurEcran / (float)HauteurEcran;
             _xSoleil = -ratio;
             _ySoleil = 0;
             Initialise(gl);
@@ -176,7 +177,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 1 };
-            float ratio = (float)tailleEcran.Width / (float)tailleEcran.Height;
+            float ratio = tailleEcran.Width / (float)tailleEcran.Height;
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
             using (new Viewport2D(gl, -ratio, -1.0f, ratio, 1.0f))

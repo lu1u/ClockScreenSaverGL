@@ -18,11 +18,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
     /// </summary>
     public class Neige : Metaballes
     {
-        const string CAT = "NeigeMeta";
+        private const string CAT = "NeigeMeta";
         protected CategorieConfiguration c;
-        float TailleMax, TailleMin, IntensiteMax, IntensiteMin;
-        int NbMax;
-        TimerIsole _timer = new TimerIsole(800);
+        private float TailleMax, TailleMin, IntensiteMax, IntensiteMin;
+        private int NbMax;
+        private TimerIsole _timer = new TimerIsole(800);
 
         public Neige(OpenGL gl, int cx, int cy) : base(gl)
         {

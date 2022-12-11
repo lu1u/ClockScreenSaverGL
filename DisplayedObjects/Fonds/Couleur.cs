@@ -19,9 +19,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     /// </summary>
     public class Couleur : Fond
     {
-        const string CAT = "Couleur";
+        private const string CAT = "Couleur";
         protected CategorieConfiguration c;
-        byte _fondCouleur;
+        private byte _fondCouleur;
 
         protected List<Bande> listeObjets = new List<Bande>();
 

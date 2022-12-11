@@ -4,14 +4,13 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurFeuArtifice : Emetteur2D
+    internal class EmetteurFeuArtifice : Emetteur2D
     {
-        readonly int NB_PARTICULES = 1000;
-
-        static RectangleF bounds = new Rectangle(-1, -1, 2, 2);
-        float _taille;
-        float _vitesseParticule;
-        TimerIsole _timer;
+        private readonly int NB_PARTICULES = 1000;
+        private static RectangleF bounds = new Rectangle(-1, -1, 2, 2);
+        private float _taille;
+        private float _vitesseParticule;
+        private TimerIsole _timer;
 
         public EmetteurFeuArtifice(float taille, float vitesseParticule, int nbParticules)
         {

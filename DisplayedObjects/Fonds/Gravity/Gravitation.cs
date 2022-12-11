@@ -12,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
     internal class Gravitation : ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.TroisD, IDisposable
     {
         public const string CAT = "Gravitation";
-        CategorieConfiguration c;
+        private CategorieConfiguration c;
         public double RAYON_UNIVERS;
         public static double RATIO_RAYON;
         public double RATIO_DISTANCES;

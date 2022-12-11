@@ -23,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
     {
         #region Parametres
         public const string CAT = "Automne.OpenGL";
-        private static CategorieConfiguration c;
+        private CategorieConfiguration c;
 
         private float VITESSE_ROTATION;
         private float PERIODE_ROTATION;
@@ -35,6 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private float DIEDRE_FEUILLE;
         private float NB_FACES_FEUILLES;
         private float CHANGE_COULEUR;
+        private float FOG_DENSITY;
         #endregion
 
         private sealed class Feuille
@@ -90,6 +91,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, (a) => { DIEDRE_FEUILLE = (float)Convert.ToDouble(a); });
                 NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, (a) => { NB_FACES_FEUILLES = (float)Convert.ToDouble(a); });
                 CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                FOG_DENSITY = c.getParametre("Densité brouillard", 0.01f, a => { FOG_DENSITY = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -113,6 +115,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             f.changeCouleur = FloatRandom(-1.0f, 1.0f);
         }
 
+        public override bool ClearBackGround(OpenGL gl, Color couleur)
+        {
+            GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f };
+
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+            gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
+            return true;
+        }
         /// <summary>
         /// Affichage des flocons
         /// </summary>
@@ -126,21 +136,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f };
-            GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f };
+
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
-            gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.Enable(OpenGL.GL_FOG);
             gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_EXP);
-            gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
-            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.02f);
+            GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f }; gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
+            gl.Fog(OpenGL.GL_FOG_DENSITY, FOG_DENSITY);
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ);
-            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ * 10);
+            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ * 2);
 
             gl.LoadIdentity();
             gl.Translate(0, 0, -_zCamera);
@@ -150,17 +158,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            //gl.Color(col);
 
             Color cG = Color.FromArgb(couleur.R, couleur.G, couleur.B, 255);
             _texture.Bind(gl);
             foreach (Feuille o in _feuilles)
             {
                 float largeurTxtr = 1.0f / NB_TYPES_FEUILLES;
-                setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
                 gl.PushMatrix();
                 gl.Translate(o.x, o.y, o.z);
                 gl.Rotate(o.ax, o.ay, o.az);
+                setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
 
                 gl.Begin(OpenGL.GL_QUAD_STRIP);
                 {

@@ -15,7 +15,7 @@ namespace ClockScreenSaverGL
     /// </summary>
     public class Temps
     {
-        const float SEUIL_INTERVAL = 50;
+        private const float SEUIL_INTERVAL = 50;
 
         public DateTime temps;
         public int annee, mois, jourDuMois, jourDeLAnnee;

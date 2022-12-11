@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL
         /// Program entry point.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length > 0)
             {
@@ -65,7 +65,7 @@ namespace ClockScreenSaverGL
         }
 
         //will show the screen saver
-        static void ShowScreensaver()
+        private static void ShowScreensaver()
         {
 
             //loops through all the computer's screens (monitors)

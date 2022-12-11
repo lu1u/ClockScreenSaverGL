@@ -3,10 +3,10 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.Trajectoires
 {
-    class TrajectoireOvale : Trajectoire
+    internal class TrajectoireOvale : Trajectoire
     {
-        const float PI_M_2 = (float)(Math.PI * 2.0);
-        const float PI_SUR_2 = (float)(Math.PI / 2.0);
+        private const float PI_M_2 = (float)(Math.PI * 2.0);
+        private const float PI_SUR_2 = (float)(Math.PI / 2.0);
 
         private float _centreX, _centreY, _rayonX, _rayonY, _vitesseAngulaire, _angle;
 

@@ -6,16 +6,15 @@ using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL
 {
-    class OpenGLFonte : IDisposable
+    internal class OpenGLFonte : IDisposable
     {
         public const String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyzàéèôïöë0123456789,;:!?./*=&é\"'{([-|è`_\\ç^à@)]=}><+";
-
-        readonly OpenGL _gl;
-        readonly string _caracteres;
-        readonly float _hauteurSymbole;
-        Texture _texture;
+        private readonly OpenGL _gl;
+        private readonly string _caracteres;
+        private readonly float _hauteurSymbole;
+        private Texture _texture;
         private float largeurTexture;
-        float[] _xCaractere;            // Coordonnees de chaque caractere dans la bitmap qui sert de texture (+1 element virtuel à droite du dernier caractere)
+        private float[] _xCaractere;            // Coordonnees de chaque caractere dans la bitmap qui sert de texture (+1 element virtuel à droite du dernier caractere)
 
         /// <summary>
         /// Retourne une chaine comportant un fois et une seule tous les caracteres du texte donne en parametre
@@ -23,7 +22,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        static string getListeCaracteresUniques(string s)
+        private static string getListeCaracteresUniques(string s)
         {
             string res = "";
             foreach (char c in s)

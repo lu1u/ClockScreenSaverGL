@@ -5,12 +5,12 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 {
-    class Feuille
+    internal class Feuille
     {
-        static Random r = new Random();
-        const int NB_TYPES_FEUILLES = 2;
-        static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-        static Bitmap _b;
+        private static Random r = new Random();
+        private const int NB_TYPES_FEUILLES = 2;
+        private static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
+        private static Bitmap _b;
         public Vecteur3D Position { get; set; }
         public float _taille;
         private static Texture _texture;

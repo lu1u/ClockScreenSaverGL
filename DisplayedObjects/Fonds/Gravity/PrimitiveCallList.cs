@@ -4,9 +4,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
     public class PrimitiveCallList : Primitive3D
     {
-        uint _callList;
-        Vecteur3Ddbl _rotation;
-        float _rayonMax;
+        private uint _callList;
+        private Vecteur3Ddbl _rotation;
+        private float _rayonMax;
         public PrimitiveCallList(uint CallList, Vecteur3Ddbl position, float rayonMax, Vecteur3Ddbl rotation) : base(position)
         {
             _callList = CallList;

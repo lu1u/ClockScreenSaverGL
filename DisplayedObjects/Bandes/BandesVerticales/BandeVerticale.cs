@@ -58,13 +58,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
                 // Reculer jusqu'à la droite de l'écran
                 while (Y > 0)
                 {
-                    Y -= (float)_largeurCase;
+                    Y -= _largeurCase;
                     val--;
                 }
 
                 // Revenir jusqu'a la gauche de l'ecran
                 while (val < 0)
-                    val += (int)_valeurMax;
+                    val += _valeurMax;
 
                 // Trace les chiffres et marques
                 while (Y < tailleEcran.Height)

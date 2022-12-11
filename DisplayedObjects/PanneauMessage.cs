@@ -9,7 +9,7 @@ using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
-    class PanneauMessage
+    internal class PanneauMessage
     {
         private static PanneauMessage _instance;
 
@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         protected CategorieConfiguration c;
         private Texture _texture = null;
         private Bitmap _bitmap;
-        Interpolateur _interpolateur;
+        private Interpolateur _interpolateur;
 
         public CategorieConfiguration getConfiguration()
         {

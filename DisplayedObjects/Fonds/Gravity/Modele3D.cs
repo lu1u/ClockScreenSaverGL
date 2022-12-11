@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                     double Sin1 = Math.Sin(Angle);
                     double y1 = Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle - Math.PI / 2.0);
 
-                    double Angle2 = Angle + (float)(Math.PI * 2.0 / (double)NbTranches);
+                    double Angle2 = Angle + (float)(Math.PI * 2.0 / NbTranches);
                     double Cos2 = Math.Cos(Angle2);
                     double Sin2 = Math.Sin(Angle2);
                     double y2 = Math.Sin(DEG_TO_RAD(angleX)) * Math.Sin(Angle2 - Math.PI / 2.0);

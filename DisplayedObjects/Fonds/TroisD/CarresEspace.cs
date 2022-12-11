@@ -150,17 +150,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             gl.Translate(0, 0, -_zCamera);
             gl.Rotate(0, 0, vitesseCamera + 90);
-            
+
             Color cG = Color.FromArgb(couleur.R, couleur.G, couleur.B, 255);
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Carre c in _Carres)
             {
                 setColorWithHueChange(gl, cG, c.changeCouleur * CHANGE_COULEUR);
-                
+
                 gl.Vertex(c.x, c.y, c.z);
                 gl.Vertex(c.x, c.y, c.z + TAILLE_CARRE);
-                gl.Vertex(c.x + TAILLE_CARRE,c.y, c.z + TAILLE_CARRE);
-                gl.Vertex(c.x + TAILLE_CARRE,c.y, c.z);
+                gl.Vertex(c.x + TAILLE_CARRE, c.y, c.z + TAILLE_CARRE);
+                gl.Vertex(c.x + TAILLE_CARRE, c.y, c.z);
             }
             gl.End();
 #if TRACER

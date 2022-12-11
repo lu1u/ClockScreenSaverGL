@@ -39,13 +39,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
         #endregion
 
-        Texture _textureCircuit;
+        private Texture _textureCircuit;
 
-        delegate bool AnimationDelegate();
-        AnimationDelegate _animation;
-        Tete _tete;
-        Ruban _ruban;
-        Programme _programme;
+        private delegate bool AnimationDelegate();
+
+        private AnimationDelegate _animation;
+        private Tete _tete;
+        private Ruban _ruban;
+        private Programme _programme;
         public override CategorieConfiguration getConfiguration()
         {
             if (c == null)

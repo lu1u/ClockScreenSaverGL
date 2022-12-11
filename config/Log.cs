@@ -12,9 +12,9 @@ namespace ClockScreenSaverGL.Config
         public const string CAT = "Log";
         private CategorieConfiguration c;
         #region parametres
-        bool LOG_VERBOSE;
-        bool LOG_WARNING;
-        bool LOG_ERROR;
+        private bool LOG_VERBOSE;
+        private bool LOG_WARNING;
+        private bool LOG_ERROR;
         #endregion
 
         /// <summary>

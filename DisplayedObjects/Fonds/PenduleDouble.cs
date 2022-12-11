@@ -7,33 +7,33 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-    class PenduleDouble : Fond, IDisposable
+    internal class PenduleDouble : Fond, IDisposable
     {
         public const float TOUR_COMPLET = (float)(Math.PI * 2.0);
         #region Parametres
         public const string CAT = "Double pendule";
         private CategorieConfiguration c;
-        float TAILLE_LIGNE_SEGMENTS;
-        float ALPHA_SEGMENT;
-        float MIN_LONGUEUR;
-        float MAX_LONGUEUR;
-        float RAYON_TOTAL;
-        float MIN_VITESSE;
-        float MAX_VITESSE;
-        float INTENSITE_FORCE;
-        int NB_MAX_TRACE;
-        int DELAI_TRACE;
-        float TAILLE_LIGNE_TRACES;
-        float TAILLE_PENDULE;
+        private float TAILLE_LIGNE_SEGMENTS;
+        private float ALPHA_SEGMENT;
+        private float MIN_LONGUEUR;
+        private float MAX_LONGUEUR;
+        private float RAYON_TOTAL;
+        private float MIN_VITESSE;
+        private float MAX_VITESSE;
+        private float INTENSITE_FORCE;
+        private int NB_MAX_TRACE;
+        private int DELAI_TRACE;
+        private float TAILLE_LIGNE_TRACES;
+        private float TAILLE_PENDULE;
         #endregion
         private const int NB_PENDULES = 2; // La methode de calcule fonctionne uniquement avec 2 pendules
         private float[] _longueur;
         private float[] _angle;
         private float[] _vitesse;
         private float[] _masse;
-        int _nbTraces;
-        float[] _xTrace;
-        float[] _yTrace;
+        private int _nbTraces;
+        private float[] _xTrace;
+        private float[] _yTrace;
         private TimerIsole _timerTrace;
         private Texture _texture = new Texture();
         /// <summary>
@@ -190,7 +190,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float ratio = (float)tailleEcran.Width / (float)tailleEcran.Height;
+            float ratio = tailleEcran.Width / (float)tailleEcran.Height;
 
             using (new Viewport2D(gl, -ratio, -1.1f, ratio, 0.9f))
             {
@@ -207,7 +207,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     for (int i = 0; i < _nbTraces; i++)
                     {
-                        gl.Color(1.0f, 1.0f, 1.0f, (float)i / (float)_nbTraces);
+                        gl.Color(1.0f, 1.0f, 1.0f, i / (float)_nbTraces);
                         gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
                 }

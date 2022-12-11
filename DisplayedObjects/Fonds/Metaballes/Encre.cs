@@ -18,16 +18,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
     /// </summary>
     public class Encre : Metaballes
     {
-        const String CAT = "Encre";
-        CategorieConfiguration c;
-        float TailleMax;
-        float TailleMin;
-        float IntensiteMax;
-        float IntensiteMin;
-        float xEmetteur;
-        DateTime derniereCreation = DateTime.Now;
-
-        int NbMax = 0;
+        private const String CAT = "Encre";
+        private CategorieConfiguration c;
+        private float TailleMax;
+        private float TailleMin;
+        private float IntensiteMax;
+        private float IntensiteMin;
+        private float xEmetteur;
+        private DateTime derniereCreation = DateTime.Now;
+        private int NbMax = 0;
         public Encre(OpenGL gl, int cx, int cy) : base(gl)
         {
             getConfiguration();

@@ -4,9 +4,9 @@ using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class FrustumCulling
+    internal class FrustumCulling
     {
-        double[,] g_frustumPlanes = new double[6, 4];
+        private double[,] g_frustumPlanes = new double[6, 4];
 
         public FrustumCulling(OpenGL gl)
         {

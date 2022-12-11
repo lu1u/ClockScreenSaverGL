@@ -6,8 +6,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 {
     internal class GrilleMarqueur
     {
-        float[,] _marqueurs;
-        readonly int _LARGEUR, _HAUTEUR;
+        private float[,] _marqueurs;
+        private readonly int _LARGEUR, _HAUTEUR;
         public GrilleMarqueur(int l, int h)
         {
             _LARGEUR = l;
@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                     {
                         int alpha = Math.Min(255, (int)(_marqueurs[x, y] / maxPheromone * 255));
                         Color c = DisplayedObject.getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(alpha));
-                        gl.Color((byte)Convert.ToByte(c.R), (byte)Convert.ToByte(c.G), (byte)Convert.ToByte(c.B));
+                        gl.Color(Convert.ToByte(c.R), Convert.ToByte(c.G), Convert.ToByte(c.B));
 
                         gl.Begin(OpenGL.GL_QUADS);
                         gl.Vertex((float)x / _LARGEUR, (float)y / _HAUTEUR);
@@ -57,8 +57,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             int X = (int)Math.Round(x * _LARGEUR);
             int Y = (int)Math.Round(y * _HAUTEUR);
             X = Contraint(X, 0, _LARGEUR - 1);
-            Y = Contraint(Y, 0, _HAUTEUR- 1);     
-            
+            Y = Contraint(Y, 0, _HAUTEUR - 1);
+
             _marqueurs[X, Y] += valeur;
             if (_marqueurs[X, Y] > 1.0f)
                 _marqueurs[X, Y] = 1.0f;
@@ -93,8 +93,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                     else
                         _marqueurs[x, y] = 0;
 
-                    if (_marqueurs[x,y]>max)
-                            max = _marqueurs[x, y];
+                    if (_marqueurs[x, y] > max)
+                        max = _marqueurs[x, y];
                 }
 
             return max;
@@ -127,13 +127,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                     {
                         trouve = true;
                         poidsMax = _marqueurs[X, Y];
-                        xMarqueur = X ;
-                        yMarqueur = Y ;
+                        xMarqueur = X;
+                        yMarqueur = Y;
                     }
 
             // Convertir les indices en coordonnees 0..1
-            xMarqueur = xMarqueur /  _LARGEUR;
-            yMarqueur = yMarqueur /  _HAUTEUR;
+            xMarqueur = xMarqueur / _LARGEUR;
+            yMarqueur = yMarqueur / _HAUTEUR;
 
             return trouve;
         }
@@ -151,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             for (int X = minX; X < maxX; X++)
                 for (int Y = minY; Y < maxY; Y++)
                 {
-                    float poids = _marqueurs[X, Y] ;
+                    float poids = _marqueurs[X, Y];
                     if (poids > 0 && poids < poidsMin)
                     {
                         trouve = true;

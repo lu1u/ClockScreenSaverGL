@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL.Config
         public bool _utilisé = false;
         public string _nom;
 
-        
+
         private const string TYPE_BOOL = "bool";
         private const string TYPE_BYTE = "byte";
         private const string TYPE_DOUBLE = "double";
@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL.Config
         private const string TYPE_INT = "int";
         private const string TYPE_STRING = "string";
 
-        
+
         #region Public Constructors
 
         /// <summary>
@@ -257,14 +257,14 @@ namespace ClockScreenSaverGL.Config
             switch (_type)
             {
                 case TYPE_PARAMETRE.T_INT:
-                    _value = (int)0;
+                    _value = 0;
                     break;
 
                 case TYPE_PARAMETRE.T_FLOAT:
-                    _value = ((float)0.0f);
+                    _value = 0.0f;
                     break;
                 case TYPE_PARAMETRE.T_DOUBLE:
-                    _value = ((double)0.0);
+                    _value = 0.0;
                     break;
 
                 case TYPE_PARAMETRE.T_BOOL:
@@ -287,7 +287,7 @@ namespace ClockScreenSaverGL.Config
 
         #region Private Methods
 
-        static bool boolFromString(string s)
+        private static bool boolFromString(string s)
         {
             if (s == null)
                 return false;
@@ -352,7 +352,7 @@ namespace ClockScreenSaverGL.Config
             return modifiable ? "modifiable" : "non_modifiable";
         }
 
-        static string stringFromBool(bool b)
+        private static string stringFromBool(bool b)
         {
             return b ? "vrai" : "false";
         }

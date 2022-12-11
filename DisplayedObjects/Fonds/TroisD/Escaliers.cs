@@ -7,39 +7,38 @@ using System.Linq;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class Escaliers : MateriauGlobal, IDisposable
+    internal class Escaliers : MateriauGlobal, IDisposable
     {
-        
+
         #region Parametres
-        const String CAT = "Escaliers";
-        CategorieConfiguration c;
-        int NB_ESCALIERS;
-        float RATIO_COULEUR_MIN;
-        float RATIO_COULEUR_MAX;
-        float MIN_TAILLE_X;
-        float MAX_TAILLE_X;
-        float MIN_TAILLE_Y;
-        float MAX_TAILLE_Y;
-        float MIN_TAILLE_Z;
-        float MAX_TAILLE_Z;
-        float VITESSE_ROTATION;
-        float SEUIL_DECALAGE;
-        float ACCELERATION_DECALAGE;
+        private const String CAT = "Escaliers";
+        private CategorieConfiguration c;
+        private int NB_ESCALIERS;
+        private float RATIO_COULEUR_MIN;
+        private float RATIO_COULEUR_MAX;
+        private float MIN_TAILLE_X;
+        private float MAX_TAILLE_X;
+        private float MIN_TAILLE_Y;
+        private float MAX_TAILLE_Y;
+        private float MIN_TAILLE_Z;
+        private float MAX_TAILLE_Z;
+        private float VITESSE_ROTATION;
+        private float SEUIL_DECALAGE;
+        private float ACCELERATION_DECALAGE;
         #endregion
 
         // Palier en cours
-        float _sensEscalierZ;
-        float _xEscalier;
-        float _largeurMarche;
-        float _profondeurMarche;
-        int _nbMarchesPalier;
-        float _prochaineLargeur;
-        float _prochainDecalage;
-        TimerIsole _timer = new TimerIsole(500);
-        List<Marche> _escaliers = new List<Marche>();
-        float _angleVue = FloatRandom(0, DEUX_PI);
-
-        float xCible, yCible, zCible;
+        private float _sensEscalierZ;
+        private float _xEscalier;
+        private float _largeurMarche;
+        private float _profondeurMarche;
+        private int _nbMarchesPalier;
+        private float _prochaineLargeur;
+        private float _prochainDecalage;
+        private TimerIsole _timer = new TimerIsole(500);
+        private List<Marche> _escaliers = new List<Marche>();
+        private float _angleVue = FloatRandom(0, DEUX_PI);
+        private float xCible, yCible, zCible;
         private uint _genLists;
 
 

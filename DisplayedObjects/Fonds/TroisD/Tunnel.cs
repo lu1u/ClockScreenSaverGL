@@ -40,7 +40,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private class Anneau
         {
-            public Vecteur3D pos ;
+            public Vecteur3D pos;
             public double changeCouleur;
         }
         private readonly Anneau[,] _anneaux;
@@ -126,7 +126,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             for (int j = 0; j < TAILLE_ANNEAU; j++)
             {
                 double angle = (Math.PI * 2.0 * j) / TAILLE_ANNEAU;
-                _anneaux[i, j] = new Anneau() { pos = new Vecteur3D( _CentreAnneauX + (float)(RAYON_ANNEAU * Math.Cos(angle)), _CentreAnneauY + (float)(RAYON_ANNEAU * Math.Sin(angle)), zAnneau) };
+                _anneaux[i, j] = new Anneau() { pos = new Vecteur3D(_CentreAnneauX + (float)(RAYON_ANNEAU * Math.Cos(angle)), _CentreAnneauY + (float)(RAYON_ANNEAU * Math.Sin(angle)), zAnneau) };
                 _anneaux[i, j].changeCouleur = FloatRandom(-1.0f, 1.0f);
             }
         }

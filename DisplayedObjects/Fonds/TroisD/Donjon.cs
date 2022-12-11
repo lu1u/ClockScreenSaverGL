@@ -1,26 +1,19 @@
 ﻿using ClockScreenSaverGL.Config;
 using SharpGL;
-using SharpGL.SceneGraph;
-using SharpGL.SceneGraph.Cameras;
-using SharpGL.SceneGraph.Core;
-using SharpGL.SceneGraph.Primitives;
-using SharpGL.Serialization;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class Donjon : MateriauGlobal
+    internal class Donjon : MateriauGlobal
     {
         #region Parametres
-        const String CAT = "Donjon";
-        CategorieConfiguration c;
+        private const String CAT = "Donjon";
+        private CategorieConfiguration c;
         #endregion
-        float rotate = 0;
-
-        uint _genLists;
-        uint _listeCouloirDroit;
+        private float rotate = 0;
+        private uint _genLists;
+        private uint _listeCouloirDroit;
         public Donjon(OpenGL gl) : base(gl)
         {
             _genLists = gl.GenLists(1);
@@ -58,13 +51,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Vertex(1, 0, -1);
 
             // Mur a gauche
-            gl.Normal(-1, 0, 0); 
+            gl.Normal(-1, 0, 0);
             gl.Vertex(-1, 0, -1);
             gl.Vertex(-1, 1, -1);
             gl.Vertex(-1, 1, 1);
             gl.Vertex(-1, 0, 1);
             gl.End();
-            
+
             // Plafond
             const int NB_FACES = 16;
             gl.Begin(OpenGL.GL_QUAD_STRIP);
@@ -80,10 +73,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 cos *= 1;
 
                 gl.Vertex(sin, 1 + cos, -1);
-                gl.Vertex( sin, 1 + cos, 1);
+                gl.Vertex(sin, 1 + cos, 1);
             }
             gl.End();
-            
+
             gl.EndList();
 
             return res;

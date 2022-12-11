@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         // <returns></returns>
         protected override void Init(OpenGL gl)
         {
-            _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);            
+            _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
         }
 
         public override CategorieConfiguration getConfiguration()

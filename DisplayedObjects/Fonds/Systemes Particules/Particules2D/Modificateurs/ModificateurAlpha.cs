@@ -2,9 +2,9 @@
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurAlpha : Modificateur
+    internal class ModificateurAlpha : Modificateur
     {
-        const float SEUIL = 0.001f;
+        private const float SEUIL = 0.001f;
         private DateTime _derniere = DateTime.Now;
         private float _dAlpha;
         private bool _eliminerSiSeuil;

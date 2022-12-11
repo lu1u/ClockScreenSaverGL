@@ -4,12 +4,12 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurGravitation : Emetteur2D
+    internal class EmetteurGravitation : Emetteur2D
     {
         private static float _G;
         private static float _multDist;
-        TimerIsole _timer;
-        float _taille = 0.01f;
+        private TimerIsole _timer;
+        private float _taille = 0.01f;
 
         public EmetteurGravitation(float G, float MultDist, int delaiCreation)
         {

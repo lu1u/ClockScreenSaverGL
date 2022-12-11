@@ -118,7 +118,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            
+
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);

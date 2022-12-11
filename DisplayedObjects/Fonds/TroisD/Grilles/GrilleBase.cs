@@ -8,11 +8,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
     /// Classe de base pour un objet statique, avec une rotation
     /// Principe: on genere une callList (dans la methode GenererListe)
     /// </summary>
-    abstract class GrilleBase : MateriauGlobal, IDisposable
+    internal abstract class GrilleBase : MateriauGlobal, IDisposable
     {
         #region Membres
         private uint _genLists;
-        float _angleVue = FloatRandom(0, 6.28f);
+        private float _angleVue = FloatRandom(0, 6.28f);
         protected static readonly float[] fogcolor = { 0, 0, 0, 1 };
         protected float fogEnd;
         protected float VITESSE_ROTATION;

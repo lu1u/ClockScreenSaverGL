@@ -5,7 +5,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
     sealed public class Primitive3DBillboard : Primitive3D
     {
-        double _taille;
+        private double _taille;
         public Primitive3DBillboard(OpenGL gl, Vecteur3Ddbl position, double taille) : base(position)
         {
             _taille = taille;

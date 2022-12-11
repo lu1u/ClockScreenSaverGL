@@ -10,33 +10,31 @@ using System.Drawing;
 /// </summary>
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class TroisDPipes : MateriauGlobal, IDisposable
+    internal class TroisDPipes : MateriauGlobal, IDisposable
     {
-         private const string CAT = "TroisDPipes";
+        private const string CAT = "TroisDPipes";
         private CategorieConfiguration c;
-
-        const int HAUT = 1 << 1;
-        const int BAS = 1 << 2;
-        const int NORD = 1 << 3;
-        const int SUD = 1 << 4;
-        const int EST = 1 << 5;
-        const int OUEST = 1 << 6;
-        const int FIN = 1 << 7;
-
-        int[] directions = { HAUT, BAS, NORD, SUD, EST, OUEST };
+        private const int HAUT = 1 << 1;
+        private const int BAS = 1 << 2;
+        private const int NORD = 1 << 3;
+        private const int SUD = 1 << 4;
+        private const int EST = 1 << 5;
+        private const int OUEST = 1 << 6;
+        private const int FIN = 1 << 7;
+        private int[] directions = { HAUT, BAS, NORD, SUD, EST, OUEST };
         #region Parametres
-        int DELAI_TIMER;
-        int DELAI_TIMER_REINIT;
-        int TAILLE;
-        float PROBA_CHANGE_ALEATOIRE;
-        float DIAMETRE_TUYAU;
-        float DIAMETRE_JOINT;
-        float DIAMETRE_FIN;
-        bool AFFICHER_NOUVEAUX_DEPARTS;
-        float VITESSE_ROTATION;
-        float DISTANCE;
-        int DETAIL_CYLINDRES;
-        int DETAIL_SPHERES;
+        private int DELAI_TIMER;
+        private int DELAI_TIMER_REINIT;
+        private int TAILLE;
+        private float PROBA_CHANGE_ALEATOIRE;
+        private float DIAMETRE_TUYAU;
+        private float DIAMETRE_JOINT;
+        private float DIAMETRE_FIN;
+        private bool AFFICHER_NOUVEAUX_DEPARTS;
+        private float VITESSE_ROTATION;
+        private float DISTANCE;
+        private int DETAIL_CYLINDRES;
+        private int DETAIL_SPHERES;
         #endregion
 
         private int[,,] _grille;
@@ -46,9 +44,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private TimerIsole timer;
         private TimerIsole _timerReinit;
         private Color _derniereCouleur;
-        int _nbTuyaux;
+        private int _nbTuyaux;
 
-        class Point3
+        private class Point3
         {
             public Point3(int x, int y, int z)
             {
@@ -58,8 +56,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             }
             public int X, Y, Z;
         }
-        List<Point3> _nouveauxDeparts;
-        float _angle = 0;
+
+        private List<Point3> _nouveauxDeparts;
+        private float _angle = 0;
         private Sphere _sphere = new Sphere();
         public TroisDPipes(OpenGL gl) : base(gl)
         {
@@ -547,7 +546,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
         public override string DumpRender()
         {
-            return base.DumpRender() + $"Nb tuyaux: {_nbTuyaux}/{TAILLE * TAILLE * TAILLE}, Nouveaux départs:{ _nouveauxDeparts.Count}";
+            return base.DumpRender() + $"Nb tuyaux: {_nbTuyaux}/{TAILLE * TAILLE * TAILLE}, Nouveaux départs:{_nouveauxDeparts.Count}";
         }
 
 #endif

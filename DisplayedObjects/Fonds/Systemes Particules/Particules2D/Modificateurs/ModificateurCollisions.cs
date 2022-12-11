@@ -2,7 +2,7 @@
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurCollisions : Modificateur
+    internal class ModificateurCollisions : Modificateur
     {
         public override void Applique(SystemeParticules2D s, Temps maintenant)
         {

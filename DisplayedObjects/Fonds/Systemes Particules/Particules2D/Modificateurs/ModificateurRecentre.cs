@@ -2,7 +2,7 @@
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurRecentre : Modificateur
+    internal class ModificateurRecentre : Modificateur
     {
         private DateTime _derniere = DateTime.Now;
         private float _vitesse;

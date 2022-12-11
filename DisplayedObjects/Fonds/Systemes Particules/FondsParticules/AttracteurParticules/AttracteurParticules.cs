@@ -6,20 +6,20 @@ using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class AttracteurParticules : SystemeParticules2D.SystemeParticules2D, IDisposable
+    internal class AttracteurParticules : SystemeParticules2D.SystemeParticules2D, IDisposable
     {
         #region Parametres
-        const string CAT = "AttracteurParticules";
+        private const string CAT = "AttracteurParticules";
         protected CategorieConfiguration c;
-        int NB_EMETTEURS;
-        int NB_ATTRACTEURS;
-        int NB_PARTICULES_EMISES;
-        float ALPHA_MODIFIEUR;
-        float TAILLE_PARTICULE;
-        float VITESSE_PARTICULE;
-        float VITESSE_EMETTEUR;
-        float VITESSE_ATTRACTEUR;
-        float G;
+        private int NB_EMETTEURS;
+        private int NB_ATTRACTEURS;
+        private int NB_PARTICULES_EMISES;
+        private float ALPHA_MODIFIEUR;
+        private float TAILLE_PARTICULE;
+        private float VITESSE_PARTICULE;
+        private float VITESSE_EMETTEUR;
+        private float VITESSE_ATTRACTEUR;
+        private float G;
         #endregion
 
         public AttracteurParticules(OpenGL gl) : base(gl)

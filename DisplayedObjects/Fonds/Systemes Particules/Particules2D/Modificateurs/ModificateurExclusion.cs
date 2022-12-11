@@ -1,6 +1,6 @@
 ﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurExclusion : Modificateur
+    internal class ModificateurExclusion : Modificateur
     {
         public enum Exclusions
         {

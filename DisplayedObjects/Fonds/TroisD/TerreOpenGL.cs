@@ -5,32 +5,30 @@
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
-using SharpGL.SceneGraph.Assets;
 using SharpGL.SceneGraph.Quadrics;
 using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class TerreOpenGL : MateriauGlobal, IDisposable
+    internal class TerreOpenGL : MateriauGlobal, IDisposable
     {
         #region Parametres
-        const string CAT = "TerreOpenGl";
-        CategorieConfiguration c;
-        int NB_TRANCHES;
-        int NB_MERIDIENS;
-        float VITESSE;
-        float LONGITUDE_DRAPEAU;
-        float LATITUDE_DRAPEAU;
-        int DETAILS_DRAPEAU;
+        private const string CAT = "TerreOpenGl";
+        private CategorieConfiguration c;
+        private int NB_TRANCHES;
+        private int NB_MERIDIENS;
+        private float VITESSE;
+        private float LONGITUDE_DRAPEAU;
+        private float LATITUDE_DRAPEAU;
+        private int DETAILS_DRAPEAU;
         #endregion
 
-        TextureAsynchrone _tA;
-        Sphere _sphere = new Sphere();
-
-        float _rotation = 270;
-        float[] _zDrapeau;
-        int _frame = 0;
+        private TextureAsynchrone _tA;
+        private Sphere _sphere = new Sphere();
+        private float _rotation = 270;
+        private float[] _zDrapeau;
+        private int _frame = 0;
         /// <summary>
         /// Constructeur: preparer les objets OpenGL
         /// </summary>
@@ -40,6 +38,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             getConfiguration();
             //_textureTerre.Create(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
             _tA = new TextureAsynchrone(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
+            _tA.Init();
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;

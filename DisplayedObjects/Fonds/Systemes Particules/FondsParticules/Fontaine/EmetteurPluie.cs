@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurPluie : Emetteur2D
+    internal class EmetteurPluie : Emetteur2D
     {
-        DateTime _derniereParticule = DateTime.Now;
+        private DateTime _derniereParticule = DateTime.Now;
         private float _vitesseX;
         private float _vitesseY;
         private TimerIsole timer = new TimerIsole(10);

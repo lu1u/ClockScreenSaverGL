@@ -2,9 +2,9 @@
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
-    class Primitive3DQuadrilatere : Primitive3D
+    internal class Primitive3DQuadrilatere : Primitive3D
     {
-        Vecteur3Ddbl p1, p2, p3, p4;
+        private Vecteur3Ddbl p1, p2, p3, p4;
         public Primitive3DQuadrilatere(OpenGL gl, Vecteur3Ddbl P1, Vecteur3Ddbl P2, Vecteur3Ddbl P3, Vecteur3Ddbl P4) : base((P1 + P2 + P3 + P4) / 4.0f)
         {
             p1 = P1;

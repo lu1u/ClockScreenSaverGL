@@ -66,7 +66,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
                 // gl.End();
             }
         }
-        const double ANGLE_DROIT = Math.PI * 0.5;
+
+        private const double ANGLE_DROIT = Math.PI * 0.5;
         /// <summary>
         /// Calcule les points perpendiculaires autour d'un segment pour tracer un segment epais sous forme d'un rectangle
         /// 

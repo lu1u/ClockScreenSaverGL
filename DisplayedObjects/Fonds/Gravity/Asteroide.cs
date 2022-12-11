@@ -14,12 +14,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             public PointF _textCoord;
         }
 
-        int NbTranches = 10;
+        private int NbTranches = 10;
         public const double TWOPI = Math.PI * 2.0;
         public const double PID2 = Math.PI / 2.0;
         private float maxTaille;
-
-        uint _iGenList;
+        private uint _iGenList;
 
         public Asteroide(OpenGL gl, float VA, float ax, int t, float rOrbite, float posOrbite, float vOrbite, float rX, float rY, float rZ, int centrale) : base(gl, VA, ax, t, rOrbite, posOrbite, vOrbite, rX, rY, rZ, centrale)
         {
@@ -48,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                                                                 rZ * Math.Cos(theta2) * Math.Sin(theta3));
 
                     pt._vertex = new Vecteur3Ddbl(pt._normale);
-                    pt._textCoord = new PointF((float)i / (float)NbTranches, 2.0f * (j + 1) / (float)NbTranches);
+                    pt._textCoord = new PointF(i / (float)NbTranches, 2.0f * (j + 1) / NbTranches);
 
                     pt._normale.Normalize();
                     pt._normale.Normal(gl);

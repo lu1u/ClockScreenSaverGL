@@ -7,25 +7,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     public class Tree
     {
         public bool DoneGrowing = false;
-
-        Vecteur3D Position;
-
-        readonly int NB_CIBLES;
-        readonly int LARGEUR_ARBRE;
-        readonly int HAUTEUR_ARBRE;
-        readonly int HAUTEUR_TRONC;
-        readonly int DISTANCE_MIN;
-        readonly int DISTANCE_MAX;
-        readonly int LONGUEUR_BRANCHE;
-        readonly float LARGEUR_TRONC;
-        readonly Vecteur3D POUSSEE = new Vecteur3D(-1, 0, 0);
-        readonly static float RATIO_TAILLE_PARENT = 1.01f;
-        Branch _racineArbre;
-        List<Cible> _ciblesBranches;
-        Dictionary<Vecteur3D, Branch> _branches;
-        List<Feuille> _feuilles;
-        Random r = new Random();
-        float _oscillation;
+        private Vecteur3D Position;
+        private readonly int NB_CIBLES;
+        private readonly int LARGEUR_ARBRE;
+        private readonly int HAUTEUR_ARBRE;
+        private readonly int HAUTEUR_TRONC;
+        private readonly int DISTANCE_MIN;
+        private readonly int DISTANCE_MAX;
+        private readonly int LONGUEUR_BRANCHE;
+        private readonly float LARGEUR_TRONC;
+        private readonly Vecteur3D POUSSEE = new Vecteur3D(-1, 0, 0);
+        private static readonly float RATIO_TAILLE_PARENT = 1.01f;
+        private Branch _racineArbre;
+        private List<Cible> _ciblesBranches;
+        private Dictionary<Vecteur3D, Branch> _branches;
+        private List<Feuille> _feuilles;
+        private Random r = new Random();
+        private float _oscillation;
 
         public Tree(float X, float Y, float Z, float LargeurTronc, int LargeurArbre, int HauteurArbre, int LongueurBranche, int DistanceMin, int DistanceMax, int NbCibles, int HauteurTronc)
         {

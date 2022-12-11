@@ -10,22 +10,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
     /// <summary>
     /// Affichage du programme
     /// </summary>
-    class Programme
+    internal class Programme
     {
         #region Parametres
-        float X_PROGRAMME, Y_PROGRAMME;
-        float HAUTEUR_PROGRAMME, LARGEUR_PROGRAMME;
+        private float X_PROGRAMME, Y_PROGRAMME;
+        private float HAUTEUR_PROGRAMME, LARGEUR_PROGRAMME;
         private float LARGEUR_CASE_PROGRAMME;
         private float HAUTEUR_CASE_PROGRAMME;
         #endregion
 
-        Texture _textureProgramme, _textureSymbolesProgramme, _textureTeteProgramme;
+        private Texture _textureProgramme, _textureSymbolesProgramme, _textureTeteProgramme;
         private Interpolateur _interpolateurProgramme, _interpolateurChangeEtatProgramme;
         private float _positionIndicateur;
         private float _cibleIndicateur;
         private float _departIndicateur;
         private float _progressionEtat;
-        Bitmap _bitmap;
+        private Bitmap _bitmap;
 
         public Programme(OpenGL gl)
         {

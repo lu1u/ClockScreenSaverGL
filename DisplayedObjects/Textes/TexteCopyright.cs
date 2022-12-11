@@ -13,7 +13,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     /// </summary>
     public class TexteCopyright : Texte
     {
-        const string CAT = "TexteCopyright";
+        private const string CAT = "TexteCopyright";
         protected CategorieConfiguration c;
         private const string _texte = "Lucien Pilloni (c) 2014";
         private SizeF _Taille;

@@ -1,12 +1,7 @@
 ﻿using ClockScreenSaverGL.Config;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
-using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using SharpGL;
 using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -145,7 +140,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             gl.LookAt(0, 0f, -RAYON_RONDE * 0.3f, 0, 0, 0, 0, 1, 0);
             gl.Rotate(0, (float)Math.Sin(angle) * 6.0f, 0);
-            
+
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
 

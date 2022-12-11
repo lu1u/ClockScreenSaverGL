@@ -9,7 +9,6 @@
 
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace ClockScreenSaverGL
@@ -20,8 +19,8 @@ namespace ClockScreenSaverGL
     public class Lune
     {
         private int _ageLune = -1;
-        DateTime _maintenant;   
-        byte ALPHA_AIGUILLES;
+        private DateTime _maintenant;
+        private byte ALPHA_AIGUILLES;
 
         public Lune(byte alpha)
         {
@@ -33,7 +32,7 @@ namespace ClockScreenSaverGL
             int k1, k2, k3;
             int j;
 
-            yy = y - (int)((12 - m) / 10);
+            yy = y - (12 - m) / 10;
             mm = m + 9;
 
             if (mm >= 12)
@@ -42,7 +41,7 @@ namespace ClockScreenSaverGL
             }
             k1 = (int)(365.25 * (yy + 4712));
             k2 = (int)(30.6001 * mm + 0.5);
-            k3 = (int)((int)((yy / 100) + 49) * 0.75) - 38;
+            k3 = (int)(((yy / 100) + 49) * 0.75) - 38;
             // 'j' for dates in Julian calendar:
             j = k1 + k2 + d + 59;
             if (j > 2299160)

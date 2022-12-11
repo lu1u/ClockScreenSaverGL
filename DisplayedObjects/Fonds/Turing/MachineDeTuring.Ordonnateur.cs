@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 {
-    partial class MachineDeTuring
+    internal partial class MachineDeTuring
     {
         public enum VALEUR { NULL, ZERO, UN };
         public enum DEPLACEMENT { GAUCHE, DROITE, RIEN }
@@ -29,10 +29,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         }
 
         private List<string> _fichiers;
-        static readonly int NB_INSTRUCTIONS = 3;
-        static readonly int INDICE_INSTRUCTION_NULL = 0;
-        static readonly int INDICE_INSTRUCTION_ZERO = 1;
-        static readonly int INDICE_INSTRUCTION_UN = 2;
+        private static readonly int NB_INSTRUCTIONS = 3;
+        private static readonly int INDICE_INSTRUCTION_NULL = 0;
+        private static readonly int INDICE_INSTRUCTION_ZERO = 1;
+        private static readonly int INDICE_INSTRUCTION_UN = 2;
 
         public static readonly int NB_SYMBOLES = 18;
         public static readonly int SYMBOLE_VIDE = 0;
@@ -52,18 +52,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         public static readonly int SYMBOLE_ECRITURE = 14;
         public static readonly int SYMBOLE_DEPLACEMENT = 15;
         public static readonly int SYMBOLE_ETAT = 16;
-
-        List<Etat> _etats = new List<Etat>();
-        char[] ruban;
-        int _indiceRuban;
-        int _instructionCible;
+        private List<Etat> _etats = new List<Etat>();
+        private char[] ruban;
+        private int _indiceRuban;
+        private int _instructionCible;
         public enum ETAPE_TURING { DEBUT, LECTURE, RECHERCHE_INSTRUCTION, ECRITURE, DEPLACEMENT, CHANGE_ETAT };
-        ETAPE_TURING _etatOrdonnateur;
-        VALEUR _valeurAEcrire;
-        string _nom = "";
-        string _description = "";
-        int _instructionActive = 0;
-        int _etatActif = 0;
+
+        private ETAPE_TURING _etatOrdonnateur;
+        private VALEUR _valeurAEcrire;
+        private string _nom = "";
+        private string _description = "";
+        private int _instructionActive = 0;
+        private int _etatActif = 0;
 
 
         private void InitOrdonnateur()

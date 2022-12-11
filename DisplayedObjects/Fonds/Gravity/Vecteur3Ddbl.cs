@@ -124,12 +124,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
         public void soustraire(Vecteur3Ddbl a) { x = x - a.x; y = y - a.y; z = z - a.z; }
 
-        static double DEG_TO_RAD(double a) { return a * (double)Math.PI / 360.0f; }
+        private static double DEG_TO_RAD(double a) { return a * Math.PI / 360.0f; }
         public void RotateX(double AngleDegres)
         {
             double Angle = DEG_TO_RAD(AngleDegres);
-            y = (double)((Math.Cos(Angle) * y) - (Math.Sin(Angle) * z));
-            z = (double)((Math.Sin(Angle) * y) + (Math.Cos(Angle) * z));
+            y = (Math.Cos(Angle) * y) - (Math.Sin(Angle) * z);
+            z = (Math.Sin(Angle) * y) + (Math.Cos(Angle) * z);
         }
 
         ///////////////////////////////////////////////////////////////////////////////
@@ -139,8 +139,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public void RotateY(double AngleDegres)
         {
             double Angle = DEG_TO_RAD(AngleDegres);
-            x = (double)((Math.Cos(Angle) * x) + (Math.Sin(Angle) * z));
-            z = (double)(-(Math.Sin(Angle) * x) + (Math.Cos(Angle) * z));
+            x = (Math.Cos(Angle) * x) + (Math.Sin(Angle) * z);
+            z = -(Math.Sin(Angle) * x) + (Math.Cos(Angle) * z);
         }
 
         ///////////////////////////////////////////////////////////////////////////////
@@ -150,8 +150,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public void RotateZ(double AngleDegres)
         {
             double Angle = DEG_TO_RAD(AngleDegres);
-            x = (double)((Math.Cos(Angle) * x) - (Math.Sin(Angle) * y));
-            y = (double)((Math.Sin(Angle) * x) + (Math.Cos(Angle) * y));
+            x = (Math.Cos(Angle) * x) - (Math.Sin(Angle) * y);
+            y = (Math.Sin(Angle) * x) + (Math.Cos(Angle) * y);
         }
     }
 }

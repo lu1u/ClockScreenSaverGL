@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 /// </summary>
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-    class Sinusoides : Fond
+    internal class Sinusoides : Fond
     {
         #region PARAMETRES
         private const string CAT = "Sinusoides";
@@ -26,10 +26,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #endregion
 
         // Donnees des sinusoides
-        float[] _frequence;
-        float[] _phase;
-        float[] _amplitude;
-        float[] _changementPhase;
+        private float[] _frequence;
+        private float[] _phase;
+        private float[] _amplitude;
+        private float[] _changementPhase;
 
         public override CategorieConfiguration getConfiguration()
         {
@@ -164,7 +164,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] float getX(int i) => -1.01f + (2.02f / NB_SEGMENTS) * i;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private float getX(int i) => -1.01f + (2.02f / NB_SEGMENTS) * i;
 
         private void getCourbe(float[] valeurs, float longueurOnde, float phase, float amplitude)
         {

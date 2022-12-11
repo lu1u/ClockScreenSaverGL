@@ -19,10 +19,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     /// </summary>
     public class HeureTexte : Texte
     {
-        const string CAT = "HeureTexte";
+        private const string CAT = "HeureTexte";
         protected CategorieConfiguration c;
-        int HAUTEUR_FONTE;
-        OpenGLFonte _glFonte;
+        private int HAUTEUR_FONTE;
+        private OpenGLFonte _glFonte;
 
         public override CategorieConfiguration getConfiguration()
         {

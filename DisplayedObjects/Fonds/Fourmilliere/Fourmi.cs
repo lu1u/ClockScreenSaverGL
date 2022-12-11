@@ -1,12 +1,11 @@
 ﻿using SharpGL;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 {
-    class Fourmi
+    internal class Fourmi
     {
         private const float RADIAN_TO_DEG = 180.0f / (float)Math.PI;
         private const float PHEROMONES_MAX = 1.0f;
@@ -15,7 +14,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         private float _pheromonesRestantes;
         private float _distancePerception;
         private int _noImage = 0;
-        enum MODE
+
+        private enum MODE
         {
             RECHERCHE_NOURRITURE, RETOUR_NID
         }
@@ -72,7 +72,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         internal void Deplace(Monde monde, float intervalleDepuisDerniereFrame)
         {
             // Centre de perception
-            _dpx = _x ;//+ _dx * monde.DISTANCE_PERCEPTION / _vitesse;
+            _dpx = _x;//+ _dx * monde.DISTANCE_PERCEPTION / _vitesse;
             _dpy = _y; //+_dy * monde.DISTANCE_PERCEPTION / _vitesse;
 
             switch (_mode)
@@ -88,7 +88,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                         }
                         else
                         // Sinon: si nourriture a proximite: se tourner vers la nourriture
-                        if ( nourritureAProximite(monde, _dpx, _dpy))
+                        if (nourritureAProximite(monde, _dpx, _dpy))
                         {
                             tourneVers(monde.X_NOURRITURE, monde.Y_NOURRITURE);
                         }
@@ -157,7 +157,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             }
 
             // Variations aleatoires du cap
-            _cap += DisplayedObject.FloatRandom(- monde.VARIATION_CAP,monde.VARIATION_CAP)* intervalleDepuisDerniereFrame;
+            _cap += DisplayedObject.FloatRandom(-monde.VARIATION_CAP, monde.VARIATION_CAP) * intervalleDepuisDerniereFrame;
 
             // Collision avec les bords
             if (_x >= 1.0f)
@@ -183,7 +183,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             }
 
             EviterObstacles(monde, intervalleDepuisDerniereFrame);
-             
+
             // Normaliser le cap entre 0 et DEUX_PI
             while (_cap < 0)
                 _cap += DisplayedObject.DEUX_PI;
@@ -212,7 +212,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             foreach (Obstacle o in monde._listeObstacles)
                 if (o.ModifieCap(_x, _y, dx, dy, _cap, ref cumulVirage, intervalle * _vitesse, intervalle * monde.VARIATION_CAP_OBSTACLE))
                     // L'obstacle a demandé un changement de cap urgent
-                    break ;
+                    break;
 
             _cap += cumulVirage;
         }
@@ -221,11 +221,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         {
             float dx = (x - monde.X_NOURRITURE);
             float dy = (y - monde.Y_NOURRITURE);
-            return monde.DISTANCE_PERCEPTION*1.5f > Math.Sqrt(dx * dx + dy * dy);
+            return monde.DISTANCE_PERCEPTION * 1.5f > Math.Sqrt(dx * dx + dy * dy);
         }
 
         static private bool nidAProximite(Monde monde, float x, float y)
-        { 
+        {
             float dx = (x - monde.X_NID);
             float dy = (y - monde.Y_NID);
             return monde.DISTANCE_PERCEPTION * 1.5f > Math.Sqrt(dx * dx + dy * dy);
@@ -271,7 +271,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             float dx = x - monde.X_NID;
             float dy = y - monde.Y_NID;
 
-            return Math.Sqrt((dx * dx) + (dy * dy)) - Math.Sqrt(monde.TAILLE_NID * monde.TAILLE_NID ) < monde.TAILLE_NID;
+            return Math.Sqrt((dx * dx) + (dy * dy)) - Math.Sqrt(monde.TAILLE_NID * monde.TAILLE_NID) < monde.TAILLE_NID;
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                 // Cercle de perception
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
                 gl.Color(1.0f, 1.0f, 1.0f, 0.2f);
-                Fourmis.DessineCercle(gl,_dpx, _dpy, _distancePerception, 16);
+                Fourmis.DessineCercle(gl, _dpx, _dpy, _distancePerception, 16);
                 gl.Enable(OpenGL.GL_TEXTURE_2D);
             }
 
@@ -299,7 +299,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                 case MODE.RETOUR_NID: couleurFourmi = couleur.getColorWithHueChange(0.25f); break;
                 default: couleurFourmi = couleur.getColorWithHueChange(-0.25f); break;
             }
-            gl.Color((byte)couleurFourmi.R, (byte)couleurFourmi.G, (byte)couleurFourmi.B);
+            gl.Color(couleurFourmi.R, couleurFourmi.G, couleurFourmi.B);
 
             gl.PushMatrix();
             gl.Translate(_x, _y, 0);

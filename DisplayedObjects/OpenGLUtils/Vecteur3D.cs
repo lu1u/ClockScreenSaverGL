@@ -151,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public void soustraire(Vecteur3D a) { x = x - a.x; y = y - a.y; z = z - a.z; }
 
-        static float DEG_TO_RAD(float a) { return a * (float)Math.PI / 360.0f; }
+        private static float DEG_TO_RAD(float a) { return a * (float)Math.PI / 360.0f; }
         public void RotateX(float AngleDegres)
         {
             double Angle = DEG_TO_RAD(AngleDegres);

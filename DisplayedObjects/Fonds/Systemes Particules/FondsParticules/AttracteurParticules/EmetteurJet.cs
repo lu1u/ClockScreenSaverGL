@@ -3,17 +3,16 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class EmetteurJet : Emetteur2D
+    internal class EmetteurJet : Emetteur2D
     {
-        readonly int NB_PARTICULES = 1000;
-
-        static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y,
+        private readonly int NB_PARTICULES = 1000;
+        private static RectangleF bounds = new RectangleF(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MIN_Y,
             SystemeParticules2D.SystemeParticules2D.LARGEUR, SystemeParticules2D.SystemeParticules2D.HAUTEUR);
-        static SizeF tailleEmetteur = new SizeF(0.2f, 0.2f);
-        float _taille;
-        float _vitesseParticule;
-        TimerIsole _timer;
-        Trajectoire _traj;
+        private static SizeF tailleEmetteur = new SizeF(0.2f, 0.2f);
+        private float _taille;
+        private float _vitesseParticule;
+        private TimerIsole _timer;
+        private Trajectoire _traj;
 
         public EmetteurJet(float taille, float vitesseParticule, int nbParticules, Trajectoire traj)
         {

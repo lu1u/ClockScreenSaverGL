@@ -3,12 +3,7 @@ using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -24,16 +19,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #region Configuration
         private const string CAT = "LifeSimulation";
         private CategorieConfiguration c;
-        bool REGLES_SYMETRIQUES = false;
-        float TAILLE_PARTICULE;
-        int NB_PARTICULES;
-        int NB_COULEURS;
-        float DISTANCE_MAX;
-        float FLUIDITE;
-        float COEFF_DISTANCE;
-        bool ADDITIF;
-        float ATTRACTION_MAX;
-        float ATTRACTION_MIN;
+        private bool REGLES_SYMETRIQUES = false;
+        private float TAILLE_PARTICULE;
+        private int NB_PARTICULES;
+        private int NB_COULEURS;
+        private float DISTANCE_MAX;
+        private float FLUIDITE;
+        private float COEFF_DISTANCE;
+        private bool ADDITIF;
+        private float ATTRACTION_MAX;
+        private float ATTRACTION_MIN;
         #endregion
 
         private class Particule
@@ -43,7 +38,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             public float x, y, vx, vy;
         };
 
-        struct CouleurParticule
+        private struct CouleurParticule
         {
             public byte R, G, B;
         }
@@ -91,7 +86,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <summary>
         /// Initialisation des regles d'attraction entre types de particules
         /// </summary>
-        void InitRegles()
+        private void InitRegles()
         {
             for (int i = 0; i < NB_COULEURS; i++)
                 for (int j = 0; j < NB_COULEURS; j++)
@@ -171,7 +166,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             for (int i = 0; i < NB_COULEURS; i++)
             {
-                Color col = c.getColorWithHueChange((float)i / (float)NB_COULEURS);
+                Color col = c.getColorWithHueChange(i / (float)NB_COULEURS);
                 _couleursAffichees[i].R = col.R;
                 _couleursAffichees[i].G = col.G;
                 _couleursAffichees[i].B = col.B;

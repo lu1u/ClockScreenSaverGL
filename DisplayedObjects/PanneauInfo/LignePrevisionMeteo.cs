@@ -11,14 +11,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     public class LignePrevisionMeteo : IDisposable
     {
-        const int NB_HEURES_PREVI = 4;
+        private const int NB_HEURES_PREVI = 4;
         private Image _bmp;
         private string _date;
         private string _temperature;
         private string _texte;
         private string _vent;
         private string _pluie;
-        internal static int TAILLE_ICONE_METEO;
 
         public LignePrevisionMeteo(string icone, string date, string temperature, string texte, string vent, string pluie)
         {
@@ -27,13 +26,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             try
             {
                 string fichierIcone = @"Meteo\" + icone + ".png";
-                string chemin = Config.Configuration.getImagePath(fichierIcone, true);
+                string chemin = Configuration.getImagePath(fichierIcone, true);
 
                 if (chemin == null)
                 {
                     Log.instance.error($"icone météo inconnue \"{icone}\", chemin \"{fichierIcone}\", texte \"{texte}\"");
-                    _bmp = Image.FromFile(Config.Configuration.getImagePath(@"Meteo\inconnu.png"));
-                    //_texte = "{" + icone + "}" + _texte;
+                    _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
                 }
                 else
                     _bmp = Image.FromFile(chemin);
@@ -44,7 +42,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                 Log.instance.error(e.StackTrace);
                 Log.instance.error($"impossible de charger l'icône météo \"{icone}\", texte \"{texte}\"");
                 _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
-                //_texte = "{" + icone + "}" + _texte;
             }
             _date = date;
             _temperature = temperature;
@@ -58,33 +55,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             _bmp?.Dispose();
         }
 
-        public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y)
+        public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y, int tailleIconeMeteo)
         {
             if (_bmp != null)
-                g.DrawImage(_bmp, 0, Y, TAILLE_ICONE_METEO, TAILLE_ICONE_METEO);
+                g.DrawImage(_bmp, 0, Y, tailleIconeMeteo, tailleIconeMeteo);
 
-            float H = 0;
+            SizeF sizeTitre = g.MeasureString(_date, fTitre);
+            g.DrawString(_date, fTitre, Brushes.White, tailleIconeMeteo, Y);
+
+            string texte = "";
+            if (_temperature?.Length > 0)
+                texte += _temperature + "\n";
+            if (_texte?.Length > 0)
+                texte += _texte + "\n";
+            if (_vent?.Length > 0)
+                texte += _vent + "\n";
+            if (_pluie?.Length > 0)
+                texte += _pluie + "\n";
+
             // Date
-            SizeF size = g.MeasureString(_date, fTitre);
-            g.DrawString(_date, fTitre, Brushes.White, TAILLE_ICONE_METEO, Y);
-            H += size.Height;
-
-            // Temperature
-            g.DrawString(_temperature, fTitre, Brushes.White, TAILLE_ICONE_METEO, Y + H);
-            size = g.MeasureString(_temperature, fSousTitre);
-            H += size.Height;
-
-            // Vent
-            g.DrawString(_vent, fTitre, Brushes.White, TAILLE_ICONE_METEO, Y + H);
-            size = g.MeasureString(_vent, fSousTitre);
-            H += size.Height;
-
-            // Texte
-            g.DrawString(_texte, fTitre, Brushes.White, TAILLE_ICONE_METEO, Y + H);
-            size = g.MeasureString(_temperature, fSousTitre);
-            H += size.Height;
-
-            return H;
+            SizeF size = g.MeasureString(texte, fTitre);
+            g.DrawString(texte, fSousTitre, Brushes.White, tailleIconeMeteo, Y + sizeTitre.Height);
+            return size.Height + sizeTitre.Height;
         }
     }
 }

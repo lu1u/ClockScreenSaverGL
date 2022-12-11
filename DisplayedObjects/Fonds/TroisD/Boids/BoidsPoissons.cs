@@ -5,19 +5,17 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
-    class BoidsPoissons : Boids
+    internal class BoidsPoissons : Boids
     {
-        const String CAT = "Boids Poissons";
-        static CategorieConfiguration c;
-
-        int NB;
-        float FOG_DENSITY;
-
-        readonly float HAUTEUR_CORPS;
-        readonly float LONGUEUR_TETE;
-        readonly float LONGUEUR_CORPS;
-        readonly float LONGUEUR_QUEUE;
-        readonly float HAUTEUR_QUEUE;
+        private const String CAT = "Boids Poissons";
+        private static CategorieConfiguration c;
+        private int NB;
+        private float FOG_DENSITY;
+        private readonly float HAUTEUR_CORPS;
+        private readonly float LONGUEUR_TETE;
+        private readonly float LONGUEUR_CORPS;
+        private readonly float LONGUEUR_QUEUE;
+        private readonly float HAUTEUR_QUEUE;
 
 
         public BoidsPoissons(OpenGL gl) : base(gl)
@@ -144,7 +142,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         protected class BoidPoisson : Boid
         {
-            float TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE;
+            private float TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE;
             public BoidPoisson(float x, float y, float z, float taille, float longueurTete, float hauteurCorps, float longueurCorps, float longueurQueue, float hauteurQueue) : base(x, y, z)
             {
                 TAILLE = taille;

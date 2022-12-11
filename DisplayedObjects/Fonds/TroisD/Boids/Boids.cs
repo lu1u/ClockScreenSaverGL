@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
-    abstract class Boids : MateriauGlobal, IDisposable
+    internal abstract class Boids : MateriauGlobal, IDisposable
     {
         #region Parametres
 
@@ -118,7 +118,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         /// </summary>
         protected abstract class Boid
         {
-            const float TWO_PI = (float)Math.PI * 2.0f;
+            private const float TWO_PI = (float)Math.PI * 2.0f;
             public Vecteur3D _Position;
             public Vecteur3D _Vitesse;
             public Vecteur3D _Acceleration;
@@ -191,7 +191,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 // Separation
                 if (countSep > 0)
                 {
-                    sep.diviser_par((float)countSep);
+                    sep.diviser_par(countSep);
                     // As long as the vector is greater than 0
                     if (sep.Longueur() > 0)
                     {
@@ -206,7 +206,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 // Alignement
                 if (countAlign > 0)
                 {
-                    ali.diviser_par((float)countAlign);
+                    ali.diviser_par(countAlign);
                     ali.Normalize();
                     ali.multiplier_par(MAX_SPEED);
                     ali.soustraire(_Vitesse);
@@ -255,7 +255,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             // A method that calculates and applies a steering force towards a target
             // STEER = DESIRED MINUS VELOCITY
-            Vecteur3D seek(Vecteur3D target)
+            private Vecteur3D seek(Vecteur3D target)
             {
                 Vecteur3D desired = target - _Position;  // A vector pointing from the location to the target
                                                          // Scale to maximum speed

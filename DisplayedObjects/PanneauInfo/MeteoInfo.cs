@@ -1,7 +1,6 @@
 ﻿// 
 
 using ClockScreenSaverGL.Config;
-using SharpGL;
 ///
 /// http://www.meteofrance.com/previsions-meteo-france/crolles/38920
 /// 
@@ -11,20 +10,20 @@ using System.IO;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    class MeteoInfo : IDisposable
+    internal class MeteoInfo : IDisposable
     {
-        const string CAT = "meteo";
+        private const string CAT = "meteo";
         protected CategorieConfiguration c;
-        string CHEMIN_FICHIER;
+        private string CHEMIN_FICHIER;
+        public int NB_LIGNES_INFO_MAX;
 
         #region MEMBRES_PUBLICS
-        static public int NB_LIGNES_INFO_MAX;
         public List<LignePrevisionMeteo> _lignes = new List<LignePrevisionMeteo>();
         public string _title;
         public string _url;
         #endregion MEMBRES_PUBLICS
 
-        static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
+        private static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
         public MeteoInfo()
         {
@@ -42,6 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             {
                 c = Configuration.getCategorie(CAT);
                 CHEMIN_FICHIER = c.getParametre("chemin fichier", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), "clockscreensaver meteo.txt"));
+                NB_LIGNES_INFO_MAX = c.getParametre("nb lignes info", 5);
             }
             return c;
         }

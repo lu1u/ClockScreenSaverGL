@@ -1,6 +1,6 @@
 ﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurGravite : Modificateur
+    internal class ModificateurGravite : Modificateur
     {
         private float _gX, _gY;
         public ModificateurGravite(float gX, float gY)

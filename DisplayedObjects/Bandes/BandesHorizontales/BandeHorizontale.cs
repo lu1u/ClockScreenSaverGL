@@ -65,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
             X -= (NbRecul * _largeurCase);
             val -= NbRecul;
             while (val < 0)
-                val += (int)_valeurMax;
+                val += _valeurMax;
 
             string texte;
             // Tracer les graduations

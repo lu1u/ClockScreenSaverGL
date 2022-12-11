@@ -34,7 +34,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const Keys TOUCHE_NEGATIF = Keys.N;
         public const Keys TOUCHE_PARTICULES = Keys.P;
 
-        
+
 
         public const Keys TOUCHE_FIGER_FOND = Keys.T;
         public const Keys TOUCHE_PROCHAIN_FOND = Keys.F;
@@ -74,7 +74,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         #region Private Fields
 
-        const float PRECISION_RANDOM = 100000.0f;
+        private const float PRECISION_RANDOM = 100000.0f;
         private int _noFrame = 0;
 
         #endregion Private Fields
@@ -91,8 +91,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         #region Public Methods
 
-        
-        protected virtual void Init(OpenGL gl) {}
+
+        protected virtual void Init(OpenGL gl) { }
         protected virtual void InitAsynchrone() { }
 
         private void BackgroundInit()
@@ -101,7 +101,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _initASynchroneTerminé = true;
         }
 
-        public  void Initialisation(OpenGL gl)
+        public void Initialisation(OpenGL gl)
         {
             _initASynchroneTerminé = false;
 
@@ -202,10 +202,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
         static public float FloatRandom(float Min, float Max)
         {
             if (Min < Max)
-                return (float)r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
+                return r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 if (Min > Max)
-                return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
+                return r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 return Min;
         }
@@ -225,11 +225,11 @@ namespace ClockScreenSaverGL.DisplayedObjects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
         {
-            float a = (float)alpha / 255.0f;
+            float a = alpha / 255.0f;
             if (a < 0) a = 0;
             if (a > 1.0f) a = 1.0f;
 
-            return Color.FromArgb(255, (byte)((float)color.R * a), (byte)((float)color.G * a), (byte)((float)color.B * a));
+            return Color.FromArgb(255, (byte)(color.R * a), (byte)(color.G * a), (byte)(color.B * a));
         }
 
         static public int SigneRandom()
@@ -270,6 +270,12 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         public virtual void AppendHelpText(StringBuilder s) { }
 
+        /// <summary>
+        /// Effacer le fond de la fenetre
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="c"></param>
+        /// <returns>True si on a effacé le fond</returns>
         public virtual bool ClearBackGround(OpenGL gl, Color c) { return false; }
 
         // Cette fonction sera appelee quand un changement de date sera detecte
@@ -307,6 +313,12 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public static float SigneMoins(float v)
         {
             return v <= 0 ? v : -v;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Signe(float v)
+        {
+            return v < 0 ? -1.0f : 1.0f;
         }
 
 
@@ -518,8 +530,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
         private Stopwatch chronoDeplace = new Stopwatch();
         private Stopwatch chronoRender = new Stopwatch();
         private Stopwatch chronoInit = new Stopwatch();
-        long moyennedureeD = 0;
-        long moyennedureeR = 0;
+        private long moyennedureeD = 0;
+        private long moyennedureeR = 0;
         protected enum CHRONO_TYPE { RENDER, DEPLACE, INIT };
         public virtual string DumpRender()
         {

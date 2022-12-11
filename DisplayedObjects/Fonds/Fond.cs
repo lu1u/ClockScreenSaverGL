@@ -8,7 +8,6 @@
  */
 using ClockScreenSaverGL.Config;
 using SharpGL;
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -19,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     /// </summary>
     public abstract class Fond : DisplayedObject
     {
-         public Fond(OpenGL gl) : base(gl)
+        public Fond(OpenGL gl) : base(gl)
         {
 
         }
@@ -79,11 +78,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             return base.KeyDown(f, k);
         }
 
-        protected Color getColorWithHueChange(Color couleur, double change)
+        static public Color getColorWithHueChange(Color couleur, double change)
         {
             return new CouleurGlobale(couleur).getColorWithHueChange(change);
         }
-        protected void setColorWithHueChange( OpenGL gl, Color couleur, double change)
+
+        static public Color getColorWithLuminanceChange(Color couleur, double change)
+        {
+            return new CouleurGlobale(couleur).getColorWithValueChange(change);
+        }
+        protected void setColorWithHueChange(OpenGL gl, Color couleur, double change)
         {
             Color cG = getColorWithHueChange(couleur, change);
             gl.Color(cG.R / 256.0f, cG.G / 256.0f, cG.B / 256.0f, cG.A / 256.0f);

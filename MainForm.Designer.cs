@@ -64,7 +64,7 @@ namespace ClockScreenSaverGL
             this.openGLControl.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGLControl.DrawFPS = false;
-            this.openGLControl.FrameRate = 30;
+            this.openGLControl.FrameRate = 50;
             this.openGLControl.Location = new System.Drawing.Point(0, 0);
             this.openGLControl.Name = "openGLControl";
             this.openGLControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;

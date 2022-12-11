@@ -1,6 +1,6 @@
 ﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurTaille : Modificateur
+    internal class ModificateurTaille : Modificateur
     {
         private float _dTaille;
         public ModificateurTaille(float dTaille)

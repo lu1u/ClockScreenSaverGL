@@ -5,19 +5,19 @@ using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class FeuDArtifice : SystemeParticules2D.SystemeParticules2D, IDisposable
+    internal class FeuDArtifice : SystemeParticules2D.SystemeParticules2D, IDisposable
     {
 
         #region Parametres
-        const string CAT = "FeuDArtifice";
-        CategorieConfiguration c;
-        int NB_EMETTEURS;
-        float GRAVITE_X;
-        float GRAVITE_Y;
-        float ALPHA_MODIFIEUR;
-        float TAILLE_MODIFIEUR;
-        float TAILLE_PARTICULE;
-        float VITESSE_PARTICULE;
+        private const string CAT = "FeuDArtifice";
+        private CategorieConfiguration c;
+        private int NB_EMETTEURS;
+        private float GRAVITE_X;
+        private float GRAVITE_Y;
+        private float ALPHA_MODIFIEUR;
+        private float TAILLE_MODIFIEUR;
+        private float TAILLE_PARTICULE;
+        private float VITESSE_PARTICULE;
         #endregion
 
         public FeuDArtifice(OpenGL gl) : base(gl)

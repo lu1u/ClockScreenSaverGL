@@ -9,15 +9,15 @@ using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    class RebondParticules : SystemeParticules2D.SystemeParticules2D, IDisposable
+    internal class RebondParticules : SystemeParticules2D.SystemeParticules2D, IDisposable
     {
         #region Parametres
-        const string CAT = "RebondParticules";
+        private const string CAT = "RebondParticules";
         protected CategorieConfiguration c;
-        float GRAVITE_X;
-        float GRAVITE_Y;
-        float TAILLE_PARTICULE;
-        float VITESSE_PARTICULE;
+        private float GRAVITE_X;
+        private float GRAVITE_Y;
+        private float TAILLE_PARTICULE;
+        private float VITESSE_PARTICULE;
         #endregion
 
         public RebondParticules(OpenGL gl) : base(gl)

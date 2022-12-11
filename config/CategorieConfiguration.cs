@@ -144,7 +144,7 @@ namespace ClockScreenSaverGL.Config
                     tw.WriteLine("# ----------------------------------------");
                     tw.WriteLine("");
                     foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
-                        if ( p._utilisé)
+                        if (p._utilisé)
                             p.ecritDansFichier(tw);
 
                     tw.Close();
@@ -298,7 +298,7 @@ namespace ClockScreenSaverGL.Config
                                 Parametre parametre = new Parametre(line);
                                 _valeurs.Add(parametre._nom, parametre);
                             }
-                            catch( Exception e)
+                            catch (Exception e)
                             {
                                 Log.instance.error("Exception dans CategorieConfiguration.LireFichier " + filename);
                                 Log.instance.error(line);

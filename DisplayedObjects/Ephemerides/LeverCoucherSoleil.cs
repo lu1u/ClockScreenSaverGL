@@ -24,7 +24,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
             this.useSummerTime = useSummerTime;
         }
 
-        
+
 
         public DateTime CalculateSunRise(DateTime dateTime)
         {

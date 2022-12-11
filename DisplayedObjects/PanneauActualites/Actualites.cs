@@ -10,7 +10,7 @@ using System.Windows.Forms;
 /// </summary>
 namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
-    internal class Actualites : DisplayedObject, IDisposable
+    internal class Actualites : DisplayedObject
     {
         #region Parametres
         public const string CAT = "Actualites";
@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         #endregion
 
         private float _decalageX = SystemInformation.VirtualScreen.Width;
-        
+
         private ActuFactory _actuFactory;
 
         /// <summary>
@@ -47,20 +47,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             LigneActu.TAILLE_SOURCE = TAILLE_SOURCE;
             LigneActu.HAUTEUR_BANDEAU = HAUTEUR_BANDEAU;
             LigneActu.SATURATION_IMAGES = SATURATION_IMAGES;
-            _actuFactory = new ActuFactory();
+
         }
 
-        protected override void InitAsynchrone()
+        protected override void Init(OpenGL gl)
         {
+            base.Init(gl);
+            _actuFactory = new ActuFactory(gl);
             _actuFactory.Init();
         }
 
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            _actuFactory.Dispose();
-        }
+
         public override CategorieConfiguration getConfiguration()
         {
             if (c == null)
@@ -111,7 +109,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 gl.Enable(OpenGL.GL_TEXTURE_2D);
                 gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
 
-                if (_actuFactory._lignes != null)
+                if (_actuFactory?.Pret == true)
                     try
                     {
                         foreach (LigneActu l in _actuFactory._lignes)

@@ -17,14 +17,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public Color COLOR = Color.White;
         public Texture TEXTURE;
         public Material MATERIAL;
-        static double[,] g_frustumPlanes = new double[6, 4];
+        private static double[,] g_frustumPlanes = new double[6, 4];
 
         public Primitive3D(Vecteur3Ddbl position)
         {
             _position = position;
         }
 
-        static double DEG_TO_RAD(double angled)
+        private static double DEG_TO_RAD(double angled)
         {
             return (angled / 180.0) * Math.PI;
         }

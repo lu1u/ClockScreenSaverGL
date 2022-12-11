@@ -2,7 +2,6 @@
  * Gestion de la couleur globale de l'économiseur qui est presque monochrome
  */
 
-using ClockScreenSaverGL.Config;
 using System;
 using System.Drawing;
 
@@ -17,7 +16,7 @@ namespace ClockScreenSaverGL
         private const string HUE = "hue";
         private const string VALUE = "value";
         private const string SATURATION = "saturation";
-        
+
         public double alpha;
         public double hue;
         public double saturation;
@@ -75,6 +74,16 @@ namespace ClockScreenSaverGL
             hue = hueValue;
         }
 
+        public void SetLuminance(double luminanceValue)
+        {
+            luminance = luminanceValue;
+            if (luminance < 0)
+                luminance = 0;
+            if (luminance > 1.0)
+                luminance = 1.0;
+
+        }
+
         public Color getColorWithHueChange(double hueChange)
         {
             CouleurGlobale c = new CouleurGlobale(hue, saturation, luminance);
@@ -84,6 +93,17 @@ namespace ClockScreenSaverGL
             c.saturation = this.saturation;
 
             c.SetHue(c.hue + hueChange);
+            return c.GetARGB();
+        }
+        public Color getColorWithValueChange(double luminance)
+        {
+            CouleurGlobale c = new CouleurGlobale(hue, saturation, this.luminance);
+            c.alpha = this.alpha;
+            c.hue = this.hue;
+            c.luminance = this.luminance;
+            c.saturation = this.saturation;
+
+            c.SetLuminance(c.luminance + luminance);
             return c.GetARGB();
         }
 

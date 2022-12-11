@@ -14,7 +14,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     public class Viewport2D : IDisposable
     {
-        OpenGL _gl;
+        private OpenGL _gl;
         /// <summary>
         /// Constructeur
         /// Parametres: coordonnees "logiques" des coins du viewport

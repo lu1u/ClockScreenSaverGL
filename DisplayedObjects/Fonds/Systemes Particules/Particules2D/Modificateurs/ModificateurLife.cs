@@ -1,6 +1,6 @@
 ﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurLife : Modificateur
+    internal class ModificateurLife : Modificateur
     {
 
         public override void Applique(SystemeParticules2D s, Temps maintenant)

@@ -2,10 +2,10 @@
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
-    class ModificateurRebond : Modificateur
+    internal class ModificateurRebond : Modificateur
     {
         private DateTime _derniere = DateTime.Now;
-        float _minX, _maxX, _minY, _maxY;
+        private float _minX, _maxX, _minY, _maxY;
         public ModificateurRebond(float minX, float maxX, float minY, float maxY)
         {
             _minX = minX;

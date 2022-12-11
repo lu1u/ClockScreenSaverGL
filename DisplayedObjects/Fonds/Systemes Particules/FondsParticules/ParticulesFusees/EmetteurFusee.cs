@@ -3,21 +3,18 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 {
-    class EmetteurFusee : Emetteur2D
+    internal class EmetteurFusee : Emetteur2D
     {
-        static RectangleF bounds = new Rectangle(-1, -1, 2, 2);
-        static SizeF tailleEmetteur = new SizeF(0.2f, 0.2f);
-        DateTime _derniereParticule = DateTime.Now;
-        float _taille;
-        float _vitesseAngle;
-        float _vitesseParticule;
-
-
-        float _vitesse;
-        float _angle = 0;
-        float _pX, _pY;
-
-        TimerIsole _timer = new TimerIsole(10);
+        private static RectangleF bounds = new Rectangle(-1, -1, 2, 2);
+        private static SizeF tailleEmetteur = new SizeF(0.2f, 0.2f);
+        private DateTime _derniereParticule = DateTime.Now;
+        private float _taille;
+        private float _vitesseAngle;
+        private float _vitesseParticule;
+        private float _vitesse;
+        private float _angle = 0;
+        private float _pX, _pY;
+        private TimerIsole _timer = new TimerIsole(10);
 
         public EmetteurFusee(float taille, float vitesseAngle, float vitesseParticule, float vitesseFusee)
         {

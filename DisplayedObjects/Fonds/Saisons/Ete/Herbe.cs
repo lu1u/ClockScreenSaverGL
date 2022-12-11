@@ -4,17 +4,16 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 {
-    class Herbe
+    internal class Herbe
     {
-        const float ratioSegments = 0.8f;
-        const float largeurInitiale = 15;
-        const int NbSegments = 16;
-
-        readonly float _x, _y;
-        readonly float _raideur;
-        float[] _longueurSegments;
-        double[] _anglesSegments;
-        static Pen[] _pens;
+        private const float ratioSegments = 0.8f;
+        private const float largeurInitiale = 15;
+        private const int NbSegments = 16;
+        private readonly float _x, _y;
+        private readonly float _raideur;
+        private float[] _longueurSegments;
+        private double[] _anglesSegments;
+        private static Pen[] _pens;
 
         /// <summary>
         /// Constructeur

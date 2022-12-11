@@ -2,7 +2,6 @@
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects;
 using ClockScreenSaverGL.DisplayedObjects.Fonds;
-using ClockScreenSaverGL.DisplayedObjects.Meteo;
 using ClockScreenSaverGL.DisplayedObjects.PanneauActualites;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
@@ -34,53 +33,53 @@ namespace ClockScreenSaverGL
         #region Parametres
         public const string CAT = "Main";
         static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
-        const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
-        const string PARAM_FONDDESAISON = "FondDeSaison";
-        const string PARAM_TYPEFOND = "TypeFond";
+        private const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
+        private const string PARAM_FONDDESAISON = "FondDeSaison";
+        private const string PARAM_TYPEFOND = "TypeFond";
 
         #endregion
 
-        CouleurGlobale _couleur = new CouleurGlobale(c.getParametre("Couleur Globale Hue", 0.5f), c.getParametre("Couleur Globale Saturation", 0.5f), c.getParametre("Couleur Globale Luminance", 0.5f));        // La couleur de base pour tous les affichages
+        private CouleurGlobale _couleur = new CouleurGlobale(c.getParametre("Couleur Globale Hue", 0.5f), c.getParametre("Couleur Globale Saturation", 0.5f), c.getParametre("Couleur Globale Luminance", 0.5f));        // La couleur de base pour tous les affichages
         private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
 
         private bool _fondDeSaison;                           // Vrai si on doit commencer par le fond 'de saison'
-        DateTime _derniereFrame = DateTime.Now;                // Heure de la derniere frame affichee
-        Temps _temps;
+        private DateTime _derniereFrame = DateTime.Now;                // Heure de la derniere frame affichee
+        private Temps _temps;
         private bool wireframe = false;
-        int INDICE_FOND;
-        int INDICE_TRANSITION;
-        int noFrame = 0;
+        private int INDICE_FOND;
+        private int INDICE_TRANSITION;
+        private int noFrame = 0;
 
 
 
 
 #if TRACER
-        bool _afficheDebug = c.getParametre("Debug", true);
-        DateTime lastFrame = DateTime.Now;
-        PanneauMessage _panneau;
-        Process currentProc = Process.GetCurrentProcess();
-        PerformanceCounter cpuCounter;
-        PerformanceCounter ramCounter;
+        private bool _afficheDebug = c.getParametre("Debug", true);
+        private DateTime lastFrame = DateTime.Now;
+        private PanneauMessage _panneau;
+        private Process currentProc = Process.GetCurrentProcess();
+        private PerformanceCounter cpuCounter;
+        private PerformanceCounter ramCounter;
 #endif
         #region Preview API's
 
         [DllImport("user32.dll")]
-        static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+        private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
         [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll")]
-        static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
+        private static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
 
         #endregion
 
         #region Screensaver
-        bool IsPreviewMode = false;
+        private bool IsPreviewMode = false;
         public MainForm()
         {
             //
@@ -158,7 +157,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void onLoad(object sender, System.EventArgs e)
+        private void onLoad(object sender, System.EventArgs e)
         {
             try
             {
@@ -227,7 +226,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void deplaceTous()
+        private void deplaceTous()
         {
             _couleur.AvanceCouleur();
             Rectangle bnd = Bounds;
@@ -249,9 +248,9 @@ namespace ClockScreenSaverGL
             _derniereFrame = _temps.temps;
         }
 
-        void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
+        private void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
         {
-            Debug.WriteLine("onOpenGLDraw");
+            //Debug.WriteLine("onOpenGLDraw");
             _temps = new Temps(DateTime.Now, _derniereFrame);
             noFrame++;
 
@@ -303,7 +302,7 @@ namespace ClockScreenSaverGL
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
             {
-                using (var v = new Chronometre("Affichage " + b.GetType().Name))
+                //using (var v = new Chronometre("Affichage " + b.GetType().Name))
                 {
                     gl.PushMatrix();
                     gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_CURRENT_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
@@ -335,7 +334,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void onOpenGLInitialized(object sender, System.EventArgs e)
+        private void onOpenGLInitialized(object sender, System.EventArgs e)
         {
             Debug.WriteLine("onOpenGLInitialized");
             _initTermine = false;
@@ -362,7 +361,7 @@ namespace ClockScreenSaverGL
             if (IsPreviewMode)
             {
                 TailleHorloge = 10;
-                _listeObjets.Add(new HorlogeRonde(gl, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+                //_listeObjets.Add(new HorlogeRonde(gl, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
                 return;
             }
 
@@ -399,7 +398,7 @@ namespace ClockScreenSaverGL
             log.verbose(">>> Fin initialisation");
         }
 
-        void onTimerChangeBackground(object sender, EventArgs e)
+        private void onTimerChangeBackground(object sender, EventArgs e)
         {
             DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
             Type = ProchainFond(Type);
@@ -530,7 +529,7 @@ namespace ClockScreenSaverGL
         //start off OriginalLoction with an X and Y of int.MaxValue, because
         //it is impossible for the cursor to be at that position. That way, we
         //know if this variable has been set yet.
-        Point OriginalLocation = new Point(int.MaxValue, int.MaxValue);
+        private Point OriginalLocation = new Point(int.MaxValue, int.MaxValue);
         private bool _effacerFond = true;
         private bool _initTermine = false;
         //private bool _frameInitiale = true;

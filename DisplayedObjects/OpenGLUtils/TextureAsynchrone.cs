@@ -7,9 +7,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
     public class TextureAsynchrone : ObjetAsynchrone
     {
         public string _nomFichier;
-        Bitmap _bitmap;
-        Texture _texture;
-        OpenGL _gl;
+        protected Bitmap _bitmap;
+        protected Texture _texture;
+        protected OpenGL _gl;
 
         public TextureAsynchrone(OpenGL gl, string nomfichier)
         {

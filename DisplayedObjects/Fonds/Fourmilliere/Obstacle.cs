@@ -23,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         internal void Affiche(OpenGL gl, CouleurGlobale couleur, int details)
         {
             Color c = CouleurGlobale.Light(couleur.getColorWithHueChange(_nuance), 0.4f);
-            gl.Color((byte)c.R, (byte)c.G, (byte)c.B, (byte)128);
+            gl.Color(c.R, c.G, c.B, (byte)128);
             DisplayedObject.DessineCercle(gl, _x, _y, _taille, details);
         }
 
@@ -63,7 +63,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             if ((distanceCarreGauche < (_taille * _taille)) && (distanceCarreDroite < (_taille * _taille)))
             {
                 // Demi tour d'urgence!
-                cumulVirage =  DisplayedObject.PI;
+                cumulVirage = DisplayedObject.PI;
                 return true;
             }
 

@@ -18,17 +18,18 @@ using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
-    class DisplayedObjectFactory
+    internal class DisplayedObjectFactory
     {
         public const string CAT = "Saison";
-        
+
         #region Fonds
         public enum FONDS
         {
-            ESPACE, TROISDPIPES, COURONNES, GRILLE, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, 
-            CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, 
-            BOIDS_POISSONS, EPICYCLE2,
+            ESPACE, TROISDPIPES, COURONNES, GRILLE, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, SNAKE, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE,
+            CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE, LIFE, TERRE, TETRIS,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, SPACE_INVADERS,
+            VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, PONG,
+            BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES,
             MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, /*MOIRE,*//*DONJON, */ ADN, LIFE_SIM, FOURMIS, SINUSOIDE
         };
 
@@ -36,14 +37,14 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const FONDS DERNIER_FOND = FONDS.SINUSOIDE;
         #endregion
 
-        enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 };
+        private enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 };
         /// <summary>
         /// Retourne la saison, (calcul tres approximatif)
         /// </summary>
         /// <returns></returns>
         private static SAISON getSaison()
         {
-             CategorieConfiguration c = Configuration.getCategorie(CAT);
+            CategorieConfiguration c = Configuration.getCategorie(CAT);
             int PRINTEMPS = c.getParametre("Printemps", 80);
             int ETE = c.getParametre("Ete", 172);
             int AUTOMNE = c.getParametre("Automne", 265);
@@ -94,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 }
             }
 
-            //Type = FONDS.MOTO;
+            Type = FONDS.SPACE_INVADERS;
 
             switch (Type)
             {
@@ -144,6 +145,11 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 //case FONDS.DONJON: return new Donjon(gl);
                 case FONDS.LIFE_SIM: return new LifeSimulation(gl);
                 case FONDS.FOURMIS: return new Fourmis(gl);
+                case FONDS.CASSE_BRIQUES: return new CasseBrique(gl);
+                case FONDS.TETRIS: return new Tetris(gl);
+                case FONDS.PONG: return new Pong(gl);
+                case FONDS.SNAKE: return new Snake(gl);
+                case FONDS.SPACE_INVADERS: return new SpaceInvaders(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

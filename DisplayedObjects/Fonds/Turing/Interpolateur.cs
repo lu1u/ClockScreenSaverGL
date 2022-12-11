@@ -4,7 +4,7 @@
 //              http://cogitolearning.co.uk/2013/10/android-animations-tutorial-5-more-on-interpolators/
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 {
-    class Interpolateur
+    internal class Interpolateur
     {
         private TimeSpan _duree;
         private DateTime _dateDepart;

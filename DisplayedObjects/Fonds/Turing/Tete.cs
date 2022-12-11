@@ -6,14 +6,14 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 {
-    class Tete
+    internal class Tete
     {
         #region Parametres
         #endregion
-        Interpolateur _interpolateurTete;
-        float _valeurTete = 1.0f;
-        float _valeurEcriture = 1.0f;
-        Texture _textureSymbolesProgramme, _textureTete;
+        private Interpolateur _interpolateurTete;
+        private float _valeurTete = 1.0f;
+        private float _valeurEcriture = 1.0f;
+        private Texture _textureSymbolesProgramme, _textureTete;
         private float X_TETE, Y_TETE, LARGEUR_TETE, HAUTEUR_TETE, LARGEUR_CASE_RUBAN, HAUTEUR_RUBAN;
         public Tete(OpenGL gl)
         {

@@ -82,7 +82,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             if (c == null)
             {
                 c = Configuration.getCategorie(CAT);
-                MeteoInfo.NB_LIGNES_INFO_MAX = c.getParametre("Nb lignes info max", 4);
                 DELAI_DEEZER = c.getParametre("DeezerInfo Delai (secondes)", 5);
                 TAILLE_TITRE_METEO = c.getParametre("Taille Titre Meteo", 24);
                 LignePrevisionMeteo.TAILLE_ICONE_METEO = c.getParametre("Taille Icone Meteo", 56);

@@ -19,7 +19,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     /// </summary>
     public class DateTexte : Texte
     {
-        const string CAT = "DateTexte";
+        private const string CAT = "DateTexte";
         protected CategorieConfiguration c;
         private string _date; // Sera initialise dans OnDateChange
 

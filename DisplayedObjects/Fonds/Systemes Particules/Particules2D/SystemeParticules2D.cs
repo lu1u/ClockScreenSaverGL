@@ -11,7 +11,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
     public abstract class SystemeParticules2D : Fond, IDisposable
     {
         public int NB_MAX_PARTICULES = 50000;
-        readonly float SEUIL_ALPHA = 0.005f;
+        private readonly float SEUIL_ALPHA = 0.005f;
         public const uint PARTICULES_BLEND_NORMAL = OpenGL.GL_ONE_MINUS_SRC_ALPHA;
         public const uint PARTICULES_BLEND_ADDITIVE = OpenGL.GL_ONE;
         public const float MIN_X = -1.2f;
@@ -253,7 +253,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 gl.Color(1.0f, 1.0f, 1.0f, 0.2f);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
 
-                gl.Rect(MIN_X, MIN_Y, MIN_X + LARGEUR * ((float)_nbParticules / (float)NB_MAX_PARTICULES), MIN_Y + HAUTEUR * 0.005f);
+                gl.Rect(MIN_X, MIN_Y, MIN_X + LARGEUR * (_nbParticules / (float)NB_MAX_PARTICULES), MIN_Y + HAUTEUR * 0.005f);
 
                 gl.Rect(MILIEU_X - (LARGEUR / 1000.0f), MIN_Y + (HAUTEUR / 30.0f), MILIEU_X + (LARGEUR / 1000.0f), MIN_Y);
             }

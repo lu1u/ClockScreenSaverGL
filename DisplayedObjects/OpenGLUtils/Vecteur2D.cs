@@ -117,7 +117,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] public void soustraire(Vecteur2D a) { x = x - a.x; y = y - a.y; }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] static float DEG_TO_RAD(float a) { return a * (float)Math.PI / 360.0f; }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private static float DEG_TO_RAD(float a) { return a * (float)Math.PI / 360.0f; }
         /**
          * Calculate the angle of rotation for this vector
          * @return the angle of rotation 

@@ -10,18 +10,18 @@ using System.Drawing;
 /// </summary>
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 {
-    class Ruban
+    internal class Ruban
     {
-        float _sensDeplacementRuban = 0.0f;
-        float _decalageRuban = 0;
-        Interpolateur _interpolateurRuban;
+        private float _sensDeplacementRuban = 0.0f;
+        private float _decalageRuban = 0;
+        private Interpolateur _interpolateurRuban;
         public static readonly int NB_SYMBOLES = 3;     // Nombre de symboles dans la texture des chiffres du ruban
-        float X_RUBAN;
-        float Y_RUBAN;
-        float HAUTEUR_RUBAN;
-        float HAUTEUR_TETE;
-        float LARGEUR_CASE_RUBAN;
-        Texture _textureEngrenage, _textureSymboles;
+        private float X_RUBAN;
+        private float Y_RUBAN;
+        private float HAUTEUR_RUBAN;
+        private float HAUTEUR_TETE;
+        private float LARGEUR_CASE_RUBAN;
+        private Texture _textureEngrenage, _textureSymboles;
         public Ruban(OpenGL gl)
         {
             _decalageRuban = 0;

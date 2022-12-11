@@ -7,22 +7,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     public abstract class MateriauGlobal : TroisD
     {
-        const string CONF_LIGHT_AMBIENT = "Material Light Ambient";
-        const string CONF_LIGHT_DIFFUSE = "Material Light Diffuse";
-        const string CONF_LIGHT_SPECULAR = "Material Light Specular";
-
-        const string CONF_COL_AMBIENT = "Material Ambient";
-        const string CONF_COL_DIFFUSE = "Material Diffuse";
-        const string CONF_COL_SPECULAR = "Material Specular";
-        const string CONF_COL_COLOR = "Material Color";
-        const string CONF_SHININESS = "Material Shininess";
+        private const string CONF_LIGHT_AMBIENT = "Material Light Ambient";
+        private const string CONF_LIGHT_DIFFUSE = "Material Light Diffuse";
+        private const string CONF_LIGHT_SPECULAR = "Material Light Specular";
+        private const string CONF_COL_AMBIENT = "Material Ambient";
+        private const string CONF_COL_DIFFUSE = "Material Diffuse";
+        private const string CONF_COL_SPECULAR = "Material Specular";
+        private const string CONF_COL_COLOR = "Material Color";
+        private const string CONF_SHININESS = "Material Shininess";
 
 
         //protected enum VALEUR_MODIFIEE { LAMBIENT = 0, LDIFFUSE = 1, LSPECULAR = 2, AMBIENT = 3, DIFFUSE = 4, SPECULAR = 5, COLOR = 6, SHININESS = 7 };
         protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
         protected float[] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
         protected float[] COL_SPECULAR = { 0.7f, 0.7f, 0.7f, 1.0f };
-        protected float[] COL_COLOR = { 0.7f, 0.7f, 0.7f,1.0f };
+        protected float[] COL_COLOR = { 0.7f, 0.7f, 0.7f, 1.0f };
         protected float SHININESS = 18f;
 
         protected float[] LIGHTPOS = { -2, 1.5f, -2.5f, 1.0f };

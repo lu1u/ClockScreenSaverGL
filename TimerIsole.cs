@@ -16,6 +16,7 @@ namespace ClockScreenSaverGL
         /// Constructeur
         /// </summary>
         /// <param name="intervalle">Intervalle en millisecondes</param>
+        /// <param name="initial">true si le timer est initialement "écoulé"</param>
         public TimerIsole(double intervalle, bool initial = false)
         {
             _intervalle = intervalle;

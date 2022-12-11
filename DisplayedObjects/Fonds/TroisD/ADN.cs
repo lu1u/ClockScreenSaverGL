@@ -8,16 +8,15 @@ using System.Linq;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    class ADN : MateriauGlobal, IDisposable
+    internal class ADN : MateriauGlobal, IDisposable
     {
-
-        const String CAT = "ADN";
-        CategorieConfiguration c;
-        float RAYON_SPHERE;
-        float LONGUEUR_RAYON;
-        int NB_ETAGES;
-        float MIN_Y;
-        float MAX_Y;
+        private const String CAT = "ADN";
+        private CategorieConfiguration c;
+        private float RAYON_SPHERE;
+        private float LONGUEUR_RAYON;
+        private int NB_ETAGES;
+        private float MIN_Y;
+        private float MAX_Y;
 
         private class Etage
         {
@@ -27,10 +26,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             public float y;
         };
 
-        List<Etage> _etages = new List<Etage>();
-        Sphere _sphere = new Sphere();
-        Cylinder _cylindre = new Cylinder();
-        float _angle = 0;
+        private List<Etage> _etages = new List<Etage>();
+        private Sphere _sphere = new Sphere();
+        private Cylinder _cylindre = new Cylinder();
+        private float _angle = 0;
         public ADN(OpenGL gl) : base(gl)
         {
             getConfiguration();
@@ -49,8 +48,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 e._angle = angle;
                 _etages.Add(e);
 
-                y -= (MAX_Y - MIN_Y) / (float)NB_ETAGES;
-                angle += 360.0f / (float)NB_ETAGES;
+                y -= (MAX_Y - MIN_Y) / NB_ETAGES;
+                angle += 360.0f / NB_ETAGES;
             }
 
             _sphere.CreateInContext(gl);
@@ -186,7 +185,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             Etage et = _etages.First();
             if (et.y > MAX_Y)
             {
-                et.y = _etages.Last().y - (MAX_Y - MIN_Y) / (float)NB_ETAGES;
+                et.y = _etages.Last().y - (MAX_Y - MIN_Y) / NB_ETAGES;
                 _etages.RemoveAt(0);
                 _etages.Add(et);
             }

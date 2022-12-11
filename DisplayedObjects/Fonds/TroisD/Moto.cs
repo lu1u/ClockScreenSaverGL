@@ -1,7 +1,6 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
-using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
 using GLfloat = System.Single;
@@ -141,8 +140,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Moto(OpenGL gl) : base(gl)
         {
             getConfiguration();
-            _texture= new TextureAsynchrone(gl, Configuration.getImagePath("texture_route.png"));
-            _texturePaysage = new TextureAsynchrone(gl, c.getParametre("Texture Paysage", Config.Configuration.getImagePath("paysage_route.png")));
+            _texture = new TextureAsynchrone(gl, Configuration.getImagePath("texture_route.png"));
+            _texture.Init();
+            _texturePaysage = new TextureAsynchrone(gl, c.getParametre("Texture Paysage", Configuration.getImagePath("paysage_route.png")));
+            _texturePaysage.Init();
 
             _anglePasVirageEnCours = 0.1f * FloatRandom(-ANGLE_TRONCON, ANGLE_TRONCON);
             _nombrePasVirageEnCours = r.Next(NB_PAS_MIN, NB_PAS_MAX);
@@ -275,7 +276,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            
+
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_DEPTH);
             gl.ShadeModel(OpenGL.GL_SMOOTH);
@@ -292,10 +293,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             float[] col = { couleur.R / COULEUR * RATIO_FOG, couleur.G / COULEUR * RATIO_FOG, couleur.B / COULEUR * RATIO_FOG, 1 };
             gl.Color(col);
             brouillard(gl, col);
-            dessinePaysage(gl);
-            dessineRoute(gl);
 
-            
+            if (_texturePaysage?.Pret == true)
+                dessinePaysage(gl);
+
+            if (_texture?.Pret == true)
+                dessineRoute(gl);
+
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -303,9 +307,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private void dessineRoute(OpenGL gl)
         {
-            if (!_texture.Pret)
-                return;
-
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
@@ -342,10 +343,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_COLOR_MATERIAL);
-            //gl.Enable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-
 
             Troncon.Decors[] decors = new Troncon.Decors[NB_TRONCONS * 2];
             // Decors de gauche
@@ -448,9 +447,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         ///////////////////////////////////////////////////////////////////////////////////////////
         private void dessinePaysage(OpenGL gl)
         {
-            if (!_texturePaysage.Pret)
-                return;
-
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             _texturePaysage.texture.Bind(gl);

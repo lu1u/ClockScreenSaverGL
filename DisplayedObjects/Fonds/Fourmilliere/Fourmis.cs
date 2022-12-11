@@ -12,16 +12,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     internal class Fourmis : Fond
     {
         #region Parametres
-        const string CAT = "Fourmis";
+        private const string CAT = "Fourmis";
         protected CategorieConfiguration c;
-        int NB_FOURMIS, NB_OBSTACLES;
-        float TAILLE_FOURMI, TAILLE_OBSTACLES;
-        float VITESSE;
+        private int NB_FOURMIS, NB_OBSTACLES;
+        private float TAILLE_FOURMI, TAILLE_OBSTACLES;
+        private float VITESSE;
         public double DELAI_TIMER;
-        int DETAIL_CERCLES;
-        int TAILLE_GRILLE;
-        bool AFFICHER_PERCEPTION;
-        bool AFFICHER_RECHERCHE_NOURRITURE, AFFICHER_RAPPORTE_NOURRITURE;
+        private int DETAIL_CERCLES;
+        private int TAILLE_GRILLE;
+        private bool AFFICHER_PERCEPTION;
+        private bool AFFICHER_RECHERCHE_NOURRITURE, AFFICHER_RAPPORTE_NOURRITURE;
         #endregion
 
 
@@ -51,7 +51,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             for (int i = 0; i < NB_OBSTACLES; i++)
             {
                 float xy = FloatRandom(0.0f, 1.0f);
-                _monde._listeObstacles.Add(new Obstacle(xy, FloatRandom(0.8f,1.2f) - xy, FloatRandom(0.25f, 2.0f) * TAILLE_OBSTACLES, FloatRandom(-0.1f, 0.1f)));
+                _monde._listeObstacles.Add(new Obstacle(xy, FloatRandom(0.8f, 1.2f) - xy, FloatRandom(0.25f, 2.0f) * TAILLE_OBSTACLES, FloatRandom(-0.1f, 0.1f)));
             }
         }
 
@@ -105,7 +105,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
 
                 foreach (Fourmi f in _fourmis)
-                    f.Affiche(gl, TAILLE_FOURMI, AFFICHER_PERCEPTION, c);                
+                    f.Affiche(gl, TAILLE_FOURMI, AFFICHER_PERCEPTION, c);
             }
 
 #if TRACER

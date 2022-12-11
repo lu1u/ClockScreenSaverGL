@@ -6,42 +6,42 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-    class Epicycle2 : Fond, IDisposable
+    internal class Epicycle2 : Fond, IDisposable
     {
         public const float TOUR_COMPLET = (float)(Math.PI * 2.0);
-        const double ANGLE_DROIT = Math.PI * 0.5;
+        private const double ANGLE_DROIT = Math.PI * 0.5;
 
         #region Parametres
         public const string CAT = "Epicycle2";
         private readonly float TAILLE_VIEWPORT = 100.0f;
         private CategorieConfiguration c;
-        int NBMAX_SEGMENTS;
-        int NBMIN_SEGMENTS;
-        float MIN_LONGUEUR;
-        float MAX_LONGUEUR;
-        float MIN_VITESSE;
-        float MAX_VITESSE;
-        float TAILLE_LIGNE_SEGMENTS;
-        float TAILLE_LIGNE_TRACES;
-        float ALPHA_SEGMENT;
-        float RAYON_TOTAL;
-        int NB_MAX_TRACE;
-        int DELAI_TRACE;
-        float VITESSE_DEFILE;
+        private int NBMAX_SEGMENTS;
+        private int NBMIN_SEGMENTS;
+        private float MIN_LONGUEUR;
+        private float MAX_LONGUEUR;
+        private float MIN_VITESSE;
+        private float MAX_VITESSE;
+        private float TAILLE_LIGNE_SEGMENTS;
+        private float TAILLE_LIGNE_TRACES;
+        private float ALPHA_SEGMENT;
+        private float RAYON_TOTAL;
+        private int NB_MAX_TRACE;
+        private int DELAI_TRACE;
+        private float VITESSE_DEFILE;
         #endregion
 
-        int _nbSegments;
-        float[] _longueurSegments;
-        float[] _angleSegments;
-        float[] _vitesseSegments;
+        private int _nbSegments;
+        private float[] _longueurSegments;
+        private float[] _angleSegments;
+        private float[] _vitesseSegments;
+        private int _nbTraces;
+        private float[] _xTrace;
+        private float[] _yTrace;
 
-        int _nbTraces;
-        float[] _xTrace;
-        float[] _yTrace;
         //Color[] _couleurs;
         //Color _derniereCouleur = Color.FromArgb(0,0,0,0) ;
 
-        bool frameInitiale = true;  // Ne pas tracer la frame initiale, pb dus au temps d'initialisation du programme
+        private bool frameInitiale = true;  // Ne pas tracer la frame initiale, pb dus au temps d'initialisation du programme
         private TimerIsole _timerTrace;
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             // Normaliser la longueur des segments pour que le total fasse RAYON_TOTAL
             for (int i = 0; i < _nbSegments; i++)
             {
-                _longueurSegments[i] = _longueurSegments[i] * (RAYON_TOTAL*TAILLE_VIEWPORT) / longueurTotale;
+                _longueurSegments[i] = _longueurSegments[i] * (RAYON_TOTAL * TAILLE_VIEWPORT) / longueurTotale;
             }
 
             // Traces
@@ -188,7 +188,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float ratio = (float)tailleEcran.Width / (float)tailleEcran.Height;
+            float ratio = tailleEcran.Width / (float)tailleEcran.Height;
 
             using (new Viewport2D(gl, -ratio * TAILLE_VIEWPORT, -TAILLE_VIEWPORT, ratio * TAILLE_VIEWPORT, TAILLE_VIEWPORT))
             {

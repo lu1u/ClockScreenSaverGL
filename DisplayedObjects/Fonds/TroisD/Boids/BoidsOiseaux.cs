@@ -7,16 +7,14 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
-    class BoidsOiseaux : Boids
+    internal class BoidsOiseaux : Boids
     {
-        const String CAT = "Boids Oiseaux";
-        CategorieConfiguration c;
-        static int NB;
-
-        static float DIMINUE_VITESSE_V;
-        static float DIMINUE_ACCELERATION_V;
-
-        Texture _texture = new Texture();
+        private const String CAT = "Boids Oiseaux";
+        private CategorieConfiguration c;
+        private static int NB;
+        private static float DIMINUE_VITESSE_V;
+        private static float DIMINUE_ACCELERATION_V;
+        private Texture _texture = new Texture();
 
 
         public BoidsOiseaux(OpenGL gl) : base(gl)

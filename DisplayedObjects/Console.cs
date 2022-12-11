@@ -8,7 +8,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 {
     public class Console : IDisposable
     {
-        OpenGLFonte _fonte;
+        private OpenGLFonte _fonte;
         private class LIGNE
         {
             public LIGNE(Color c, string s)
