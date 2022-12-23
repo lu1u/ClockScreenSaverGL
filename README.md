@@ -11,7 +11,7 @@ Features:
 - 50+ different backgrounds
 
 Snow background:
-![ScreenShot]([https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-1.png])
+![ScreenShot]([screenshots/Sans%20titre-1.png])
 
 Blobs:
 
