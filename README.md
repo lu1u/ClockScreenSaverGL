@@ -11,7 +11,7 @@ Features:
 - 50+ different backgrounds
 
 Snow background:
-![ScreenShot]([screenshots/sans-titre-1.png])
+![Screenshot](screenshots/sans-titre-1.png)
 
 Blobs:
 
