@@ -10,19 +10,24 @@ Features:
 - french citations (can be easily changed to add your own texts)
 - 50+ different backgrounds
 
-Snow background:
+
 ![Screenshot](screenshots/sans-titre-1.png)
-
-Blobs:
-
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-2.png)
-
-Space:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-3.png)
-
-Game of life:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-4.png)
-
-Moving bands:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-5.png)
+![Screenshot](screenshots/sans-titre-2.png)
+![Screenshot](screenshots/sans-titre-3.png)
+![Screenshot](screenshots/sans-titre-4.png)
+![Screenshot](screenshots/sans-titre-5.png)
+![Screenshot](screenshots/sans-titre-6.png)
+![Screenshot](screenshots/sans-titre-7.png)
+![Screenshot](screenshots/sans-titre-8.png)
+![Screenshot](screenshots/sans-titre-9.png)
+![Screenshot](screenshots/sans-titre-10.png)
+![Screenshot](screenshots/sans-titre-11.png)
+![Screenshot](screenshots/sans-titre-12.png)
+![Screenshot](screenshots/sans-titre-13.png)
+![Screenshot](screenshots/sans-titre-14.png)
+![Screenshot](screenshots/sans-titre-15.png)
+![Screenshot](screenshots/sans-titre-16.png)
+![Screenshot](screenshots/sans-titre-17.png)
+![Screenshot](screenshots/sans-titre-18.png)
+![Screenshot](screenshots/sans-titre-19.png)
 More...
