@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const float COULEUR_CHANGE_J = CHANGE_COULEUR * 5.0f;
         private const float COULEUR_CHANGE_T = CHANGE_COULEUR * 6.0f;
 
-        static private T_CASE[,] O =
+        private static readonly T_CASE[,] O =
         {
             { 1, 1 } ,
             { 1, 1 }
@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         };
 
         // Piece I
-        static private T_CASE[,] I_1 =
+        private static readonly T_CASE[,] I_1 =
         {
                 { 1 },
                 { 1 },
@@ -38,18 +38,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 { 1 }
         };
 
-        static private T_CASE[,] I_2 =
+        static private readonly T_CASE[,] I_2 =
         {
             { 1, 1, 1, 1 }
         };
 
         // Piece S
-        static private T_CASE[,] S_1 =
+        static private readonly T_CASE[,] S_1 =
         {
             { 0,1,1 },
             { 1,1,0 }
         };
-        static private T_CASE[,] S_2 =
+        static private readonly T_CASE[,] S_2 =
         {
             { 1,0 },
             { 1,1 },
@@ -57,13 +57,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         };
 
         // Piece Z
-        static private T_CASE[,] Z_1 =
+        static private readonly T_CASE[,] Z_1 =
         {
             { 1,1,0 },
             { 0,1,1 }
         };
 
-        static private T_CASE[,] Z_2 =
+        static private readonly T_CASE[,] Z_2 =
         {
             { 0,1 },
             { 1,1 },
@@ -71,75 +71,75 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         };
 
         // Piece L
-        static private T_CASE[,] L_1 =
+        static private readonly T_CASE[,] L_1 =
         {
             {1,0 },
             {1,0 },
             {1,1 }
         };
 
-        static private T_CASE[,] L_2 =
+        static private readonly T_CASE[,] L_2 =
         {
             {1,1,1 },
             {1,0,0 }
         };
-        static private T_CASE[,] L_3 =
+        static private readonly T_CASE[,] L_3 =
         {
             {1,1 },
             {0,1 },
             {0,1 }
         };
-        static private T_CASE[,] L_4 =
+        static private readonly T_CASE[,] L_4 =
         {
             {0,0,1 },
             {1,1,1 }
         };
 
         // Piece J 
-        static private T_CASE[,] J_1 =
+        static private readonly T_CASE[,] J_1 =
             {
             {0,1 },
             {0,1 },
             {1,1 }
             };
-        static private T_CASE[,] J_2 =
+        static private readonly T_CASE[,] J_2 =
         {
             {1,0,0 },
             {1,1,1 }
         };
 
-        static private T_CASE[,] J_3 =
+        static private readonly T_CASE[,] J_3 =
         {
             {1,1 },
             {1,0 },
             {1,0 }
         };
-        static private T_CASE[,] J_4 =
+        static private readonly T_CASE[,] J_4 =
         {
             {1,1,1 },
             {0,0,1 }
         };
 
         // Piece T
-        static private T_CASE[,] T_1 =
+        static private readonly T_CASE[,] T_1 =
         {
             {1,1,1},
             {0,1,0}
         };
 
-        static private T_CASE[,] T_2 =
+        static private readonly T_CASE[,] T_2 =
         {
             {0,1 },
             {1,1 },
             {0,1 }
         };
-        static private T_CASE[,] T_3 =
+        static private readonly T_CASE[,] T_3 =
         {
             {0,1,0},
             {1,1,1}
         };
 
-        static private T_CASE[,] T_4 =
+        static private readonly T_CASE[,] T_4 =
         {
             {1,0 },
             {1,1 },
@@ -203,12 +203,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="i">Numero de la piece, de 0 à NB_PIECES</param>
         /// <returns></returns>
-        public static PieceTetris creerPiece(T_CASE i)
+        public static PieceTetris CreerPiece(T_CASE i)
         {
             switch (i)
             {
                 case 0: return new PieceTetris(O, O, O, O, COULEUR_CHANGE_O);
-                case 1: return new PieceTetris(I_1, I_2, I_1, I_2, COULEUR_CHANGE_I); ;
+                case 1: return new PieceTetris(I_1, I_2, I_1, I_2, COULEUR_CHANGE_I); 
                 case 2: return new PieceTetris(S_1, S_2, S_1, S_2, COULEUR_CHANGE_S);
                 case 3: return new PieceTetris(Z_1, Z_2, Z_1, Z_2, COULEUR_CHANGE_Z);
                 case 4: return new PieceTetris(L_1, L_2, L_3, L_4, COULEUR_CHANGE_L);
@@ -239,9 +239,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 _rotation = _cases.Length - 1;
         }
 
-        private T_CASE[][,] _cases;
+        private readonly T_CASE[][,] _cases;
         private int _rotation;
-        private float _couleurChange;
+        private readonly float _couleurChange;
 
         private PieceTetris(PieceTetris p)
         {
@@ -271,15 +271,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="largeurCase"></param>
         /// <param name="hauteurCase"></param>
         /// <param name="couleur"></param>
-        public void affiche(OpenGL gl, float origineX, float origineY, float largeurCase, float hauteurCase, Color couleur)
+        public void Affiche(OpenGL gl, float origineX, float origineY, float largeurCase, float hauteurCase, Color couleur)
         {
             float X = origineX + (CaseX * largeurCase);
             float Y = origineY + (CaseY * hauteurCase);
 
             gl.PushMatrix();
             gl.Translate(X, Y, 0);
-            Color Couleur = Fond.getColorWithHueChange(couleur, _couleurChange);
-            gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 1.0f);
+            Fond.SetColorWithHueChange(gl, couleur, _couleurChange);
             gl.Begin(OpenGL.GL_QUADS);
             for (T_CASE i = 0; i < _cases[_rotation].GetLength(0); i++)
                 for (T_CASE j = 0; j < _cases[_rotation].GetLength(1); j++)

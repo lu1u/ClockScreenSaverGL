@@ -1,5 +1,6 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -33,9 +34,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         #endregion
         private static readonly DateTime debut = DateTime.Now;
         // Soleil
-        private Texture _textureSoleil;
-        private Texture _textureFond;
-        private Texture _textureFlares;
+        private readonly Texture _textureSoleil;
+        private readonly Texture _textureFond;
+        private readonly Texture _textureFlares;
 
         private float _xSoleil, _ySoleil;
         // Herbes
@@ -43,10 +44,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 
         //private List<Herbe> _herbes;
 
-        private TimerIsole timer = new TimerIsole(500);
+        private readonly TimerIsole timer = new TimerIsole(500);
 
         // Lens Flares (reflets du soleil sur l'objectif
-        private class Flare
+        sealed private class Flare
         {
             public float _distance;
             public float _taille;
@@ -56,7 +57,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         };
         private Flare[] _flares;
 
-        private class Reflet
+        sealed private class Reflet
         {
             public Reflet(float TAILLE_SOLEIL)
             {
@@ -64,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
                 _y = FloatRandom(0.01f, -0.1f);
                 _alpha = 1.0f;
                 _sX = FloatRandom(0.1f, 0.2f) * -_y;
-                _sY = FloatRandom(0.002f, 0.004f); ;
+                _sY = FloatRandom(0.002f, 0.004f); 
                 //_vx = FloatRandom(-0.01f, 0.01f);
                 _vy = -0.005f;
                 _dalpha = 0.99f;
@@ -86,39 +87,39 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
          */
         public Ete(OpenGL gl, int LargeurEcran, int HauteurEcran) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _textureSoleil = new Texture();
-            _textureSoleil.Create(gl, c.getParametre("Soleil", Config.Configuration.getImagePath(REPERTOIRE_ETE + @"\soleil.png")));
+            _textureSoleil.Create(gl, c.GetParametre("Soleil", Config.Configuration.GetImagePath(REPERTOIRE_ETE + @"\soleil.png")));
             _textureFond = new Texture();
-            _textureFond.Create(gl, c.getParametre("Fond", Config.Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png")));
+            _textureFond.Create(gl, c.GetParametre("Fond", Config.Configuration.GetImagePath(REPERTOIRE_ETE + @"\fondEte.png")));
             _textureFlares = new Texture();
-            _textureFlares.Create(gl, c.getParametre("Flares", Config.Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png")));
+            _textureFlares.Create(gl, c.GetParametre("Flares", Config.Configuration.GetImagePath(REPERTOIRE_ETE + @"\flares.png")));
             float ratio = LargeurEcran / (float)HauteurEcran;
             _xSoleil = -ratio;
             _ySoleil = 0;
-            Initialise(gl);
+            Initialise();
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
 
-                REPERTOIRE_ETE = c.getParametre("Repertoire", "ete");
+                REPERTOIRE_ETE = c.GetParametre("Repertoire", "ete");
                 //NB_HERBES = c.getParametre("Nb Herbes", 80);
-                NB_REFLETS = c.getParametre("Nb Reflets", 20);
-                NB_FLARES = c.getParametre("Nb Flares", 6);
-                VX_SOLEIL = c.getParametre("VX Soleil", 0.01f, (a) => { VX_SOLEIL = (float)Convert.ToDouble(a); });
-                VY_SOLEIL = c.getParametre("VY Soleil", 0.01f, (a) => { VY_SOLEIL = (float)Convert.ToDouble(a); });
-                TAILLE_SOLEIL = c.getParametre("Taille Soleil", 0.4f, (a) => { TAILLE_SOLEIL = (float)Convert.ToDouble(a); });
-                RATIO_FLARE_MIN = c.getParametre("Ratio Flare Min", 0.7f);
-                RATIO_FLARE_MAX = c.getParametre("Ratio Flare Max", 1.3f);
-                ALPHA = (byte)c.getParametre("Alpha", 64);
-                ALPHA_FLARE_MIN = (byte)c.getParametre("Alpha Flare Min", 3);
-                ALPHA_FLARE_MAX = (byte)c.getParametre("Alpha Flare Max", 16);
-                AFFICHE_FOND = c.getParametre("Affiche Fond", true);
-                RATIO_MER = c.getParametre("Ratio mer", 0.5f, (a) => { RATIO_MER = (float)Convert.ToDouble(a); });
+                NB_REFLETS = c.GetParametre("Nb Reflets", 20);
+                NB_FLARES = c.GetParametre("Nb Flares", 6);
+                VX_SOLEIL = c.GetParametre("VX Soleil", 0.01f, (a) => { VX_SOLEIL = (float)Convert.ToDouble(a); });
+                VY_SOLEIL = c.GetParametre("VY Soleil", 0.01f, (a) => { VY_SOLEIL = (float)Convert.ToDouble(a); });
+                TAILLE_SOLEIL = c.GetParametre("Taille Soleil", 0.4f, (a) => { TAILLE_SOLEIL = (float)Convert.ToDouble(a); });
+                RATIO_FLARE_MIN = c.GetParametre("Ratio Flare Min", 0.7f);
+                RATIO_FLARE_MAX = c.GetParametre("Ratio Flare Max", 1.3f);
+                ALPHA = (byte)c.GetParametre("Alpha", 64);
+                ALPHA_FLARE_MIN = (byte)c.GetParametre("Alpha Flare Min", 3);
+                ALPHA_FLARE_MAX = (byte)c.GetParametre("Alpha Flare Max", 16);
+                AFFICHE_FOND = c.GetParametre("Affiche Fond", true);
+                RATIO_MER = c.GetParametre("Ratio mer", 0.5f, (a) => { RATIO_MER = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -126,7 +127,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         /**
          * Initialisation du soleil, des lens flares et de l'herbe
          * */
-        private void Initialise(OpenGL gl)
+        private void Initialise()
         {
 
             _flares = new Flare[NB_FLARES];
@@ -136,7 +137,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
                 _flares[i]._distance = FloatRandom(1f, -1.5f);
                 _flares[i]._taille = FloatRandom(TAILLE_SOLEIL * RATIO_FLARE_MIN, TAILLE_SOLEIL * RATIO_FLARE_MAX);
                 _flares[i]._alpha = FloatRandom(ALPHA_FLARE_MIN, ALPHA_FLARE_MAX);
-                _flares[i]._texture = r.Next(0, NB_IMAGES_FLARES);
+                _flares[i]._texture = random.Next(0, NB_IMAGES_FLARES);
                 _flares[i].rR = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
                 _flares[i].rG = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
                 _flares[i].rB = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
@@ -329,7 +330,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 
         public override bool ClearBackGround(OpenGL gl, Color c)
         {
-            c = getCouleurOpaqueAvecAlpha(c, ALPHA);
+            c = OpenGLColor.GetCouleurOpaqueAvecAlpha(c, ALPHA);
 
             gl.ClearColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);

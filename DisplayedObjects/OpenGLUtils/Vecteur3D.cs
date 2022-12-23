@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return (float)Math.Sqrt((x * x) + (y * y) + (z * z));
         }
 
-        public void set(float X, float Y, float Z = 0)
+        public void Set(float X, float Y, float Z = 0)
         {
             x = X;
             y = Y;
@@ -64,7 +64,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             z /= n;
         }
 
-        public float[] tabf
+        public float[] Tabf
         {
             get
             {
@@ -95,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public float operator *(Vecteur3D v, Vecteur3D w)     //produit scalaire
-        { return v.prodscal(w); }
+        { return v.Prodscal(w); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vecteur3D operator +(Vecteur3D v, Vecteur3D w) => new Vecteur3D(v.x + w.x, v.y + w.y, v.z + w.z);
@@ -138,18 +138,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             if (Longueur() > max)
             {
                 Normalize();
-                multiplier_par(max);
+                Multiplier_par(max);
             }
         }
 
-        public void multiplier_par(float a) { x = a * x; y = a * y; z = a * z; }
-        public void diviser_par(float a) { x = x / a; y = y / a; z = z / a; }
-        public float prodscal(Vecteur3D v) { return (x * v.x + y * v.y + z * v.z); }
-        public void additionner(float a) { x = a + x; y = a + y; z = a + z; }
-        public void additionner(float a, float b, float c) { x = a + x; y = b + y; z = c + z; }
-        public void additionner(Vecteur3D a) { x = x + a.x; y = y + a.y; z = z + a.z; }
+        public void Multiplier_par(float a) { x = a * x; y = a * y; z = a * z; }
+        public void Diviser_par(float a) { x /= a; y /= a; z /= a; }
+        public float Prodscal(Vecteur3D v) { return (x * v.x + y * v.y + z * v.z); }
+        public void Additionner(float a) { x = a + x; y = a + y; z = a + z; }
+        public void Additionner(float a, float b, float c) { x = a + x; y = b + y; z = c + z; }
+        public void Additionner(Vecteur3D a) { x += a.x; y += a.y; z += a.z; }
 
-        public void soustraire(Vecteur3D a) { x = x - a.x; y = y - a.y; z = z - a.z; }
+        public void Soustraire(Vecteur3D a) { x -= a.x; y -= a.y; z -= a.z; }
 
         private static float DEG_TO_RAD(float a) { return a * (float)Math.PI / 360.0f; }
         public void RotateX(float AngleDegres)
@@ -204,12 +204,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return (float)Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
         }
 
-        public static Vecteur3D normale(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
+        public static Vecteur3D Normale(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
-            Vecteur3D v = new Vecteur3D();
-            v.x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);
-            v.y = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z);
-            v.z = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x);
+            Vecteur3D v = new Vecteur3D
+            {
+                x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y),
+                y = (P2.z - P1.z) * (P3.x - P1.x) - (P2.x - P1.x) * (P3.z - P1.z),
+                z = (P2.x - P1.x) * (P3.y - P1.y) - (P2.y - P1.y) * (P3.x - P1.x)
+            };
             v.Normalize();
             return v;
         }

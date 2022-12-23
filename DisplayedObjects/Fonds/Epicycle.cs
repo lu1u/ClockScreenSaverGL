@@ -1,12 +1,13 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-    internal class Epicycle : Fond, IDisposable
+    internal class Epicycle : Fond
     {
         public const float TOUR_COMPLET = (float)(Math.PI * 2.0);
         private const double ANGLE_DROIT = Math.PI * 0.5;
@@ -36,9 +37,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float[] _xTrace;
         private float[] _yTrace;
 
-        //Color[] _couleurs;
-        //Color _derniereCouleur = Color.FromArgb(0,0,0,0) ;
-
         private bool frameInitiale = true;  // Ne pas tracer la frame initiale, pb dus au temps d'initialisation du programme
         private TimerIsole _timerTrace;
 
@@ -46,23 +44,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// Lecture de la configuration
         /// </summary>
         /// <returns></returns>
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NBMAX_SEGMENTS = c.getParametre("NB Max segments", 3);
-                NBMIN_SEGMENTS = c.getParametre("NB Min segments", 2);
-                RAYON_TOTAL = c.getParametre("Rayon Total", 0.95f);
-                MAX_LONGUEUR = c.getParametre("Longueur max", 0.25f);
-                MIN_LONGUEUR = c.getParametre("Longueur min", 0.05f);
-                MAX_VITESSE = c.getParametre("Vitesse max", 3.0f);
-                MIN_VITESSE = c.getParametre("Vitesse min", 1.5f);
-                TAILLE_LIGNE_SEGMENTS = c.getParametre("Largeur ligne segment", 25.0f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
-                TAILLE_LIGNE_TRACES = c.getParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
-                ALPHA_SEGMENT = c.getParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
-                NB_MAX_TRACE = c.getParametre("Nb Max Trace", 10000);
-                DELAI_TRACE = c.getParametre("Delai Trace", 20, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
+                c = Configuration.GetCategorie(CAT);
+                NBMAX_SEGMENTS = c.GetParametre("NB Max segments", 3);
+                NBMIN_SEGMENTS = c.GetParametre("NB Min segments", 2);
+                RAYON_TOTAL = c.GetParametre("Rayon Total", 0.95f);
+                MAX_LONGUEUR = c.GetParametre("Longueur max", 0.25f);
+                MIN_LONGUEUR = c.GetParametre("Longueur min", 0.05f);
+                MAX_VITESSE = c.GetParametre("Vitesse max", 3.0f);
+                MIN_VITESSE = c.GetParametre("Vitesse min", 1.5f);
+                TAILLE_LIGNE_SEGMENTS = c.GetParametre("Largeur ligne segment", 25.0f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
+                TAILLE_LIGNE_TRACES = c.GetParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
+                ALPHA_SEGMENT = c.GetParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
+                NB_MAX_TRACE = c.GetParametre("Nb Max Trace", 10000);
+                DELAI_TRACE = c.GetParametre("Delai Trace", 20, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
             }
             return c;
         }
@@ -73,7 +71,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="gl"></param>
         public Epicycle(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected override void Init(OpenGL gl)
         {
             _timerTrace = new TimerIsole(DELAI_TRACE, true);
-            _nbSegments = r.Next(NBMIN_SEGMENTS, NBMAX_SEGMENTS + 1);
+            _nbSegments = random.Next(NBMIN_SEGMENTS, NBMAX_SEGMENTS + 1);
             _longueurSegments = new float[_nbSegments];
             _angleSegments = new float[_nbSegments];
             _vitesseSegments = new float[_nbSegments];
@@ -117,7 +115,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             _nbTraces = 0;
             _xTrace = new float[NB_MAX_TRACE];
             _yTrace = new float[NB_MAX_TRACE];
-            //_couleurs = new Color[NB_MAX_TRACE];
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
@@ -157,7 +154,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                     _xTrace[_nbTraces] = x;
                     _yTrace[_nbTraces] = y;
-                    //_couleurs[_nbTraces] = _derniereCouleur ;
                     _nbTraces++;
                 }
             }
@@ -170,7 +166,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public override bool ClearBackGround(OpenGL gl, Color c)
         {
             gl.ClearColor(c.R / 512.0f, c.G / 512.0f, c.B / 512.0f, 1);
-            //gl.ClearColor(0,0,0, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             return true;
         }
@@ -192,8 +187,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 // Dessine les segments traceurs
                 PointF[] p = getMultilinePolygon();
                 gl.Color(1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT);
-                gl.Begin(OpenGL.GL_TRIANGLES);
-                for (int i = 0; i < _nbSegments; i++)
+                using (new GLBegin(gl, OpenGL.GL_TRIANGLES))
+                    for (int i = 0; i < _nbSegments; i++)
                 {
                     int POINT = i * 4;
 
@@ -226,23 +221,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
                     }
                 }
-                gl.End();
-
+                
                 // Les traces
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-                //_derniereCouleur = couleur; // Ca sera la couleur du prochain segment de trace
                 gl.LineWidth(TAILLE_LIGNE_TRACES);
-                gl.Begin(OpenGL.GL_LINE_STRIP);
+                //gl.Begin(OpenGL.GL_LINE_STRIP);
+                using (new GLBegin(gl,OpenGL.GL_LINE_STRIP))
                 {
                     for (int i = 0; i < _nbTraces; i++)
                     {
                         gl.Color(1.0f, 1.0f, 1.0f, i / (float)_nbTraces);
-                        //gl.Color(_couleurs[i].R/255.0f, _couleurs[i].G/255.0f, _couleurs[i].B/255.0f, (float)i / (float)_nbTraces);
                         gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
                 }
-                gl.End();
+                //gl.End();
             }
 
 #if TRACER
@@ -343,16 +336,5 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             per4 = new PointF(p1.X + fX, p1.Y + fY);
         }
 
-#if TRACER
-        public override String DumpRender()
-        {
-            string res = base.DumpRender() + " Nb Traces:" + _nbTraces;
-
-            for (int i = 0; i < _nbSegments; i++)
-                res += ", " + _longueurSegments[i] + "/" + _vitesseSegments[i];
-            return res;
-        }
-
-#endif
     }
 }

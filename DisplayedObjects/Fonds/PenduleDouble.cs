@@ -1,5 +1,6 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -35,28 +36,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float[] _xTrace;
         private float[] _yTrace;
         private TimerIsole _timerTrace;
-        private Texture _texture = new Texture();
+        private readonly Texture _texture = new Texture();
         /// <summary>
         /// Lecture de la configuration
         /// </summary>
         /// <returns></returns>
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE_LIGNE_SEGMENTS = c.getParametre("Largeur pendules", 0.2f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
-                ALPHA_SEGMENT = c.getParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
-                INTENSITE_FORCE = c.getParametre("Intensite force", 2.0f, (a) => { INTENSITE_FORCE = (float)Convert.ToDouble(a); });
-                MAX_LONGUEUR = c.getParametre("Longueur max", 0.25f);
-                MIN_LONGUEUR = c.getParametre("Longueur min", 0.05f);
-                RAYON_TOTAL = c.getParametre("Rayon Total", 0.95f);
-                MAX_VITESSE = c.getParametre("Vitesse max", 0.3f);
-                MIN_VITESSE = c.getParametre("Vitesse min", 0.1f);
-                NB_MAX_TRACE = c.getParametre("Nb Max Trace", 10000);
-                DELAI_TRACE = c.getParametre("Delai Trace", 20, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
-                TAILLE_PENDULE = c.getParametre("Taille pendule", 0.05f, (a) => { TAILLE_PENDULE = (float)Convert.ToDouble(a); });
-                TAILLE_LIGNE_TRACES = c.getParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                TAILLE_LIGNE_SEGMENTS = c.GetParametre("Largeur pendules", 0.2f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
+                ALPHA_SEGMENT = c.GetParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
+                INTENSITE_FORCE = c.GetParametre("Intensite force", 2.0f, (a) => { INTENSITE_FORCE = (float)Convert.ToDouble(a); });
+                MAX_LONGUEUR = c.GetParametre("Longueur max", 0.25f);
+                MIN_LONGUEUR = c.GetParametre("Longueur min", 0.05f);
+                RAYON_TOTAL = c.GetParametre("Rayon Total", 0.95f);
+                MAX_VITESSE = c.GetParametre("Vitesse max", 0.3f);
+                MIN_VITESSE = c.GetParametre("Vitesse min", 0.1f);
+                NB_MAX_TRACE = c.GetParametre("Nb Max Trace", 10000);
+                DELAI_TRACE = c.GetParametre("Delai Trace", 20, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
+                TAILLE_PENDULE = c.GetParametre("Taille pendule", 0.05f, (a) => { TAILLE_PENDULE = (float)Convert.ToDouble(a); });
+                TAILLE_LIGNE_TRACES = c.GetParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -67,8 +68,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="gl"></param>
         public PenduleDouble(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            _texture.Create(gl, c.getParametre("Pendule", Config.Configuration.getImagePath("balle.png")));
+            GetConfiguration();
+            _texture.Create(gl, c.GetParametre("Pendule", Config.Configuration.GetImagePath("balle.png")));
         }
         public override void Dispose()
         {
@@ -203,7 +204,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
                 gl.LineWidth(TAILLE_LIGNE_TRACES);
-                gl.Begin(OpenGL.GL_LINE_STRIP);
+                using (new GLBegin(gl,OpenGL.GL_LINE_STRIP))
                 {
                     for (int i = 0; i < _nbTraces; i++)
                     {
@@ -211,21 +212,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
                 }
-                gl.End();
-
+                
                 // Tiges des pendules
-                PointF[] p = getMultilinePolygon();
+                PointF[] p = GetMultilinePolygon();
                 gl.Color(0, 0, 0, ALPHA_SEGMENT);
-                gl.Begin(OpenGL.GL_QUAD_STRIP);
-                for (int i = 0; i < NB_PENDULES; i++)
-                {
-                    int POINT = i * 4;
-                    gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
-                    gl.Vertex(p[POINT + 0].X, p[POINT + 0].Y);
-                    gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
-                    gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
-                }
-                gl.End();
+                using (new GLBegin(gl, OpenGL.GL_QUAD_STRIP))
+                    for (int i = 0; i < NB_PENDULES; i++)
+                    {
+                        int POINT = i * 4;
+                        gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
+                        gl.Vertex(p[POINT + 0].X, p[POINT + 0].Y);
+                        gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
+                        gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
+                    }
 
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
@@ -236,25 +235,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 float x = 0.0f;
                 float y = 0.0f;
 
-                gl.Begin(OpenGL.GL_QUADS);
-                gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE, y + TAILLE_PENDULE);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE, y - TAILLE_PENDULE);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE, y - TAILLE_PENDULE);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE, y + TAILLE_PENDULE);
-
-
-                // Boules
-                for (int i = 0; i < NB_PENDULES; i++)
+                using (new GLBegin(gl, OpenGL.GL_QUADS))
                 {
-                    float taille = (float)Math.Sqrt(_masse[i]);
-                    x += (float)Math.Sin(_angle[i]) * _longueur[i];
-                    y += (float)Math.Cos(_angle[i]) * _longueur[i];
-                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
-                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
-                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
-                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
+                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE, y + TAILLE_PENDULE);
+                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE, y - TAILLE_PENDULE);
+                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE, y - TAILLE_PENDULE);
+                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE, y + TAILLE_PENDULE);
+
+
+                    // Boules
+                    for (int i = 0; i < NB_PENDULES; i++)
+                    {
+                        float taille = (float)Math.Sqrt(_masse[i]);
+                        x += (float)Math.Sin(_angle[i]) * _longueur[i];
+                        y += (float)Math.Cos(_angle[i]) * _longueur[i];
+                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
+                        gl.TexCoord(0.0f, 1.0f); gl.Vertex(x - TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
+                        gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y - TAILLE_PENDULE * taille);
+                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + TAILLE_PENDULE * taille, y + TAILLE_PENDULE * taille);
+                    }
                 }
-                gl.End();
             }
 
 #if TRACER
@@ -278,7 +278,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="multiline"></param>
         /// <param name="largeurLigne"></param>
         /// <returns></returns>
-        public PointF[] getMultilinePolygon()
+        public PointF[] GetMultilinePolygon()
         {
             PointF[] p = new PointF[(NB_PENDULES) * 4];
             float x = 0;

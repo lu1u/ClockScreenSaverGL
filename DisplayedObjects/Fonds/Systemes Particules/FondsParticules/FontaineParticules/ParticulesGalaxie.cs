@@ -20,11 +20,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public ParticulesGalaxie(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            AjouteTexture(c.getParametre("nuages petits", Configuration.getImagePath("nuages_petits.png")), 3);
+            GetConfiguration();
+            AjouteTexture(c.GetParametre("nuages petits", Configuration.GetImagePath("nuages_petits.png")), 3);
 
             for (int i = 0; i < NB_EMETTEURS; i++)
-                AjouteEmetteur(new EmetteurGalaxie(TAILLE_PARTICULE, VITESSE_ANGLE * FloatRandom(0.9f, 1.2f), VITESSE_PARTICULE * FloatRandom(0.9f, 1.2f), r.Next(2, 8)));
+                AjouteEmetteur(new EmetteurGalaxie(TAILLE_PARTICULE, VITESSE_ANGLE * FloatRandom(0.9f, 1.2f), VITESSE_PARTICULE * FloatRandom(0.9f, 1.2f), random.Next(2, 8)));
 
             AttributBlend = PARTICULES_BLEND_ADDITIVE;
 
@@ -36,18 +36,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurTaille(TAILLE_MODIFIEUR));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_EMETTEURS = c.getParametre("Nb Emetteurs", 2);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 10000);
-                ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.1f, (a) => { ALPHA_MODIFIEUR = (float)Convert.ToDouble(a); });
-                TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.02f);
-                TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.01f);
-                VITESSE_ANGLE = c.getParametre("VitesseAngle", 2.0f);
-                VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.1f);
+                c = Configuration.GetCategorie(CAT);
+                NB_EMETTEURS = c.GetParametre("Nb Emetteurs", 2);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 10000);
+                ALPHA_MODIFIEUR = c.GetParametre("Modifieur Alpha", 0.1f, (a) => { ALPHA_MODIFIEUR = (float)Convert.ToDouble(a); });
+                TAILLE_MODIFIEUR = c.GetParametre("Modifieur Taille", 0.02f);
+                TAILLE_PARTICULE = c.GetParametre("TailleParticule", 0.01f);
+                VITESSE_ANGLE = c.GetParametre("VitesseAngle", 2.0f);
+                VITESSE_PARTICULE = c.GetParametre("VitesseParticule", 0.1f);
             }
             return c;
         }

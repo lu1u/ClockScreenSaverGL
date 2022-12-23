@@ -12,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     /// <summary>
     /// Description of Noir.
     /// </summary>
-    public class VielleConsole : Fond, IDisposable
+    public class VielleConsole : Fond
     {
         private const string NO_LIGNE = "Numero Ligne";
         private const string DEBUT_BALISE = "<<<";
@@ -31,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private int noLigne;
         #endregion
 
-        private class Caractere
+        sealed private class Caractere
         {
             public char caractere = ' ';
             public float rR = 1.0f, rG = 1.0f, rB = 1.0f;
@@ -46,14 +46,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
-        private OpenGLFonte fonte;
-        private Caractere[,] console;
+        private readonly OpenGLFonte fonte;
+        private readonly Caractere[,] console;
         private int curseurX = 0;
         private int curseurY = 0;
-        private TimerIsole timer = new TimerIsole(1);
-        private TimerIsole timerCurseur = new TimerIsole(200);
+        private readonly TimerIsole timer = new TimerIsole(1);
+        private readonly TimerIsole timerCurseur = new TimerIsole(200);
         private bool clignotantEnCours = false;
-        private string script;
+        private readonly string script;
         private int posScript = 0;
         private readonly int TAILLE_DEBUT_BALISE = DEBUT_BALISE.Length;
         private readonly int TAILLE_FIN_BALISE = FIN_BALISE.Length;
@@ -65,8 +65,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 		/// <param name="gl"></param>
         public VielleConsole(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            script = File.ReadAllText(Configuration.getDataDirectory() + @"\script console.txt");
+            GetConfiguration();
+            script = File.ReadAllText(Configuration.GetDataDirectory() + @"\script console.txt");
             fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, TAILLE_CHAR, FontFamily.GenericMonospace, FontStyle.Bold);
             console = new Caractere[NB_LIGNES, NB_COLONNES];
             for (int i = 0; i < NB_LIGNES; i++)
@@ -92,18 +92,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             return pos;
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_LIGNES = c.getParametre("NB Lignes", 40);
-                NB_COLONNES = c.getParametre("NB Colonnes", 120);
-                TAILLE_CHAR = c.getParametre("Taille caracteres", 16);
-                rR = c.getParametre("R", 0.5f, a => { rR = (float)Convert.ToDouble(a); });
-                rG = c.getParametre("G", 0.5f, a => { rG = (float)Convert.ToDouble(a); });
-                rB = c.getParametre("B", 0.5f, a => { rB = (float)Convert.ToDouble(a); });
-                noLigne = c.getParametre(NO_LIGNE, 0);
+                c = Configuration.GetCategorie(CAT);
+                NB_LIGNES = c.GetParametre("NB Lignes", 40);
+                NB_COLONNES = c.GetParametre("NB Colonnes", 120);
+                TAILLE_CHAR = c.GetParametre("Taille caracteres", 16);
+                rR = c.GetParametre("R", 0.5f, a => { rR = (float)Convert.ToDouble(a); });
+                rG = c.GetParametre("G", 0.5f, a => { rG = (float)Convert.ToDouble(a); });
+                rB = c.GetParametre("B", 0.5f, a => { rB = (float)Convert.ToDouble(a); });
+                noLigne = c.GetParametre(NO_LIGNE, 0);
             }
             return c;
         }
@@ -129,16 +129,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Disable(OpenGL.GL_DEPTH_TEST);
             gl.Disable(OpenGL.GL_ALPHA_TEST);
             gl.Disable(OpenGL.GL_BLEND);
-            for (int l = 0; l < NB_LIGNES; l++)
+            for (int ligne = 0; ligne < NB_LIGNES; ligne++)
             {
-                for (int c = 0; c < NB_COLONNES; c++)
-                    if (console[l, c].caractere != ' ')
-                        if (clignotantEnCours || (!console[l, c].clignotant))
+                for (int colonne = 0; colonne < NB_COLONNES; colonne++)
+                    if (console[ligne, colonne].caractere != ' ')
+                        if (clignotantEnCours || (!console[ligne, colonne].clignotant))
                         {
-                            fonte.drawOpenGL(gl, console[l, c].caractere, c * TAILLE_CHAR, (NB_LIGNES - (l + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2),
-                                console[l, c].rR * couleur.R / 256.0f,
-                                console[l, c].rG * couleur.G / 256.0f,
-                                console[l, c].rB * couleur.B / 256.0f);
+                            fonte.drawOpenGL(gl, console[ligne, colonne].caractere, colonne * TAILLE_CHAR, (NB_LIGNES - (ligne + 1)) * TAILLE_CHAR - (TAILLE_CHAR / 2),
+                                console[ligne, colonne].rR * couleur.R / 256.0f,
+                                console[ligne, colonne].rG * couleur.G / 256.0f,
+                                console[ligne, colonne].rB * couleur.B / 256.0f);
                         }
             }
 
@@ -150,6 +150,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.PopMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
             gl.PopMatrix();
+
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -169,7 +171,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     posScript = 0;
                     noLigne = 0;
-                    c.setParametre(NO_LIGNE, noLigne);
+                    c.SetParametre(NO_LIGNE, noLigne);
                 }
 
                 TraiteBalise();
@@ -252,8 +254,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case '\n':
                     curseurX = 0;
                     noLigne++;
-                    c.setParametre(NO_LIGNE, noLigne);
-                    c.flush();
+                    c.SetParametre(NO_LIGNE, noLigne);
+                    c.Flush();
 
                     if (curseurY < NB_LIGNES - 1)
                         curseurY++;
@@ -282,5 +284,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     break;
             }
         }
+
     }
 }

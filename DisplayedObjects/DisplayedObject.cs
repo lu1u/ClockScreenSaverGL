@@ -14,7 +14,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects
@@ -22,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
     /// <summary>
     /// Classe de base pour tous les objets affiches
     /// </summary>
-    public abstract class DisplayedObject
+    public abstract class DisplayedObject : IDisposable
     {
 
         #region Public Fields
@@ -63,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const float PI_SUR_DEUX = (float)(0.5 * Math.PI);
         public const float RADIAN_TO_DEG = 180.0f / (float)Math.PI;
 
-        static readonly public Random r = new Random();
+        static readonly public Random random = new Random();
         static protected bool _initASynchroneTerminé = false;
         #endregion Public Fields
 
@@ -83,7 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         protected DisplayedObject(OpenGL gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _gl = gl;
         }
 
@@ -93,24 +92,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
 
         protected virtual void Init(OpenGL gl) { }
-        protected virtual void InitAsynchrone() { }
 
-        private void BackgroundInit()
-        {
-            InitAsynchrone();
-            _initASynchroneTerminé = true;
-        }
 
         public void Initialisation(OpenGL gl)
         {
-            _initASynchroneTerminé = false;
-
             RenderStart(CHRONO_TYPE.INIT);
             Init(gl);
             RenderStop(CHRONO_TYPE.INIT);
-
-            Thread a = new Thread(BackgroundInit);
-            a.Start();
         }
 
         /// <summary>
@@ -140,33 +128,33 @@ namespace ClockScreenSaverGL.DisplayedObjects
             // Create a Graphics
             using (Graphics gr = Graphics.FromImage(destination))
             {
-                {
-                    // ColorMatrix elements
-                    float[][] ptsArray = {
+
+                // ColorMatrix elements
+                float[][] ptsArray = {
                                      new float[] {a,  b,  c,  0, 0},
                                      new float[] {d,  e,  f,  0, 0},
                                      new float[] {g,  h,  i,  0, 0},
                                      new float[] {0,  0,  0,  1, 0},
-                                     new float[] {0, 0, 0, 0, 1}
+                                     new float[] {0,  0,  0,  0, 1}
                                  };
-                    // Create ColorMatrix
-                    ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
-                    // Create ImageAttributes
-                    ImageAttributes imgAttribs = new ImageAttributes();
-                    // Set color matrix
-                    imgAttribs.SetColorMatrix(clrMatrix,
-                        ColorMatrixFlag.Default,
-                        ColorAdjustType.Default);
-                    // Draw Image with no effects
-                    gr.DrawImage(source, 0, 0);
-                    // Draw Image with image attributes
-                    gr.DrawImage(source, new Rectangle(0, 0, source.Width, source.Height),
-                        0, 0, source.Width, source.Height,
-                        GraphicsUnit.Pixel, imgAttribs);
-                }
+                // Create ColorMatrix
+                ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+                // Create ImageAttributes
+                ImageAttributes imgAttribs = new ImageAttributes();
+                // Set color matrix
+                imgAttribs.SetColorMatrix(clrMatrix,
+                    ColorMatrixFlag.Default,
+                    ColorAdjustType.Default);
+                // Draw Image with no effects
+                //gr.DrawImage(source, 0, 0);
+                // Draw Image with image attributes
+                gr.DrawImage(source, new Rectangle(0, 0, source.Width, source.Height),
+                    0, 0, source.Width, source.Height, GraphicsUnit.Pixel, imgAttribs);
+
             }
 
             return destination;
+
         }
 
         /// <summary>
@@ -202,39 +190,21 @@ namespace ClockScreenSaverGL.DisplayedObjects
         static public float FloatRandom(float Min, float Max)
         {
             if (Min < Max)
-                return r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
+                return random.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 if (Min > Max)
-                return r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
+                return random.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 return Min;
         }
 
-        /// <summary>
-        /// Retourne une couleur correspondant a la teinte donnee avec la transparence donnee
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="alpha"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color getCouleurAvecAlpha(Color color, byte alpha)
-        {
-            return Color.FromArgb(alpha, color.R, color.G, color.B);
-        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
-        {
-            float a = alpha / 255.0f;
-            if (a < 0) a = 0;
-            if (a > 1.0f) a = 1.0f;
 
-            return Color.FromArgb(255, (byte)(color.R * a), (byte)(color.G * a), (byte)(color.B * a));
-        }
+
 
         static public int SigneRandom()
         {
-            if (r.Next(2) > 0)
+            if (random.Next(2) > 0)
                 return 1;
             else
                 return -1;
@@ -287,7 +257,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         {
         }
 
-        public abstract CategorieConfiguration getConfiguration();
+        public abstract CategorieConfiguration GetConfiguration();
         /***
          * Pour les operations qu'on ne veut pas faire à toutes les frames
          */
@@ -320,6 +290,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         {
             return v < 0 ? -1.0f : 1.0f;
         }
+
 
 
         #region Protected Methods
@@ -448,7 +419,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// Create an empty texture.
         /// </summary>
         /// <returns></returns>
-        protected uint createEmptyTexture(int LARGEUR_TEXTURE, int HAUTEUR_TEXTURE)
+        protected uint CreateEmptyTexture(int LARGEUR_TEXTURE, int HAUTEUR_TEXTURE)
         {
             uint[] txtnumber = new uint[1];                     // Texture ID
 
@@ -466,7 +437,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// DEstruction d'une texture OpenGL cree par createEmptyTexture
         /// </summary>
         /// <param name="texture"></param>
-        protected void deleteEmptyTexture(uint texture)
+        protected void DeleteEmptyTexture(uint texture)
         {
             uint[] textures = { texture };
             _gl.DeleteTextures(1, textures);
@@ -527,9 +498,9 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         #region Chrono
 #if TRACER
-        private Stopwatch chronoDeplace = new Stopwatch();
-        private Stopwatch chronoRender = new Stopwatch();
-        private Stopwatch chronoInit = new Stopwatch();
+        private readonly Stopwatch chronoDeplace = new Stopwatch();
+        private readonly Stopwatch chronoRender = new Stopwatch();
+        private readonly Stopwatch chronoInit = new Stopwatch();
         private long moyennedureeD = 0;
         private long moyennedureeR = 0;
         protected enum CHRONO_TYPE { RENDER, DEPLACE, INIT };

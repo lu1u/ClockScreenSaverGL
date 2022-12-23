@@ -22,22 +22,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
         public void Init(OpenGL gl, CategorieConfiguration c)
         {
-            string REPERTOIRE_TURING = c.getParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
+            string REPERTOIRE_TURING = c.GetParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
             _textureSymbolesProgramme = new Texture();
-            _textureSymbolesProgramme.Create(gl, c.getParametre("Ruban Symboles", Config.Configuration.getImagePath(REPERTOIRE_TURING + @"\Symboles ruban.png")));
+            _textureSymbolesProgramme.Create(gl, c.GetParametre("Ruban Symboles", Config.Configuration.GetImagePath(REPERTOIRE_TURING + @"\Symboles ruban.png")));
 
             _textureTete = new Texture();
-            _textureTete.Create(gl, c.getParametre("Tete Fond", Configuration.getImagePath(REPERTOIRE_TURING + @"\Tete.png")));
+            _textureTete.Create(gl, c.GetParametre("Tete Fond", Configuration.GetImagePath(REPERTOIRE_TURING + @"\Tete.png")));
         }
 
         public void getConfiguration(CategorieConfiguration c)
         {
-            X_TETE = c.getParametre("Tete X", 0.0f, (a) => { X_TETE = (float)Convert.ToDouble(a); });
-            Y_TETE = c.getParametre("Tete Y", -0.3f, (a) => { Y_TETE = (float)Convert.ToDouble(a); });
-            LARGEUR_TETE = c.getParametre("Tete Largeur", 0.15f, (a) => { LARGEUR_TETE = (float)Convert.ToDouble(a); });
-            HAUTEUR_TETE = c.getParametre("Tete Hauteur", 0.22f, (a) => { HAUTEUR_TETE = (float)Convert.ToDouble(a); });
-            LARGEUR_CASE_RUBAN = c.getParametre(MachineDeTuring.PARAM_LARGEUR_CASE_RUBAN, 0.12f);
-            HAUTEUR_RUBAN = c.getParametre(MachineDeTuring.PARAM_LARGEUR_CASE_RUBAN, 0.12f);
+            X_TETE = c.GetParametre("Tete X", 0.0f, (a) => { X_TETE = (float)Convert.ToDouble(a); });
+            Y_TETE = c.GetParametre("Tete Y", -0.3f, (a) => { Y_TETE = (float)Convert.ToDouble(a); });
+            LARGEUR_TETE = c.GetParametre("Tete Largeur", 0.15f, (a) => { LARGEUR_TETE = (float)Convert.ToDouble(a); });
+            HAUTEUR_TETE = c.GetParametre("Tete Hauteur", 0.22f, (a) => { HAUTEUR_TETE = (float)Convert.ToDouble(a); });
+            LARGEUR_CASE_RUBAN = c.GetParametre(MachineDeTuring.PARAM_LARGEUR_CASE_RUBAN, 0.12f);
+            HAUTEUR_RUBAN = c.GetParametre(MachineDeTuring.PARAM_LARGEUR_CASE_RUBAN, 0.12f);
         }
 
         public void Dessine(OpenGL gl, Color couleur, MachineDeTuring.ETAPE_TURING _etatOrdonnateur, MachineDeTuring.VALEUR valeurAEcrire)

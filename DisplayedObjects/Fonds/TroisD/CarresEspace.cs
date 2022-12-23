@@ -37,17 +37,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_PAVES = c.getParametre("Nb", 200);
-                TAILLE_CARRE = c.getParametre("Taille", 5.0f, (a) => { TAILLE_CARRE = (float)Convert.ToDouble(a); });
-                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse", 8f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                NB_PAVES = c.GetParametre("Nb", 200);
+                TAILLE_CARRE = c.GetParametre("Taille", 5.0f, (a) => { TAILLE_CARRE = (float)Convert.ToDouble(a); });
+                CHANGE_COULEUR = c.GetParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 10.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 50f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse", 8f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -59,7 +59,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public CarresEspace(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            getConfiguration();
+            GetConfiguration();
             _Carres = new Carre[NB_PAVES];
             // Initialiser les carres
             for (int i = 0; i < NB_PAVES; i++)
@@ -77,7 +77,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             if (f == null)
             {
                 f = new Carre();
-                f.z = -VIEWPORT_Z + TAILLE_CARRE * r.Next(0, (int)(_zCamera + VIEWPORT_Z) / (int)TAILLE_CARRE);
+                f.z = -VIEWPORT_Z + TAILLE_CARRE * random.Next(0, (int)(_zCamera + VIEWPORT_Z) / (int)TAILLE_CARRE);
             }
             else
                 while (f.z > -VIEWPORT_Z)
@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             int c;
             do
             {
-                c = r.Next(-VIEWPORT_Y / 5, VIEWPORT_Y / 5) * 5;
+                c = random.Next(-VIEWPORT_Y / 5, VIEWPORT_Y / 5) * 5;
             }
             while (c == 0);
             return c;
@@ -102,7 +102,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private int GetXCoord()
         {
-            int c = r.Next(-VIEWPORT_X, VIEWPORT_X);
+            int c = random.Next(-VIEWPORT_X, VIEWPORT_X);
             return (int)((int)(c / TAILLE_CARRE) * TAILLE_CARRE);
         }
 
@@ -155,7 +155,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Carre c in _Carres)
             {
-                setColorWithHueChange(gl, cG, c.changeCouleur * CHANGE_COULEUR);
+                SetColorWithHueChange(gl, cG, c.changeCouleur * CHANGE_COULEUR);
 
                 gl.Vertex(c.x, c.y, c.z);
                 gl.Vertex(c.x, c.y, c.z + TAILLE_CARRE);

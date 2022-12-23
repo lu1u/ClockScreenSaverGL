@@ -20,8 +20,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 
         public Cubes(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 0.5f);
+            GetConfiguration();
+            VITESSE_ROTATION = c.GetParametre("Vitesse Rotation", 0.5f);
             TRANSLATE_Z = ECART_CUBE * NB_CUBES_Z * -0.55f;
             LIGHTPOS[0] = ECART_CUBE * NB_CUBES_X;
             LIGHTPOS[1] = ECART_CUBE * NB_CUBES_Y;
@@ -30,16 +30,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_CUBES_X = c.getParametre("Nb Cubes X", 30);
-                NB_CUBES_Y = c.getParametre("Nb Cubes Y", 30);
-                NB_CUBES_Z = c.getParametre("Nb Cubes Z", 30);
-                TAILLE_CUBE = c.getParametre("Taille cubes", 0.06f);
-                ECART_CUBE = c.getParametre("Ecart cubes", 0.4f);
+                c = Configuration.GetCategorie(CAT);
+                NB_CUBES_X = c.GetParametre("Nb Cubes X", 30);
+                NB_CUBES_Y = c.GetParametre("Nb Cubes Y", 30);
+                NB_CUBES_Z = c.GetParametre("Nb Cubes Z", 30);
+                TAILLE_CUBE = c.GetParametre("Taille cubes", 0.06f);
+                ECART_CUBE = c.GetParametre("Ecart cubes", 0.4f);
             }
             return c;
         }

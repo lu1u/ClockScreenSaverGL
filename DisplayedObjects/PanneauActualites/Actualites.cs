@@ -41,7 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         /// <param name="gl"></param>
         public Actualites(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             LigneActu.TAILLE_TITRE = TAILLE_TITRE;
             LigneActu.TAILLE_DESCRIPTION = TAILLE_DESCRIPTION;
             LigneActu.TAILLE_SOURCE = TAILLE_SOURCE;
@@ -59,24 +59,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_JOURS_MAX_INFO = c.getParametre("Nb jours info max", 4);
-                HAUTEUR_BANDEAU = c.getParametre("Hauteur bandeau", 150);
-                VITESSE = c.getParametre("Vitesse", 75.0f);
-                MIN_LIGNES = c.getParametre("Nb lignes min", 50);
-                MAX_LIGNES = c.getParametre("Nb lignes max", 100);
-                MAX_LIGNES_PAR_SOURCE = c.getParametre("Nb lignes max par source", 10);
-                TAILLE_SOURCE = c.getParametre("Taille fonte source", 16);
-                TAILLE_TITRE = c.getParametre("Taille fonte titre", 30);
-                TAILLE_DESCRIPTION = c.getParametre("Taille fonte description", 14);
-                AFFICHE_DESCRIPTION = c.getParametre("Affiche Description", true);
-                AFFICHE_IMAGES = c.getParametre("Affiche Images", true);
-                SATURATION_IMAGES = c.getParametre("Saturation images", 0.5f);
-                LIGHT_FACTOR = c.getParametre("Luminosité", 5.0f);
+                c = Configuration.GetCategorie(CAT);
+                NB_JOURS_MAX_INFO = c.GetParametre("Nb jours info max", 4);
+                HAUTEUR_BANDEAU = c.GetParametre("Hauteur bandeau", 150);
+                VITESSE = c.GetParametre("Vitesse", 75.0f);
+                MIN_LIGNES = c.GetParametre("Nb lignes min", 50);
+                MAX_LIGNES = c.GetParametre("Nb lignes max", 100);
+                MAX_LIGNES_PAR_SOURCE = c.GetParametre("Nb lignes max par source", 10);
+                TAILLE_SOURCE = c.GetParametre("Taille fonte source", 16);
+                TAILLE_TITRE = c.GetParametre("Taille fonte titre", 30);
+                TAILLE_DESCRIPTION = c.GetParametre("Taille fonte description", 14);
+                AFFICHE_DESCRIPTION = c.GetParametre("Affiche Description", true);
+                AFFICHE_IMAGES = c.GetParametre("Affiche Images", true);
+                SATURATION_IMAGES = c.GetParametre("Saturation images", 0.5f);
+                LIGHT_FACTOR = c.GetParametre("Luminosité", 5.0f);
             }
             return c;
         }
@@ -114,14 +114,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     {
                         foreach (LigneActu l in _actuFactory._lignes)
                         {
-                            l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU);
-                            x += l.largeur;
+                            l.Affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU);
+                            x += l.Largeur;
                             if (x > tailleEcran.Right)
                                 break;
                         }
                     }
                     catch (Exception)
                     {
+                        // Ignore
                     }
             }
 #if TRACER
@@ -136,10 +137,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             if (_actuFactory._lignes != null)
             {
                 if (_actuFactory._lignes.Count > 1)
-                    if (_decalageX + _actuFactory._lignes[0].largeur < 0)
+                    if (_decalageX + _actuFactory._lignes[0].Largeur < 0)
                     {
                         // Deplacer la ligne vers la fin du tableau
-                        _decalageX += _actuFactory._lignes[0].largeur;
+                        _decalageX += _actuFactory._lignes[0].Largeur;
                         LigneActu premiereLigne = _actuFactory._lignes[0];
                         premiereLigne.Clear();
 
@@ -163,8 +164,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 lock (_actuFactory._lignes)
                     _actuFactory._lignes?.Clear();
                 AFFICHE_DESCRIPTION = !AFFICHE_DESCRIPTION;
-                c.setParametre("Affiche Description", AFFICHE_DESCRIPTION);
-                c.flush();
+                c.SetParametre("Affiche Description", AFFICHE_DESCRIPTION);
+                c.Flush();
                 return true;
             }
             if (Keys.I.Equals(k))
@@ -172,8 +173,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 lock (_actuFactory._lignes)
                     _actuFactory._lignes?.Clear();
                 AFFICHE_IMAGES = !AFFICHE_IMAGES;
-                c.setParametre("Affiche Images", AFFICHE_DESCRIPTION);
-                c.flush();
+                c.SetParametre("Affiche Images", AFFICHE_DESCRIPTION);
+                c.Flush();
                 return true;
             }
 

@@ -8,6 +8,7 @@
  */
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -51,17 +52,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private readonly Feuille[] _feuilles;
 
         private float _xWind = 0;
-        private static float _xRotation;
-        private static DateTime debut = DateTime.Now;
+        private float _xRotation;
+        private readonly DateTime debut = DateTime.Now;
         private const float VIEWPORT_X = 1f;
         private const float VIEWPORT_Y = 1f;
         private const float VIEWPORT_Z = 1f;
         private const int NB_TYPES_FEUILLES = 5;
-        private Texture _texture;
+        private readonly Texture _texture;
 
         public Automne(OpenGL gl) : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            getConfiguration();
+            GetConfiguration();
             _xRotation = _tailleCubeX * 0.75f;
 
             _feuilles = new Feuille[NB_FEUILLES];
@@ -72,26 +73,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             }
 
             _texture = new Texture();
-            _texture.Create(gl, c.getParametre("texture feuilles", Config.Configuration.getImagePath("automne.png")));
+            _texture.Create(gl, c.GetParametre("texture feuilles", Config.Configuration.GetImagePath("automne.png")));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
 
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
-                VITESSE_Y = c.getParametre("VitesseChute", 8.0f, (a) => { VITESSE_Y = (float)Convert.ToDouble(a); });
-                VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f, (a) => { VITESSE_DELTA_VENT = (float)Convert.ToDouble(a); });
-                MAX_VENT = c.getParametre("MaxVent", 3f, (a) => { MAX_VENT = (float)Convert.ToDouble(a); });
-                NB_FEUILLES = c.getParametre("NbFeuilles", 10);
-                TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, (a) => { TAILLE_FEUILLE = (float)Convert.ToDouble(a); });
-                DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, (a) => { DIEDRE_FEUILLE = (float)Convert.ToDouble(a); });
-                NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, (a) => { NB_FACES_FEUILLES = (float)Convert.ToDouble(a); });
-                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
-                FOG_DENSITY = c.getParametre("Densité brouillard", 0.01f, a => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 0.2f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 20.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
+                VITESSE_Y = c.GetParametre("VitesseChute", 8.0f, (a) => { VITESSE_Y = (float)Convert.ToDouble(a); });
+                VITESSE_DELTA_VENT = c.GetParametre("VitesseDeltaVent", 1f, (a) => { VITESSE_DELTA_VENT = (float)Convert.ToDouble(a); });
+                MAX_VENT = c.GetParametre("MaxVent", 3f, (a) => { MAX_VENT = (float)Convert.ToDouble(a); });
+                NB_FEUILLES = c.GetParametre("NbFeuilles", 10);
+                TAILLE_FEUILLE = c.GetParametre("TailleFeuilles", 5.0f, (a) => { TAILLE_FEUILLE = (float)Convert.ToDouble(a); });
+                DIEDRE_FEUILLE = c.GetParametre("DiedreFeuilles", 0.25f, (a) => { DIEDRE_FEUILLE = (float)Convert.ToDouble(a); });
+                NB_FACES_FEUILLES = c.GetParametre("Nb Faces", 3, (a) => { NB_FACES_FEUILLES = (float)Convert.ToDouble(a); });
+                CHANGE_COULEUR = c.GetParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                FOG_DENSITY = c.GetParametre("Densité brouillard", 0.01f, a => { FOG_DENSITY = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -110,14 +111,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             f.ax = FloatRandom(0, 360);
             f.ay = FloatRandom(0, 360);
             f.az = FloatRandom(0, 360);
-            f.type = r.Next(0, NB_TYPES_FEUILLES);
+            f.type = random.Next(0, NB_TYPES_FEUILLES);
             f.diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f) * TAILLE_FEUILLE;
             f.changeCouleur = FloatRandom(-1.0f, 1.0f);
         }
 
-        public override bool ClearBackGround(OpenGL gl, Color couleur)
+        public override bool ClearBackGround(OpenGL gl, Color c)
         {
-            GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f };
+            GLfloat[] fogcolor = { c.R / 2048.0f, c.G / 2048.0f, c.B / 2048.0f, 0.5f };
 
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
@@ -135,8 +136,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f };
-
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
@@ -167,9 +166,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 gl.PushMatrix();
                 gl.Translate(o.x, o.y, o.z);
                 gl.Rotate(o.ax, o.ay, o.az);
-                setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
+                SetColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
 
-                gl.Begin(OpenGL.GL_QUAD_STRIP);
+                using (new GLBegin(gl, OpenGL.GL_QUAD_STRIP))
                 {
                     for (int i = 0; i <= NB_FACES_FEUILLES; i++)
                     {
@@ -180,7 +179,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                         gl.TexCoord((o.type + f) * largeurTxtr, 1.0f); gl.Vertex(f * TAILLE_FEUILLE, d, TAILLE_FEUILLE / 2);
                     }
                 }
-                gl.End();
                 gl.PopMatrix();
             }
 

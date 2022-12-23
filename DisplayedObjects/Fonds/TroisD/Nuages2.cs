@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
         private Nuage[] _nuages;
         private const int NB_TEXTURES = 6;  // Nombre de nuages differents dans la texture
-        private Texture _texture;
+        private readonly Texture _texture;
         private float angle = 0;
 
         /// <summary>
@@ -44,14 +44,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="gl"></param>
         public Nuages2(OpenGL gl) : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
             _texture = new Texture();
-            _texture.Create(gl, c.getParametre("Nuages", Configuration.getImagePath("nuages.png")));
+            _texture.Create(gl, c.GetParametre("Nuages", Configuration.GetImagePath("nuages.png")));
         }
         protected override void Init(OpenGL gl)
         {
             _nuages = null;
-            c = getConfiguration();
+            c = GetConfiguration();
             Nuage[] nuages = new Nuage[NB_NUAGES]; // Fonction asynchrone, on garde _nuages a null tant que tout n'est pas initialisé
 
             // Initialiser les nuages
@@ -72,20 +72,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _nuages = nuages;
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                ALPHA = c.getParametre("Alpha", (byte)1.0f);
-                HAUTEUR_VUE = c.getParametre("Hauteur vue", 5.0f, a => { HAUTEUR_VUE = (float)Convert.ToDouble(a); });
-                NB_NUAGES = c.getParametre("Nb Nuages", 200);
-                TAILLE_NUAGE = c.getParametre("Taille", 9);
-                ROULIS_MAX = c.getParametre("Roulis max", 3.0f, a => { ROULIS_MAX = (float)Convert.ToDouble(a); });
-                VITESSE_ROULIS = c.getParametre("Vitesse roulis", 0.1f, a => { VITESSE_ROULIS = (float)Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse", 2.0f, a => { VITESSE = (float)Convert.ToDouble(a); });
-                VITESSE_LATERALE = c.getParametre("Vitesse laterale", 10.0f, a => { VITESSE_LATERALE = (float)Convert.ToDouble(a); });
-                COLOR_RATIO = c.getParametre("Ratio couleur", 150.0f, a => { COLOR_RATIO = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                ALPHA = c.GetParametre("Alpha", (byte)1.0f);
+                HAUTEUR_VUE = c.GetParametre("Hauteur vue", 5.0f, a => { HAUTEUR_VUE = (float)Convert.ToDouble(a); });
+                NB_NUAGES = c.GetParametre("Nb Nuages", 200);
+                TAILLE_NUAGE = c.GetParametre("Taille", 9);
+                ROULIS_MAX = c.GetParametre("Roulis max", 3.0f, a => { ROULIS_MAX = (float)Convert.ToDouble(a); });
+                VITESSE_ROULIS = c.GetParametre("Vitesse roulis", 0.1f, a => { VITESSE_ROULIS = (float)Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse", 2.0f, a => { VITESSE = (float)Convert.ToDouble(a); });
+                VITESSE_LATERALE = c.GetParametre("Vitesse laterale", 10.0f, a => { VITESSE_LATERALE = (float)Convert.ToDouble(a); });
+                COLOR_RATIO = c.GetParametre("Ratio couleur", 150.0f, a => { COLOR_RATIO = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -101,7 +101,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.y = FloatRandom(-VIEWPORT_Y * 3, -1.5f);
             f.tailleX = TAILLE_NUAGE * FloatRandom(0.6f, 1.4f);
             f.tailleY = TAILLE_NUAGE * FloatRandom(0.6f, 1.4f);
-            f.texture = r.Next(NB_TEXTURES);
+            f.texture = random.Next(NB_TEXTURES);
         }
 
         public override bool ClearBackGround(OpenGL gl, Color couleur)

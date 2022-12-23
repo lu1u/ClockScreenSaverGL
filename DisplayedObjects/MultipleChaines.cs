@@ -26,28 +26,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #endregion
 
         private readonly int[,] Chaines;
-        private readonly DisplayedObject[] _objets;
+        private readonly Fond[] _objets;
         private float angle = 0;
-        private TimerIsole timerNouvelleChaine = new TimerIsole(10000);
-        private TimerIsole timerEcranChangeChaine = new TimerIsole(1000);
+        private readonly TimerIsole timerNouvelleChaine = new TimerIsole(10000);
+        private readonly TimerIsole timerEcranChangeChaine = new TimerIsole(1000);
         private readonly uint[] textures;
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_ECRANS_LARGEUR = c.getParametre("Nb ecrans largeur", 6);
-                NB_ECRANS_HAUTEUR = c.getParametre("Nb ecrans Hauteur", 3);
-                ANGLE_ECRANS = c.getParametre("Angle ecrans", 0.5f);
-                MARGE_ECRAN = c.getParametre("Marge ecrans", 0.3f);
-                HAUTEUR_ECRAN = c.getParametre("Hauteur ecrans", 0.75f);
-                LARGEUR_ECRAN = c.getParametre("Largeur ecrans", 0.9f);
-                RAYON_RONDE = c.getParametre("Rayon courbe", 4.0f);
-                NB_CHAINES = c.getParametre("Nb chaines", 4);
-                LARGEUR_TEXTURE = c.getParametre("Largeur texture", 256);
-                HAUTEUR_TEXTURE = c.getParametre("Hauteur texture", 256);
-                FOV = c.getParametre("FOV", 75.0f);
-                VITESSE_PANORAMIQUE = c.getParametre("Vitesse panoramique", 0.5f);
+                c = Configuration.GetCategorie(CAT);
+                NB_ECRANS_LARGEUR = c.GetParametre("Nb ecrans largeur", 6);
+                NB_ECRANS_HAUTEUR = c.GetParametre("Nb ecrans Hauteur", 3);
+                ANGLE_ECRANS = c.GetParametre("Angle ecrans", 0.5f);
+                MARGE_ECRAN = c.GetParametre("Marge ecrans", 0.3f);
+                HAUTEUR_ECRAN = c.GetParametre("Hauteur ecrans", 0.75f);
+                LARGEUR_ECRAN = c.GetParametre("Largeur ecrans", 0.9f);
+                RAYON_RONDE = c.GetParametre("Rayon courbe", 4.0f);
+                NB_CHAINES = c.GetParametre("Nb chaines", 4);
+                LARGEUR_TEXTURE = c.GetParametre("Largeur texture", 256);
+                HAUTEUR_TEXTURE = c.GetParametre("Hauteur texture", 256);
+                FOV = c.GetParametre("FOV", 75.0f);
+                VITESSE_PANORAMIQUE = c.GetParametre("Vitesse panoramique", 0.5f);
             }
             return c;
         }
@@ -58,14 +58,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="gl"></param>
         public MultiplesChaines(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
 
             Chaines = new int[NB_ECRANS_LARGEUR, NB_ECRANS_HAUTEUR];
             for (int i = 0; i < NB_ECRANS_LARGEUR; i++)
                 for (int j = 0; j < NB_ECRANS_HAUTEUR; j++)
-                    Chaines[i, j] = r.Next(NB_CHAINES);
+                    Chaines[i, j] = random.Next(NB_CHAINES);
 
-            _objets = new DisplayedObject[NB_CHAINES];
+            _objets = new Fond[NB_CHAINES];
             textures = new uint[NB_CHAINES];
 
 
@@ -80,15 +80,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             for (int i = 0; i < NB_CHAINES; i++)
             {
-                _objets[i] = DisplayedObjectFactory.InitObjet(gl, r);
-                textures[i] = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
+                _objets[i] = DisplayedObjectFactory.CreerFondAleatoire(gl, random);
+                _objets[i].Initialisation(gl);
+                textures[i] = CreateEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
             }
         }
         ///////////////////////////////////////////////////////////////////////
         public override void Dispose()
         {
             for (int i = 0; i < NB_CHAINES; i++)
-                deleteEmptyTexture(textures[i]);
+                DeleteEmptyTexture(textures[i]);
 
             foreach (DisplayedObject o in _objets)
                 o.Dispose();
@@ -117,15 +118,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #endif
             if (timerNouvelleChaine.Ecoule())
             {
-                int noChaine = r.Next(NB_CHAINES);
+                int noChaine = random.Next(NB_CHAINES);
                 _objets[noChaine].Dispose();
-                _objets[noChaine] = DisplayedObjectFactory.InitObjet(gl, r);
+                _objets[noChaine] = DisplayedObjectFactory.CreerFondAleatoire(gl, random);
+                _objets[noChaine].Initialisation(gl);
             }
 
-            RenderToTexture(gl, maintenant, tailleEcran, couleur);
+            RenderToTextures(gl, maintenant, tailleEcran, couleur);
             gl.ClearColor(couleur.R / 1024.0f, couleur.G / 1024.0f, couleur.B / 1024.0f, 1);                // Set The Clear Color To Medium Blue
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);      // Clear The Screen And Depth Buffer
-
+            //
             gl.Enable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
 
@@ -179,15 +181,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.PopMatrix();
             }
 
-            Console c = Console.getInstance(gl);
+            Console console = Console.GetInstance(gl);
             foreach (DisplayedObject o in _objets)
-                c.AddLigne(Color.Green, o.GetType().Name);
+                console.AddLigne(Color.Green, o.GetType().Name);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-        public void RenderToTexture(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+
+
+        public void RenderToTextures(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
             Rectangle r = new Rectangle(0, 0, LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
             gl.Viewport(0, 0, r.Width, r.Height);                    // Set Our Viewport (Match Texture Size)
@@ -219,8 +223,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             if (timerEcranChangeChaine.Ecoule())
             {
-                int x = r.Next(NB_ECRANS_LARGEUR);
-                int y = r.Next(NB_ECRANS_HAUTEUR);
+                int x = random.Next(NB_ECRANS_LARGEUR);
+                int y = random.Next(NB_ECRANS_HAUTEUR);
 
                 Chaines[x, y] = (Chaines[x, y] + 1) % NB_CHAINES;
             }

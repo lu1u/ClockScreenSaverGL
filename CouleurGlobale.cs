@@ -13,9 +13,6 @@ namespace ClockScreenSaverGL
     public class CouleurGlobale
     {
         public const double VITESSE_CHANGEMENT_COULEUR = 0.05;
-        private const string HUE = "hue";
-        private const string VALUE = "value";
-        private const string SATURATION = "saturation";
 
         public double alpha;
         public double hue;
@@ -61,7 +58,7 @@ namespace ClockScreenSaverGL
 
         public void ChangeHue(int Sens)
         {
-            Change(ref hue, Sens, HUE);
+            Change(ref hue, Sens);
         }
 
         public void SetHue(double hueValue)
@@ -84,24 +81,25 @@ namespace ClockScreenSaverGL
 
         }
 
-        public Color getColorWithHueChange(double hueChange)
+        public Color GetColorWithHueChange(double hueChange)
         {
-            CouleurGlobale c = new CouleurGlobale(hue, saturation, luminance);
-            c.alpha = this.alpha;
-            c.hue = this.hue;
-            c.luminance = this.luminance;
-            c.saturation = this.saturation;
+            CouleurGlobale c = new CouleurGlobale(hue, saturation, luminance)
+            {
+                alpha = this.alpha,
+                hue = this.hue,
+                luminance = this.luminance,
+                saturation = this.saturation
+            };
 
             c.SetHue(c.hue + hueChange);
             return c.GetARGB();
         }
-        public Color getColorWithValueChange(double luminance)
+        public Color GetColorWithValueChange(double luminance)
         {
-            CouleurGlobale c = new CouleurGlobale(hue, saturation, this.luminance);
-            c.alpha = this.alpha;
-            c.hue = this.hue;
-            c.luminance = this.luminance;
-            c.saturation = this.saturation;
+            CouleurGlobale c = new CouleurGlobale(hue, saturation, this.luminance)
+            {
+                alpha = this.alpha
+            };
 
             c.SetLuminance(c.luminance + luminance);
             return c.GetARGB();
@@ -109,12 +107,12 @@ namespace ClockScreenSaverGL
 
         public void ChangeSaturation(int Sens)
         {
-            Change(ref saturation, Sens, SATURATION);
+            Change(ref saturation, Sens);
         }
 
         public void ChangeValue(int Sens)
         {
-            Change(ref luminance, Sens, VALUE);
+            Change(ref luminance, Sens);
         }
 
         /// <summary>
@@ -122,7 +120,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="V"></param>
         /// <param name="Sens"></param>
-        private void Change(ref double V, int Sens, string parameterName)
+        private void Change(ref double V, int Sens)
         {
             if (Sens > 0)
             {
@@ -133,8 +131,6 @@ namespace ClockScreenSaverGL
             {
                 if (V > 0.01) V -= 0.01f;
             }
-
-            //c.setParametre(parameterName, (float)V);
         }
 
 

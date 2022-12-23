@@ -37,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
             }
         }
 
-        public Texture texture
+        public Texture Texture
         {
             get
             {

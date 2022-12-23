@@ -9,15 +9,14 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    public class LignePrevisionMeteo : IDisposable
-    {
-        private const int NB_HEURES_PREVI = 4;
-        private Image _bmp;
-        private string _date;
-        private string _temperature;
-        private string _texte;
-        private string _vent;
-        private string _pluie;
+    public class LignePrevisionMeteo
+    { 
+        private readonly Image _bmp;
+        private readonly string _date;
+        private readonly string _temperature;
+        private readonly string _texte;
+        private readonly string _vent;
+        private readonly string _pluie;
 
         public LignePrevisionMeteo(string icone, string date, string temperature, string texte, string vent, string pluie)
         {
@@ -26,22 +25,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             try
             {
                 string fichierIcone = @"Meteo\" + icone + ".png";
-                string chemin = Configuration.getImagePath(fichierIcone, true);
+                string chemin = Configuration.GetImagePath(fichierIcone, true);
 
                 if (chemin == null)
                 {
-                    Log.instance.error($"icone météo inconnue \"{icone}\", chemin \"{fichierIcone}\", texte \"{texte}\"");
-                    _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
+                    Log.Instance.Error($"icone météo inconnue \"{icone}\", chemin \"{fichierIcone}\", texte \"{texte}\"");
+                    _bmp = Image.FromFile(Configuration.GetImagePath(@"Meteo\inconnu.png"));
                 }
                 else
                     _bmp = Image.FromFile(chemin);
             }
             catch (Exception e)
             {
-                Log.instance.error(e.Message);
-                Log.instance.error(e.StackTrace);
-                Log.instance.error($"impossible de charger l'icône météo \"{icone}\", texte \"{texte}\"");
-                _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
+                Log.Instance.Error(e.Message);
+                Log.Instance.Error(e.StackTrace);
+                Log.Instance.Error($"impossible de charger l'icône météo \"{icone}\", texte \"{texte}\"");
+                _bmp = Image.FromFile(Configuration.GetImagePath(@"Meteo\inconnu.png"));
             }
             _date = date;
             _temperature = temperature;
@@ -50,12 +49,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         }
 
 
-        public void Dispose()
-        {
-            _bmp?.Dispose();
-        }
 
-        public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y, int tailleIconeMeteo)
+        public float Affiche(Graphics g, Font fTitre, Font fSousTitre, float Y, int tailleIconeMeteo)
         {
             if (_bmp != null)
                 g.DrawImage(_bmp, 0, Y, tailleIconeMeteo, tailleIconeMeteo);

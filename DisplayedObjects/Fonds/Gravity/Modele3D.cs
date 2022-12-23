@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             _nom = nom;
             _gl = gl;
             this.texture = new Texture();
-            this.texture.Create(gl, Config.Configuration.getImagePath(texture));
+            this.texture.Create(gl, Config.Configuration.GetImagePath(texture));
             _material = material;
             _taille = new Vecteur3Ddbl(rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON);
             _masse = masse;
@@ -37,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 _rAnneauInt = (float)(rAnneauI * Gravitation.RATIO_RAYON);
                 _rAnneauExt = (float)(rAnneauE * Gravitation.RATIO_RAYON);
                 textureAnneaux = new Texture();
-                textureAnneaux.Create(gl, Config.Configuration.getImagePath(textureAnneau));
+                textureAnneaux.Create(gl, Config.Configuration.GetImagePath(textureAnneau));
             }
             isBillboard = isbb;
         }

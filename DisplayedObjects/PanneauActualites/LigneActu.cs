@@ -20,12 +20,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
         private TextureActualité _texture;
 
-        private class TextureActualité : TextureAsynchrone
+        private sealed class TextureActualité : TextureAsynchrone
         {
-            private string _cheminFichier;
-            private string _cheminImage;
-            public float largeur { get; private set; }
-            public float hauteur { get; private set; }
+            private readonly string _cheminFichier;
+            private readonly string _cheminImage;
+            public float Largeur { get; private set; }
+            public float Hauteur { get; private set; }
             public TextureActualité(OpenGL gl, string fichier, string image) : base(gl, null)
             {
                 _gl = gl;
@@ -38,11 +38,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             /// </summary>
             protected override void InitAsynchrone()
             {
-                Bitmap bitmap;
-                string titre, source, description, date;
                 float largeurTitre, largeurSource, largeurDesc = 0;
                 float hauteurTitre, hauteurSource, hauteurDesc = 0;
-                litFichierActu(out titre, out source, out description, out date, out bitmap);
+                LitFichierActu(out string titre, out string source, out string description, out string date, out Bitmap bitmap);
 
                 // Creer la texture representant le texte de cette information
                 using (Font fTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold))
@@ -59,21 +57,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                         largeurSource = sz.Width;
                         hauteurSource = sz.Height * 1.05f;
 
-                        //if (afficheDesc)
-                        {
-                            sz = g.MeasureString(description, fDescription);
-                            largeurDesc = Math.Min(sz.Width, SystemInformation.VirtualScreen.Width * 0.75f);
-                            hauteurDesc = sz.Height * 2.0f;
-                        }
+                        sz = g.MeasureString(description, fDescription);
+                        largeurDesc = Math.Min(sz.Width, SystemInformation.VirtualScreen.Width * 0.75f);
+                        hauteurDesc = sz.Height * 2.0f;
 
-                        largeur = Math.Max(largeurSource, Math.Max(largeurTitre, largeurDesc)) + 50;
-                        hauteur = HAUTEUR_BANDEAU;
+                        Largeur = Math.Max(largeurSource, Math.Max(largeurTitre, largeurDesc)) + 50;
+                        Hauteur = HAUTEUR_BANDEAU;
                         if (bitmap != null)
-                            largeur += bitmap.Width;
+                            Largeur += bitmap.Width;
                     }
 
                     // Creation de la texture a partir d'une bitmap
-                    _bitmap = new Bitmap((int)Math.Ceiling(largeur), (int)Math.Ceiling(hauteur), PixelFormat.Format32bppArgb);
+                    _bitmap = new Bitmap((int)Math.Ceiling(Largeur), (int)Math.Ceiling(Hauteur), PixelFormat.Format32bppArgb);
                     using (Graphics g = Graphics.FromImage(_bitmap))
                     {
                         float x = 0;
@@ -102,7 +97,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             /// </summary>
             /// <param name="image"></param>
             /// <returns></returns>
-            private Image retailleImage(Image image)
+            private Image RetailleImage(Image image)
             {
                 int nouvelleHauteur = (int)(HAUTEUR_BANDEAU - (TAILLE_SOURCE + TAILLE_TITRE) * 0.9);
                 int nouvelleLargeur = (int)(image.Width * (nouvelleHauteur / (float)image.Height));
@@ -126,13 +121,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 return destImage;
             }
 
-            private void litFichierActu(out string titre, out string source, out string description, out string date, out Bitmap bitmap)
+            private void LitFichierActu(out string titre, out string source, out string description, out string date, out Bitmap bitmap)
             {
-                Log.instance.verbose($"Lecture fichier actualité {_cheminFichier}");
+                Log.Instance.Verbose($"Lecture fichier actualité {_cheminFichier}");
                 try
                 {
                     //if (File.Exists(_fichier))
-                    {
+                    //{
                         //using (var reader = File.OpenText("Words.txt"))
                         //{
                         //    var fileText = await reader.ReadToEndAsync();
@@ -147,7 +142,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                             description = file.ReadLine();
                             file.Close();
                         }
-                    }
+                   // }
                     //else
                     //{
                     //    titre = "Impossible de lire l'information";
@@ -158,7 +153,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
                     if (File.Exists(_cheminImage))
                     {
-                        bitmap = (Bitmap)retailleImage(Bitmap.FromFile(_cheminImage));
+                        bitmap = (Bitmap)RetailleImage(Bitmap.FromFile(_cheminImage));
                         bitmap = DisplayedObject.BitmapDesaturee(bitmap, SATURATION_IMAGES);
                     }
                     else
@@ -175,18 +170,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     bitmap = null;
                 }
 
-                Log.instance.verbose("Actualité lue");
+                Log.Instance.Verbose("Actualité lue");
             }
         }
 
 
-        public float hauteur
+        public float Hauteur
         {
-            get { if (_texture == null) return 0; else return _texture.hauteur; }
+            get { if (_texture == null) return 0; else return _texture.Hauteur; }
         }
-        public float largeur
+        public float Largeur
         {
-            get { if (_texture == null) return 0; else return _texture.largeur; }
+            get { if (_texture == null) return 0; else return _texture.Largeur; }
         }
 
         internal static int TAILLE_TITRE;
@@ -202,16 +197,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         internal static int HAUTEUR_BANDEAU;
 
 
-        internal void affiche(OpenGL gl, float x, float y)
+        internal void Affiche(OpenGL gl, float x, float y)
         {
             if (_texture?.Pret == true)
             {
-                _texture.texture.Bind(gl);
+                _texture.Texture.Bind(gl);
                 gl.Begin(OpenGL.GL_QUADS);
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(x, y);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(x, y - _texture.hauteur);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + _texture.largeur, y - _texture.hauteur);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + _texture.largeur, y);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(x, y - _texture.Hauteur);
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + _texture.Largeur, y - _texture.Hauteur);
+                gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + _texture.Largeur, y);
                 gl.End();
             }
         }

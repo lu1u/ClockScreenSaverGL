@@ -48,24 +48,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// Lecture de la configuration
         /// </summary>
         /// <returns></returns>
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NBMAX_SEGMENTS = c.getParametre("NB Max segments", 3);
-                NBMIN_SEGMENTS = c.getParametre("NB Min segments", 2);
-                RAYON_TOTAL = c.getParametre("Rayon Total", 0.95f);
-                MAX_LONGUEUR = c.getParametre("Longueur max", 0.25f);
-                MIN_LONGUEUR = c.getParametre("Longueur min", 0.05f);
-                MAX_VITESSE = c.getParametre("Vitesse max", 3.0f);
-                MIN_VITESSE = c.getParametre("Vitesse min", 1.5f);
-                TAILLE_LIGNE_SEGMENTS = c.getParametre("Largeur ligne segment", 25.0f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
-                TAILLE_LIGNE_TRACES = c.getParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
-                VITESSE_DEFILE = c.getParametre("Vitesse défilement", 5.0f, (a) => { VITESSE_DEFILE = (float)Convert.ToDouble(a); });
-                ALPHA_SEGMENT = c.getParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
-                NB_MAX_TRACE = c.getParametre("Nb Max Trace", 1000);
-                DELAI_TRACE = c.getParametre("Delai Trace", 2, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
+                c = Configuration.GetCategorie(CAT);
+                NBMAX_SEGMENTS = c.GetParametre("NB Max segments", 3);
+                NBMIN_SEGMENTS = c.GetParametre("NB Min segments", 2);
+                RAYON_TOTAL = c.GetParametre("Rayon Total", 0.95f);
+                MAX_LONGUEUR = c.GetParametre("Longueur max", 0.25f);
+                MIN_LONGUEUR = c.GetParametre("Longueur min", 0.05f);
+                MAX_VITESSE = c.GetParametre("Vitesse max", 3.0f);
+                MIN_VITESSE = c.GetParametre("Vitesse min", 1.5f);
+                TAILLE_LIGNE_SEGMENTS = c.GetParametre("Largeur ligne segment", 25.0f, (a) => { TAILLE_LIGNE_SEGMENTS = (float)Convert.ToDouble(a); });
+                TAILLE_LIGNE_TRACES = c.GetParametre("Largeur ligne trace", 4.0f, (a) => { TAILLE_LIGNE_TRACES = (float)Convert.ToDouble(a); });
+                VITESSE_DEFILE = c.GetParametre("Vitesse défilement", 5.0f, (a) => { VITESSE_DEFILE = (float)Convert.ToDouble(a); });
+                ALPHA_SEGMENT = c.GetParametre("Alpha segment", 0.5f, (a) => { ALPHA_SEGMENT = (float)Convert.ToDouble(a); });
+                NB_MAX_TRACE = c.GetParametre("Nb Max Trace", 1000);
+                DELAI_TRACE = c.GetParametre("Delai Trace", 2, (a) => { DELAI_TRACE = Convert.ToInt32(a); _timerTrace = new TimerIsole(DELAI_TRACE); });
             }
             return c;
         }
@@ -76,7 +76,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="gl"></param>
         public Epicycle2(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected override void Init(OpenGL gl)
         {
             _timerTrace = new TimerIsole(DELAI_TRACE, true);
-            _nbSegments = r.Next(NBMIN_SEGMENTS, NBMAX_SEGMENTS + 1);
+            _nbSegments = random.Next(NBMIN_SEGMENTS, NBMAX_SEGMENTS + 1);
             _longueurSegments = new float[_nbSegments];
             _angleSegments = new float[_nbSegments];
             _vitesseSegments = new float[_nbSegments];

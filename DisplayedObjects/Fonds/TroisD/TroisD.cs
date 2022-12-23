@@ -28,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _tailleCubeY = vpY;
             _tailleCubeZ = vpZ;
             _zCamera = zCam;
-            FOV = getConfiguration().getParametre("FOV", 60.0f, (a) => { FOV = (float)Convert.ToDouble(a); });
+            FOV = GetConfiguration().GetParametre("FOV", 60.0f, (a) => { FOV = (float)Convert.ToDouble(a); });
         }
 
 

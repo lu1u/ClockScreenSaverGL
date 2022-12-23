@@ -33,9 +33,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         //protected VALEUR_MODIFIEE valModifie = VALEUR_MODIFIEE.AMBIENT;
         public MateriauGlobal(OpenGL gl) : base(gl, 0, 0, 0, 0)
         {
-            CategorieConfiguration c = getConfiguration();
+            CategorieConfiguration c = GetConfiguration();
 
-            float val = c.getParametre(CONF_LIGHT_AMBIENT, 0.5f, (a) =>
+            float val = c.GetParametre(CONF_LIGHT_AMBIENT, 0.5f, (a) =>
             {
                 LIG_AMBIENT[0] = (float)Convert.ToDouble(a);
                 LIG_AMBIENT[1] = (float)Convert.ToDouble(a);
@@ -45,7 +45,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             LIG_AMBIENT[1] = val;
             LIG_AMBIENT[2] = val;
 
-            val = c.getParametre(CONF_LIGHT_DIFFUSE, 1.0f, (a) =>
+            val = c.GetParametre(CONF_LIGHT_DIFFUSE, 1.0f, (a) =>
            {
                LIG_DIFFUSE[0] = (float)Convert.ToDouble(a);
                LIG_DIFFUSE[1] = (float)Convert.ToDouble(a);
@@ -55,7 +55,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             LIG_DIFFUSE[1] = val;
             LIG_DIFFUSE[2] = val;
 
-            val = c.getParametre(CONF_LIGHT_SPECULAR, 1.0f, (a) =>
+            val = c.GetParametre(CONF_LIGHT_SPECULAR, 1.0f, (a) =>
            {
                LIG_SPECULAR[0] = (float)Convert.ToDouble(a);
                LIG_SPECULAR[1] = (float)Convert.ToDouble(a);
@@ -65,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             LIG_SPECULAR[1] = val;
             LIG_SPECULAR[2] = val;
 
-            val = c.getParametre(CONF_COL_AMBIENT, 0.2f, (a) =>
+            val = c.GetParametre(CONF_COL_AMBIENT, 0.2f, (a) =>
            {
                COL_AMBIENT[0] = (float)Convert.ToDouble(a);
                COL_AMBIENT[1] = (float)Convert.ToDouble(a);
@@ -75,7 +75,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             COL_AMBIENT[1] = val;
             COL_AMBIENT[2] = val;
 
-            val = c.getParametre(CONF_COL_DIFFUSE, 0.2f, (a) =>
+            val = c.GetParametre(CONF_COL_DIFFUSE, 0.2f, (a) =>
            {
                COL_DIFFUSE[0] = (float)Convert.ToDouble(a);
                COL_DIFFUSE[1] = (float)Convert.ToDouble(a);
@@ -85,7 +85,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             COL_DIFFUSE[1] = val;
             COL_DIFFUSE[2] = val;
 
-            val = c.getParametre(CONF_COL_SPECULAR, 0.7f, (a) =>
+            val = c.GetParametre(CONF_COL_SPECULAR, 0.7f, (a) =>
            {
                COL_SPECULAR[0] = (float)Convert.ToDouble(a);
                COL_SPECULAR[1] = (float)Convert.ToDouble(a);
@@ -95,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             COL_SPECULAR[1] = val;
             COL_SPECULAR[2] = val;
 
-            val = c.getParametre(CONF_COL_COLOR, 0.7f, (a) =>
+            val = c.GetParametre(CONF_COL_COLOR, 0.7f, (a) =>
            {
                COL_COLOR[0] = (float)Convert.ToDouble(a);
                COL_COLOR[1] = (float)Convert.ToDouble(a);
@@ -105,7 +105,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             COL_COLOR[1] = val;
             COL_COLOR[2] = val;
 
-            SHININESS = c.getParametre(CONF_SHININESS, 45f, (a) => { SHININESS = (float)Convert.ToDouble(a); });
+            SHININESS = c.GetParametre(CONF_SHININESS, 45f, (a) => { SHININESS = (float)Convert.ToDouble(a); });
         }
 
         protected void setGlobalMaterial(OpenGL gl, Color couleur) => setGlobalMaterial(gl, couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f);

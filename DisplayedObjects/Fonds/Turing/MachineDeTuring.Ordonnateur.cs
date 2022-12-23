@@ -81,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         private void LitFichiers()
         {
             _fichiers = new List<string>();
-            string repertoire = Configuration.getDataDirectory("Turing");
+            string repertoire = Configuration.GetDataDirectory("Turing");
             string[] filePaths = Directory.GetFiles(repertoire);
             foreach (string filename in filePaths)
                 _fichiers.Add(filename);
@@ -97,8 +97,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             if (FICHIER_EN_COURS >= _fichiers.Count)
                 FICHIER_EN_COURS = 0;
 
-            c.setParametre(PARAM_FICHIER_EN_COURS, FICHIER_EN_COURS);
-            c.flush();
+            c.SetParametre(PARAM_FICHIER_EN_COURS, FICHIER_EN_COURS);
+            c.Flush();
 
             LireFichierProgramme(_fichiers[FICHIER_EN_COURS]);
         }
@@ -141,7 +141,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 string rub = "";
                 for (int i = 0; i < 20; i++)
                 {
-                    switch (r.Next(3))
+                    switch (random.Next(3))
                     {
                         case 0: rub += ' '; break;
                         case 1: rub += '0'; break;
@@ -151,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 rubans.Add(rub);
             }
 
-            ruban = rubans[r.Next(rubans.Count)].ToCharArray();
+            ruban = rubans[random.Next(rubans.Count)].ToCharArray();
             VerifieRuban(ruban);
             _indiceRuban = ruban.Length / 2;
         }
@@ -187,7 +187,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                     etat._commentaire = e[3];
             }
             else
-                Log.instance.error("Turing: " + v + ": instruction incorrecte");
+                Log.Instance.Error("Turing: " + v + ": instruction incorrecte");
             return etat;
         }
 

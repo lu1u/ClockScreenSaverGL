@@ -28,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             {
                 using (var c = new Chronometre("Init Actufactory"))
                 {
-                    string repertoire = Path.Combine(Config.Configuration.getDataDirectory(), "Actualites");
+                    string repertoire = Path.Combine(Config.Configuration.GetDataDirectory(), "Actualites");
                     string[] fichiers = Directory.GetFiles(repertoire, $"*.{EXTENSION_ACTUALITES}");
                     if (fichiers != null)
                     {

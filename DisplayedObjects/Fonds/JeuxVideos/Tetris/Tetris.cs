@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const float MAX_JEU_X = (MAX_VIEWPORT_X - MIN_VIEWPORT_X + LARGEUR_JEU) / 2.0f;
         private const float MIN_JEU_Y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y - HAUTEUR_JEU) / 2.0f;
         private const float MAX_JEU_Y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y + HAUTEUR_JEU) / 2.0f;
-        private Plateau _plateau;
+        private readonly Plateau _plateau;
         private PieceTetris _piece;
         private TimerIsole _timerJeu;
 
@@ -37,22 +37,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         private MODE_JEU _modeJeu;
 
-        private TextureAsynchrone _textureBrique, _textureFond;
+        private readonly TextureAsynchrone _textureBrique, _textureFond;
         private int _colonneCible, _rotationCible;
         private int _nbClignotes;
         private bool _clignote;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_LIGNES = c.getParametre("Nb Lignes", 30);
-                NB_COLONNES = c.getParametre("Nb Colonnes", 13);
-                DELAI_TIMER_JEUX = c.getParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
-                Plateau.COEFF_LIGNES_VIDES = c.getParametre("Coeff Lignes vides", 30.0f, a => Plateau.COEFF_LIGNES_VIDES = Convert.ToInt32(a));
-                Plateau.COEFF_TROUS = c.getParametre("Coeff Trous", -100.0f, a => Plateau.COEFF_TROUS = Convert.ToInt32(a));
-                Plateau.COEFF_LIGNE_HAUTE = c.getParametre("Coeff Ligne haute", 20.0f, a => Plateau.COEFF_LIGNE_HAUTE = Convert.ToInt32(a));
+                c = Configuration.GetCategorie(CAT);
+                NB_LIGNES = c.GetParametre("Nb Lignes", 30);
+                NB_COLONNES = c.GetParametre("Nb Colonnes", 13);
+                DELAI_TIMER_JEUX = c.GetParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
+                Plateau.COEFF_LIGNES_VIDES = c.GetParametre("Coeff Lignes vides", 30.0f, a => Plateau.COEFF_LIGNES_VIDES = Convert.ToInt32(a));
+                Plateau.COEFF_TROUS = c.GetParametre("Coeff Trous", -100.0f, a => Plateau.COEFF_TROUS = Convert.ToInt32(a));
+                Plateau.COEFF_LIGNE_HAUTE = c.GetParametre("Coeff Ligne haute", 20.0f, a => Plateau.COEFF_LIGNE_HAUTE = Convert.ToInt32(a));
                 LARGEUR_CASE = LARGEUR_JEU / NB_COLONNES;
                 HAUTEUR_CASE = HAUTEUR_JEU / NB_LIGNES;
             }
@@ -61,10 +61,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Tetris(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
-            _textureBrique = new TextureAsynchrone(gl, Configuration.getImagePath("brique.png"));
+            c = GetConfiguration();
+            _textureBrique = new TextureAsynchrone(gl, Configuration.GetImagePath("brique.png"));
             _textureBrique.Init();
-            _textureFond = new TextureAsynchrone(gl, Configuration.getImagePath("tetris.png"));
+            _textureFond = new TextureAsynchrone(gl, Configuration.GetImagePath("tetris.png"));
             _textureFond.Init();
 
             _timerJeu = new TimerIsole(DELAI_TIMER_JEUX);
@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     gl.Color(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1.0f);
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
-                    _textureFond.texture.Bind(gl);
+                    _textureFond.Texture.Bind(gl);
 
                     // Surface de jeu
                     gl.Begin(OpenGL.GL_QUADS);
@@ -148,16 +148,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 if (_textureBrique.Pret)
                 {
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
-                    _textureBrique.texture.Bind(gl);
+                    _textureBrique.Texture.Bind(gl);
 
                     // Plateau
-                    bool clignoter = _modeJeu == MODE_JEU.LIGNES_COMPLETES ? _clignote : false;
-                    _plateau.affiche(gl, MIN_JEU_X, MIN_JEU_Y, LARGEUR_CASE, HAUTEUR_CASE, couleur, clignoter);
+                    bool clignoter = _modeJeu == MODE_JEU.LIGNES_COMPLETES && _clignote;
+                    _plateau.Affiche(gl, MIN_JEU_X, MIN_JEU_Y, LARGEUR_CASE, HAUTEUR_CASE, couleur, clignoter);
 
                     // Piece courante
-                    _piece?.affiche(gl, MIN_JEU_X, MIN_JEU_Y, LARGEUR_CASE, HAUTEUR_CASE, couleur);
+                    _piece?.Affiche(gl, MIN_JEU_X, MIN_JEU_Y, LARGEUR_CASE, HAUTEUR_CASE, couleur);
                 }
             }
+
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -165,6 +167,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
             if (_timerJeu.Ecoule())
             {
                 switch (_modeJeu)
@@ -182,6 +187,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         break;
                 }
             }
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
         }
 
         /// <summary>
@@ -190,14 +198,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private void ModePartiePerdue()
         {
             _plateau.Vide();
-            switchToMode(MODE_JEU.NORMAL);
+            SwitchToMode(MODE_JEU.NORMAL);
 
         }
 
-        private void switchToMode(MODE_JEU mode)
+        private void SwitchToMode(MODE_JEU mode)
         {
             _modeJeu = mode;
-            Log.instance.verbose("Switch to " + mode);
+            Log.Instance.Verbose("Switch to " + mode);
             switch (mode)
             {
                 case MODE_JEU.NORMAL:
@@ -240,27 +248,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             if (!_plateau.LigneVide(0))
             {
-                Log.instance.verbose("Ligne du haut non vide");
+                Log.Instance.Verbose("Ligne du haut non vide");
                 // Il y a des pieces sur la ligne du haut: partie perdue
-                switchToMode(MODE_JEU.PARTIE_PERDUE);
+                SwitchToMode(MODE_JEU.PARTIE_PERDUE);
             }
             else
             if (_plateau.Disponible(_piece, _piece.CaseX, _piece.CaseY + 1))
             {
-                Log.instance.verbose("Place disponible pour descendre");
+                Log.Instance.Verbose("Place disponible pour descendre");
                 // Descend la piece
                 _piece.CaseY++;
             }
             else
             {
                 // La piece ne peut plus descendre, la déposer ici
-                Log.instance.verbose("Place non disponible");
+                Log.Instance.Verbose("Place non disponible");
 
                 _plateau.DeposePiece(_piece);
                 _piece = null;
 
                 if (_plateau.LignesCompletes())
-                    switchToMode(MODE_JEU.LIGNES_COMPLETES);
+                    SwitchToMode(MODE_JEU.LIGNES_COMPLETES);
                 else
                     NouvellePiece();
             }
@@ -278,7 +286,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             {
                 _plateau.VideLignesCompletes();
                 NouvellePiece();
-                switchToMode(MODE_JEU.NORMAL);
+                SwitchToMode(MODE_JEU.NORMAL);
             }
         }
 
@@ -287,8 +295,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         private void NouvellePiece()
         {
-            Log.instance.verbose("Nouvelle piece");
-            _piece = PieceTetris.creerPiece((T_CASE)r.Next(PieceTetris.NB_PIECES));
+            Log.Instance.Verbose("Nouvelle piece");
+            _piece = PieceTetris.CreerPiece((T_CASE)random.Next(PieceTetris.NB_PIECES));
             _piece.CaseX = (NB_COLONNES - _piece.NbColonnes) / 2;
             _piece.CaseY = 0;
 

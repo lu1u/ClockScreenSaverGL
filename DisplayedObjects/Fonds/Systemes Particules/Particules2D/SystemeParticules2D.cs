@@ -82,7 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
         public SystemeParticules2D(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _particules = new Particule2D[NB_MAX_PARTICULES];
             for (int i = 0; i < NB_MAX_PARTICULES; i++)
                 _particules[i] = new Particule2D();
@@ -246,7 +246,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
             }
 
-            Console.getInstance(gl).AddLigne(Color.Green, "Max particules " + NB_MAX_PARTICULES);
+            Console.GetInstance(gl).AddLigne(Color.Green, "Max particules " + NB_MAX_PARTICULES);
 
             if (afficheDebug)
             {

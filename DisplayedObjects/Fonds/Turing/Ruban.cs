@@ -22,28 +22,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         private float HAUTEUR_TETE;
         private float LARGEUR_CASE_RUBAN;
         private Texture _textureEngrenage, _textureSymboles;
-        public Ruban(OpenGL gl)
+        public Ruban()
         {
             _decalageRuban = 0;
         }
 
         public void Init(OpenGL gl, CategorieConfiguration c)
         {
-            string REPERTOIRE_TURING = c.getParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
+            string REPERTOIRE_TURING = c.GetParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
             _textureEngrenage = new Texture();
-            _textureEngrenage.Create(gl, c.getParametre("Ruban Engrenage", Config.Configuration.getImagePath(REPERTOIRE_TURING + @"\engrenage.png")));
+            _textureEngrenage.Create(gl, c.GetParametre("Ruban Engrenage", Config.Configuration.GetImagePath(REPERTOIRE_TURING + @"\engrenage.png")));
 
             _textureSymboles = new Texture();
-            _textureSymboles.Create(gl, c.getParametre("Ruban Symboles", Config.Configuration.getImagePath(REPERTOIRE_TURING + @"\Symboles ruban.png")));
+            _textureSymboles.Create(gl, c.GetParametre("Ruban Symboles", Config.Configuration.GetImagePath(REPERTOIRE_TURING + @"\Symboles ruban.png")));
         }
 
-        public void getConfiguration(CategorieConfiguration c)
+        public void GetConfiguration(CategorieConfiguration c)
         {
-            X_RUBAN = c.getParametre("Ruban X", 0.0f, (a) => { X_RUBAN = (float)Convert.ToDouble(a); });
-            Y_RUBAN = c.getParametre("Ruban Y", -0.3f, (a) => { Y_RUBAN = (float)Convert.ToDouble(a); });
-            HAUTEUR_RUBAN = c.getParametre("Ruban Hauteur", 0.12f, (a) => { HAUTEUR_RUBAN = (float)Convert.ToDouble(a); });
-            LARGEUR_CASE_RUBAN = c.getParametre("Ruban Largeur case", 0.12f, (a) => { LARGEUR_CASE_RUBAN = (float)Convert.ToDouble(a); });
-            HAUTEUR_TETE = c.getParametre("Tete Hauteur", 0.22f);
+            X_RUBAN = c.GetParametre("Ruban X", 0.0f, (a) => { X_RUBAN = (float)Convert.ToDouble(a); });
+            Y_RUBAN = c.GetParametre("Ruban Y", -0.3f, (a) => { Y_RUBAN = (float)Convert.ToDouble(a); });
+            HAUTEUR_RUBAN = c.GetParametre("Ruban Hauteur", 0.12f, (a) => { HAUTEUR_RUBAN = (float)Convert.ToDouble(a); });
+            LARGEUR_CASE_RUBAN = c.GetParametre("Ruban Largeur case", 0.12f, (a) => { LARGEUR_CASE_RUBAN = (float)Convert.ToDouble(a); });
+            HAUTEUR_TETE = c.GetParametre("Tete Hauteur", 0.22f);
         }
 
         public void Dessine(OpenGL gl, Color couleur, char[] ruban, int indiceRuban)
@@ -93,7 +93,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 float xDroite = xGauche + LARGEUR_CASE_RUBAN;
                 if (xGauche < 1.0f && xDroite > -1.0f)
                 {
-                    int type = getTextureForChiffre(ruban[i]);
+                    int type = GetTextureForChiffre(ruban[i]);
 
                     float textCoordGauche = (1.0f / NB_SYMBOLES) * type;
                     float textCoordDroite = (1.0f / NB_SYMBOLES) * (type + 1);
@@ -109,7 +109,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             gl.PopMatrix();
         }
 
-        private int getTextureForChiffre(char chiffre)
+        private int GetTextureForChiffre(char chiffre)
         {
             switch (chiffre)
             {

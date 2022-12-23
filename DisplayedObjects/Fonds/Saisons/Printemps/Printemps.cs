@@ -5,6 +5,7 @@
 
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -33,7 +34,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         private Tree _tree;
         public Printemps(OpenGL gl, int LargeurEcran, int HauteurEcran) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
 
             _tree = new Tree(LargeurEcran, HauteurEcran * FloatRandom(0.4f, 0.6f), 0,
                 LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
@@ -62,28 +63,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                ALPHA = (byte)c.getParametre("ALPHA", 128);
-                DELAI_RECOMMENCE = c.getParametre("Delai nouvel arbre", 10) * 1000;
-                LARGEUR_TRONC = c.getParametre("Largeur Tronc", 10);
-                HAUTEUR_TRONC = c.getParametre("Hauteur Tronc", 200);
-                LARGEUR_ARBRE = c.getParametre("Largeur Arbre", 1200);
-                HAUTEUR_ARBRE = c.getParametre("Hauteur Arbre", 400);
-                LONGUEUR_BRANCHE = c.getParametre("Longueur Branche", 7);
-                DISTANCE_MIN = c.getParametre("Distance Min", 5);
-                DISTANCE_MAX = c.getParametre("Distance Max", 100);
-                NB_CIBLES = c.getParametre("Nb Cibles", 200);
+                c = Configuration.GetCategorie(CAT);
+                ALPHA = (byte)c.GetParametre("ALPHA", 128);
+                DELAI_RECOMMENCE = c.GetParametre("Delai nouvel arbre", 10) * 1000;
+                LARGEUR_TRONC = c.GetParametre("Largeur Tronc", 10);
+                HAUTEUR_TRONC = c.GetParametre("Hauteur Tronc", 200);
+                LARGEUR_ARBRE = c.GetParametre("Largeur Arbre", 1200);
+                HAUTEUR_ARBRE = c.GetParametre("Hauteur Arbre", 400);
+                LONGUEUR_BRANCHE = c.GetParametre("Longueur Branche", 7);
+                DISTANCE_MIN = c.GetParametre("Distance Min", 5);
+                DISTANCE_MAX = c.GetParametre("Distance Max", 100);
+                NB_CIBLES = c.GetParametre("Nb Cibles", 200);
 
             }
             return c;
         }
         public override bool ClearBackGround(OpenGL gl, Color c)
         {
-            c = getCouleurOpaqueAvecAlpha(c, ALPHA);
+            c = OpenGLColor.GetCouleurOpaqueAvecAlpha(c, ALPHA);
 
             gl.ClearColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);

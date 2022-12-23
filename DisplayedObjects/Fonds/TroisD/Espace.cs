@@ -50,30 +50,30 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Espace(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            getConfiguration();
+            GetConfiguration();
 
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, c.getParametre("Etoile", Configuration.getImagePath("etoile.png")));
+            _texture.Create(gl, c.GetParametre("Etoile", Configuration.GetImagePath("etoile.png")));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
                 NouvelleEtoile(ref _etoiles[i]);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                ALPHA = c.getParametre("Alpha", (byte)255);
-                TAILLE_ETOILE = c.getParametre("Taille", 0.15f);
-                NB_ETOILES = c.getParametre("NbEtoiles", 2000);
-                PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
-                VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
-                VITESSE = c.getParametre("Vitesse", 8f);
-                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                ALPHA = c.GetParametre("Alpha", (byte)255);
+                TAILLE_ETOILE = c.GetParametre("Taille", 0.15f);
+                NB_ETOILES = c.GetParametre("NbEtoiles", 2000);
+                PERIODE_TRANSLATION = c.GetParametre("PeriodeTranslation", 13.0f);
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 10.0f);
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 50f);
+                VITESSE_TRANSLATION = c.GetParametre("VitesseTranslation", 0.2f);
+                VITESSE = c.GetParametre("Vitesse", 8f);
+                CHANGE_COULEUR = c.GetParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -145,7 +145,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             Color cG = Color.FromArgb(ALPHA, couleur.R, couleur.G, couleur.B);
             foreach (Etoile o in _etoiles)
             {
-                setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
+                SetColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
 
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);

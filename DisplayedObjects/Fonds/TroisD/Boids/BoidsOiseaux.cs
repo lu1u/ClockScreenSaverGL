@@ -1,4 +1,5 @@
 ﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -14,13 +15,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         private static int NB;
         private static float DIMINUE_VITESSE_V;
         private static float DIMINUE_ACCELERATION_V;
-        private Texture _texture = new Texture();
+        private readonly Texture _texture = new Texture();
 
 
         public BoidsOiseaux(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            _texture.Create(gl, c.getParametre("Oiseau", Configuration.getImagePath("oiseau.png")));
+            GetConfiguration();
+            _texture.Create(gl, c.GetParametre("Oiseau", Configuration.GetImagePath("oiseau.png")));
             NB_BOIDS = NB;
         }
 
@@ -31,21 +32,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
 
-                NB = c.getParametre("Nb", 200);
-                MAX_SPEED = c.getParametre("Max Speed", 3.5f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
-                MAX_FORCE = c.getParametre("Max force", 0.01f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
-                TAILLE = c.getParametre("Taille", 0.33f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
-                DISTANCE_VOISINS = c.getParametre("Distance voisins", 3.7f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
-                SEPARATION = c.getParametre("Separation", 1.5f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
-                VITESSE_ANIMATION = c.getParametre("Vitesse animation", 2.0f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
-                DIMINUE_VITESSE_V = c.getParametre("Diminution vitesse verticale", 0.9999f, (a) => { DIMINUE_VITESSE_V = (float)Convert.ToDouble(a); });
-                DIMINUE_ACCELERATION_V = c.getParametre("Diminution acceleration verticale", 0.9999f, (a) => { DIMINUE_ACCELERATION_V = (float)Convert.ToDouble(a); });
+                NB = c.GetParametre("Nb", 200);
+                MAX_SPEED = c.GetParametre("Max Speed", 3.5f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
+                MAX_FORCE = c.GetParametre("Max force", 0.01f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
+                TAILLE = c.GetParametre("Taille", 0.33f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
+                DISTANCE_VOISINS = c.GetParametre("Distance voisins", 3.7f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
+                SEPARATION = c.GetParametre("Separation", 1.5f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
+                VITESSE_ANIMATION = c.GetParametre("Vitesse animation", 2.0f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
+                DIMINUE_VITESSE_V = c.GetParametre("Diminution vitesse verticale", 0.9999f, (a) => { DIMINUE_VITESSE_V = (float)Convert.ToDouble(a); });
+                DIMINUE_ACCELERATION_V = c.GetParametre("Diminution acceleration verticale", 0.9999f, (a) => { DIMINUE_ACCELERATION_V = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -76,7 +77,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         protected override void InitOpenGL(OpenGL gl, Temps maintenant, Color couleur)
         {
-            couleur = getCouleurOpaqueAvecAlpha(couleur, 64);
+            couleur = OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, 64);
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
 
             gl.Disable(OpenGL.GL_COLOR_MATERIAL);
@@ -115,10 +116,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             for (int i = 0; i < NB_BOIDS; i++)
                 _boids.Add(new BoidOiseau(FloatRandom(-MAX_X, MAX_X), FloatRandom(-MAX_Y, MAX_Y), FloatRandom(-MAX_Z, MAX_Z)));
         }
-        public override bool ClearBackGround(OpenGL gl, Color couleur)
+        public override bool ClearBackGround(OpenGL gl, Color c)
         {
-            couleur = getCouleurOpaqueAvecAlpha(couleur, 128);
-            gl.ClearColor(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1);
+            c = OpenGLColor.GetCouleurOpaqueAvecAlpha(c, 128);
+            gl.ClearColor(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             return true;
         }

@@ -28,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private List<Fourmi> _fourmis;
         private Monde _monde;
 
-        private Texture _texture = new Texture();
+        private readonly Texture _texture = new Texture();
         private TimerIsole _timer;
         private float _maxPheromoneCherche, _maxPheromoneRapporte;
         public Fourmis(OpenGL gl) : base(gl)
@@ -42,7 +42,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected override void Init(OpenGL gl)
         {
 
-            string nomImage = c.getParametre("Etoile", Configuration.getImagePath("fourmi.png"));
+            string nomImage = c.GetParametre("Etoile", Configuration.GetImagePath("fourmi.png"));
             _texture.Create(gl, nomImage);
             _fourmis = new List<Fourmi>();
             _timer = new TimerIsole(DELAI_TIMER, false);
@@ -74,10 +74,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Disable(OpenGL.GL_BLEND);
 
                 if (AFFICHER_RECHERCHE_NOURRITURE)
-                    _monde._pheromonesRechercheNourriture.Affiche(gl, _maxPheromoneCherche, new CouleurGlobale(couleur).getColorWithHueChange(-0.25f));
+                    _monde._pheromonesRechercheNourriture.Affiche(gl, _maxPheromoneCherche, new CouleurGlobale(couleur).GetColorWithHueChange(-0.25f));
 
                 if (AFFICHER_RAPPORTE_NOURRITURE)
-                    _monde._grilleRapporteNourriture.Affiche(gl, _maxPheromoneRapporte, new CouleurGlobale(couleur).getColorWithHueChange(0.25f));
+                    _monde._grilleRapporteNourriture.Affiche(gl, _maxPheromoneRapporte, new CouleurGlobale(couleur).GetColorWithHueChange(0.25f));
 
                 // Obstacles
                 gl.Enable(OpenGL.GL_BLEND);
@@ -135,11 +135,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             if (_timer.Ecoule())
                 if (_fourmis.Count < NB_FOURMIS)
                 {
-                    Fourmi f = new Fourmi(_monde.DISTANCE_PERCEPTION);
-                    f.X = _monde.X_NID;
-                    f.Y = _monde.Y_NID;
-                    f.Cap = FloatRandom(0, DEUX_PI);
-                    f.Vitesse = VITESSE * FloatRandom(0.9f, 1.1f);
+                    Fourmi f = new Fourmi(_monde.DISTANCE_PERCEPTION)
+                    {
+                        X = _monde.X_NID,
+                        Y = _monde.Y_NID,
+                        Cap = FloatRandom(0, DEUX_PI),
+                        Vitesse = VITESSE * FloatRandom(0.9f, 1.1f)
+                    };
                     _fourmis.Add(f);
                 }
 
@@ -147,36 +149,36 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 f.Deplace(_monde, maintenant.intervalleDepuisDerniereFrame);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE_GRILLE = c.getParametre("Taille grille marqueurs", 1000);
+                c = Configuration.GetCategorie(CAT);
+                TAILLE_GRILLE = c.GetParametre("Taille grille marqueurs", 1000);
                 _monde = new Monde(TAILLE_GRILLE);
-                _monde.X_NID = c.getParametre("X Nid", 0.1f, a => { _monde.X_NID = (float)Convert.ToDouble(a); });
-                _monde.Y_NID = c.getParametre("Y Nid", 0.1f, a => { _monde.Y_NID = (float)Convert.ToDouble(a); });
-                _monde.X_NOURRITURE = c.getParametre("X Nourriture", 0.75f, a => { _monde.X_NOURRITURE = (float)Convert.ToDouble(a); });
-                _monde.Y_NOURRITURE = c.getParametre("Y Nourriture", 0.9f, a => { _monde.Y_NOURRITURE = (float)Convert.ToDouble(a); });
-                _monde.TAILLE_NOURRITURE = c.getParametre("Taille nourriture", 0.02f, a => { _monde.TAILLE_NOURRITURE = (float)Convert.ToDouble(a); });
-                _monde.DISTANCE_PERCEPTION = c.getParametre("Distance perception", 0.03f, a => { _monde.DISTANCE_PERCEPTION = (float)Convert.ToDouble(a); });
-                _monde.VALEUR_RENFORCE = c.getParametre("Valeur renforcement", 0.00001f, a => { _monde.VALEUR_RENFORCE = (float)Convert.ToDouble(a); });
+                _monde.X_NID = c.GetParametre("X Nid", 0.1f, a => { _monde.X_NID = (float)Convert.ToDouble(a); });
+                _monde.Y_NID = c.GetParametre("Y Nid", 0.1f, a => { _monde.Y_NID = (float)Convert.ToDouble(a); });
+                _monde.X_NOURRITURE = c.GetParametre("X Nourriture", 0.75f, a => { _monde.X_NOURRITURE = (float)Convert.ToDouble(a); });
+                _monde.Y_NOURRITURE = c.GetParametre("Y Nourriture", 0.9f, a => { _monde.Y_NOURRITURE = (float)Convert.ToDouble(a); });
+                _monde.TAILLE_NOURRITURE = c.GetParametre("Taille nourriture", 0.02f, a => { _monde.TAILLE_NOURRITURE = (float)Convert.ToDouble(a); });
+                _monde.DISTANCE_PERCEPTION = c.GetParametre("Distance perception", 0.03f, a => { _monde.DISTANCE_PERCEPTION = (float)Convert.ToDouble(a); });
+                _monde.VALEUR_RENFORCE = c.GetParametre("Valeur renforcement", 0.00001f, a => { _monde.VALEUR_RENFORCE = (float)Convert.ToDouble(a); });
 
-                _monde.DELAI_MARQUEUR = c.getParametre("Delai marqueur", 10, a => { _monde.DELAI_MARQUEUR = Convert.ToInt16(a); });
-                _monde.TAILLE_NID = c.getParametre("Taille Nid", 0.02f, a => { _monde.TAILLE_NID = (float)Convert.ToDouble(a); });
+                _monde.DELAI_MARQUEUR = c.GetParametre("Delai marqueur", 10, a => { _monde.DELAI_MARQUEUR = Convert.ToInt16(a); });
+                _monde.TAILLE_NID = c.GetParametre("Taille Nid", 0.02f, a => { _monde.TAILLE_NID = (float)Convert.ToDouble(a); });
 
-                NB_FOURMIS = c.getParametre("Nb max fourmis", 100, a => { NB_FOURMIS = Convert.ToInt32(a); });
-                NB_OBSTACLES = c.getParametre("Nb obstacles", 2);
-                TAILLE_OBSTACLES = c.getParametre("Taille obstacles", 0.02f);
-                AFFICHER_PERCEPTION = c.getParametre("Afficher perception", true, a => { AFFICHER_PERCEPTION = Convert.ToBoolean(a); });
-                AFFICHER_RECHERCHE_NOURRITURE = c.getParametre("Afficher recherche nourriture", true, a => { AFFICHER_RECHERCHE_NOURRITURE = Convert.ToBoolean(a); });
-                AFFICHER_RAPPORTE_NOURRITURE = c.getParametre("Afficher rapporte nourriture", true, a => { AFFICHER_RAPPORTE_NOURRITURE = Convert.ToBoolean(a); });
-                TAILLE_FOURMI = c.getParametre("Taille fourmi", 0.01f, a => { TAILLE_FOURMI = (float)Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse fourmi", 0.5f, a => { VITESSE = (float)Convert.ToDouble(a); });
-                _monde.VARIATION_CAP = c.getParametre("Variation cap", 2.0f, a => { _monde.VARIATION_CAP = (float)Convert.ToDouble(a); });
-                _monde.VARIATION_CAP_OBSTACLE = c.getParametre("Variation cap", 4.0f, a => { _monde.VARIATION_CAP_OBSTACLE = (float)Convert.ToDouble(a); });
-                DETAIL_CERCLES = c.getParametre("Détail cercles", 16, a => { DETAIL_CERCLES = Convert.ToInt16(a); });
-                DELAI_TIMER = c.getParametre("Delai création fourmi", 300, a => { DELAI_TIMER = Convert.ToInt16(a); });
+                NB_FOURMIS = c.GetParametre("Nb max fourmis", 100, a => { NB_FOURMIS = Convert.ToInt32(a); });
+                NB_OBSTACLES = c.GetParametre("Nb obstacles", 2);
+                TAILLE_OBSTACLES = c.GetParametre("Taille obstacles", 0.02f);
+                AFFICHER_PERCEPTION = c.GetParametre("Afficher perception", true, a => { AFFICHER_PERCEPTION = Convert.ToBoolean(a); });
+                AFFICHER_RECHERCHE_NOURRITURE = c.GetParametre("Afficher recherche nourriture", true, a => { AFFICHER_RECHERCHE_NOURRITURE = Convert.ToBoolean(a); });
+                AFFICHER_RAPPORTE_NOURRITURE = c.GetParametre("Afficher rapporte nourriture", true, a => { AFFICHER_RAPPORTE_NOURRITURE = Convert.ToBoolean(a); });
+                TAILLE_FOURMI = c.GetParametre("Taille fourmi", 0.01f, a => { TAILLE_FOURMI = (float)Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse fourmi", 0.5f, a => { VITESSE = (float)Convert.ToDouble(a); });
+                _monde.VARIATION_CAP = c.GetParametre("Variation cap", 2.0f, a => { _monde.VARIATION_CAP = (float)Convert.ToDouble(a); });
+                _monde.VARIATION_CAP_OBSTACLE = c.GetParametre("Variation cap", 4.0f, a => { _monde.VARIATION_CAP_OBSTACLE = (float)Convert.ToDouble(a); });
+                DETAIL_CERCLES = c.GetParametre("Détail cercles", 16, a => { DETAIL_CERCLES = Convert.ToInt16(a); });
+                DELAI_TIMER = c.GetParametre("Delai création fourmi", 300, a => { DELAI_TIMER = Convert.ToInt16(a); });
             }
             return c;
         }
@@ -184,10 +186,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
 
 
-        public override void fillConsole(OpenGL gl)
+        public override void FillConsole(OpenGL gl)
         {
-            base.fillConsole(gl);
-            Console c = Console.getInstance(gl);
+            base.FillConsole(gl);
+            Console c = Console.GetInstance(gl);
             c.AddLigne(Color.IndianRed, "Nb fourmis " + _fourmis.Count);
         }
     }

@@ -7,6 +7,7 @@
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
 using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -40,35 +41,37 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected const byte MORT = 0;
         protected const byte NORMAL = 1;
         protected const byte NAISSANCE = 2;
-        private int _colonneMin, _colonneMax, _largeurCalcul;
+        private int _colonneMin;
+        private int _colonneMax;
+        private readonly int _largeurCalcul;
         private float _angle = 0;
         protected Texture textureCellule = new Texture();
         public Life(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _largeurCalcul = LARGEUR / SKIP;
             _colonneMin = -_largeurCalcul;
             _colonneMax = _colonneMin + _largeurCalcul;
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-            textureCellule.Create(gl, c.getParametre("texture particule", Configuration.getImagePath("particule.png")));
+            textureCellule.Create(gl, c.GetParametre("texture particule", Configuration.GetImagePath("particule.png")));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                LARGEUR = c.getParametre("Largeur", 60);
-                HAUTEUR = c.getParametre("Hauteur", 50);
-                COULEUR_NAISSANCE = c.getParametre("CouleurNaissance", 0.3f, (a) => { COULEUR_NAISSANCE = (float)Convert.ToDouble(a); });
-                COULEUR_NORMAL = c.getParametre("CouleurNormale", 0.4f, (a) => { COULEUR_NORMAL = (float)Convert.ToDouble(a); });
-                SKIP = c.getParametre("Skip", 2, (a) => { SKIP = Convert.ToInt32(a); });
-                VITESSE_ANGLE = c.getParametre("Vitesse Angle", 2.0f);
-                LOOK_AT_X = c.getParametre("LookAtX", 0.1f, (a) => { LOOK_AT_X = (float)Convert.ToDouble(a); });
-                LOOK_AT_Y = c.getParametre("LookAtY", 0.02f, (a) => { LOOK_AT_Y = (float)Convert.ToDouble(a); });
-                LOOK_AT_Z = c.getParametre("LookAtZ", -0.3f, (a) => { LOOK_AT_Z = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                LARGEUR = c.GetParametre("Largeur", 60);
+                HAUTEUR = c.GetParametre("Hauteur", 50);
+                COULEUR_NAISSANCE = c.GetParametre("CouleurNaissance", 0.3f, (a) => { COULEUR_NAISSANCE = (float)Convert.ToDouble(a); });
+                COULEUR_NORMAL = c.GetParametre("CouleurNormale", 0.4f, (a) => { COULEUR_NORMAL = (float)Convert.ToDouble(a); });
+                SKIP = c.GetParametre("Skip", 2, (a) => { SKIP = Convert.ToInt32(a); });
+                VITESSE_ANGLE = c.GetParametre("Vitesse Angle", 2.0f);
+                LOOK_AT_X = c.GetParametre("LookAtX", 0.1f, (a) => { LOOK_AT_X = (float)Convert.ToDouble(a); });
+                LOOK_AT_Y = c.GetParametre("LookAtY", 0.02f, (a) => { LOOK_AT_Y = (float)Convert.ToDouble(a); });
+                LOOK_AT_Z = c.GetParametre("LookAtZ", -0.3f, (a) => { LOOK_AT_Z = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -103,9 +106,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_BLEND);
 
-            Color Naissance = getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NAISSANCE * 255));
+            Color Naissance = OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NAISSANCE * 255));
             byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
-            Color Normal = getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NORMAL * 255));
+            Color Normal = OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NORMAL * 255));
             byte[] cNormal = { Normal.R, Normal.G, Normal.B };
 
             gl.LookAt(LOOK_AT_X, LOOK_AT_Y, LOOK_AT_Z, 0, -0.1f, 0, 0, -1, 0);
@@ -114,7 +117,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             byte ancienType = MORT;
 
             textureCellule.Bind(gl);
-            gl.Translate(-LARGEUR / 2, -HAUTEUR / 2, 0);
+            gl.Translate(-LARGEUR / 2.0f, -HAUTEUR / 2.0f, 0);
             gl.Begin(OpenGL.GL_QUADS);
 
             for (int x = 0; x < LARGEUR; x++)
@@ -140,7 +143,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 }
             gl.End();
 
-            Console.getInstance(gl).AddLigne(Color.Green, "Largeur " + LARGEUR + "x Hauteur " + HAUTEUR);
+            Console.GetInstance(gl).AddLigne(Color.Green, "Largeur " + LARGEUR + "x Hauteur " + HAUTEUR);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -160,8 +163,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #endif
 
             _angle += maintenant.intervalleDepuisDerniereFrame * VITESSE_ANGLE;
-            int xMin, xMax;
-            DecoupeEnBandes(out xMin, out xMax);
+            DecoupeEnBandes(out int xMin, out int xMax);
 
             int NbVoisines;
             int XM1, XP1, YM1, YP1;
@@ -218,9 +220,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 _colonneMax = _largeurCalcul;
 
                 // On a tout calcule, echanger les tableaux
-                byte[,] t = cellules;
-                cellules = cellulestemp;
-                cellulestemp = t;
+                (cellulestemp, cellules) = (cellules, cellulestemp);
             }
 
             xMin = _colonneMin;

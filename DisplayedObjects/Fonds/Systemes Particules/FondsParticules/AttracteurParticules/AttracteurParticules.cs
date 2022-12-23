@@ -24,8 +24,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public AttracteurParticules(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            AjouteTexture(c.getParametre("Particule", Configuration.getImagePath("particule.png")), 1);
+            GetConfiguration();
+            AjouteTexture(c.GetParametre("Particule", Configuration.GetImagePath("particule.png")), 1);
             for (int i = 0; i < NB_EMETTEURS; i++)
             {
                 Trajectoire t = new TrajectoireOvale(0, 0, MAX_X * 0.8f, MAX_Y * 0.8f, VITESSE_EMETTEUR * FloatRandom(0.5f, 1.5f), -(float)Math.PI / 2.0f);
@@ -46,22 +46,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurAlpha(ALPHA_MODIFIEUR));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
 
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_EMETTEURS = c.getParametre("Nb Emetteurs", 1);
-                NB_ATTRACTEURS = c.getParametre("Nb Emetteurs", 1);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 100000);
-                NB_PARTICULES_EMISES = c.getParametre("Nb ParticulesEmises", 10);
-                ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.002f);
-                TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.012f);
-                VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.04f);
-                VITESSE_EMETTEUR = c.getParametre("VitesseEmetteur", 0.05f);
-                VITESSE_ATTRACTEUR = c.getParametre("VitesseAttracteur", 0.02f);
-                G = c.getParametre("G", 0.3f);
+                c = Configuration.GetCategorie(CAT);
+                NB_EMETTEURS = c.GetParametre("Nb Emetteurs", 1);
+                NB_ATTRACTEURS = c.GetParametre("Nb Emetteurs", 1);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 100000);
+                NB_PARTICULES_EMISES = c.GetParametre("Nb ParticulesEmises", 10);
+                ALPHA_MODIFIEUR = c.GetParametre("Modifieur Alpha", 0.002f);
+                TAILLE_PARTICULE = c.GetParametre("TailleParticule", 0.012f);
+                VITESSE_PARTICULE = c.GetParametre("VitesseParticule", 0.04f);
+                VITESSE_EMETTEUR = c.GetParametre("VitesseEmetteur", 0.05f);
+                VITESSE_ATTRACTEUR = c.GetParametre("VitesseAttracteur", 0.02f);
+                G = c.GetParametre("G", 0.3f);
             }
             return c;
         }

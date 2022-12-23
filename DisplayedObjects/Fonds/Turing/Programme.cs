@@ -1,4 +1,5 @@
 ﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -27,10 +28,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         private float _progressionEtat;
         private Bitmap _bitmap;
 
-        public Programme(OpenGL gl)
-        {
-
-        }
 
         /// <summary>
         /// Initialisation
@@ -46,23 +43,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             _cibleIndicateur = 0;
             _progressionEtat = 0f;
 
-            string REPERTOIRE_TURING = c.getParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
+            string REPERTOIRE_TURING = c.GetParametre(MachineDeTuring.PARAM_REPERTOIRE, "turing");
             _textureProgramme = new Texture();
-            _textureProgramme.Create(gl, c.getParametre("Programme Fond", Configuration.getImagePath(REPERTOIRE_TURING + @"\Programme.png")));
+            _textureProgramme.Create(gl, c.GetParametre("Programme Fond", Configuration.GetImagePath(REPERTOIRE_TURING + @"\Programme.png")));
             _textureSymbolesProgramme = new Texture();
-            _textureSymbolesProgramme.Create(gl, c.getParametre("Programme Symboles", Configuration.getImagePath(REPERTOIRE_TURING + @"\Symboles programme.png")));
+            _textureSymbolesProgramme.Create(gl, c.GetParametre("Programme Symboles", Configuration.GetImagePath(REPERTOIRE_TURING + @"\Symboles programme.png")));
 
             CreateBitmap(gl, nom, description, etat, nbEtats, commentaire);
         }
 
-        public void getConfiguration(CategorieConfiguration c)
+        public void GetConfiguration(CategorieConfiguration c)
         {
-            X_PROGRAMME = c.getParametre("Programme X", -0.95f, (a) => { X_PROGRAMME = (float)Convert.ToDouble(a); });
-            Y_PROGRAMME = c.getParametre("Programme Y", 0.55f, (a) => { Y_PROGRAMME = (float)Convert.ToDouble(a); });
-            HAUTEUR_PROGRAMME = c.getParametre("Programme Hauteur", 0.6f, (a) => { HAUTEUR_PROGRAMME = (float)Convert.ToDouble(a); });
-            LARGEUR_PROGRAMME = c.getParametre("Programme Largeur", 0.6f, (a) => { LARGEUR_PROGRAMME = (float)Convert.ToDouble(a); });
-            HAUTEUR_CASE_PROGRAMME = c.getParametre("Programme Hauteur Case", LARGEUR_PROGRAMME / 4.0f, (a) => { HAUTEUR_CASE_PROGRAMME = (float)Convert.ToDouble(a); });
-            LARGEUR_CASE_PROGRAMME = c.getParametre("Programme Largeur Case", HAUTEUR_PROGRAMME / 4.0f, (a) => { LARGEUR_CASE_PROGRAMME = (float)Convert.ToDouble(a); });
+            X_PROGRAMME = c.GetParametre("Programme X", -0.95f, (a) => { X_PROGRAMME = (float)Convert.ToDouble(a); });
+            Y_PROGRAMME = c.GetParametre("Programme Y", 0.55f, (a) => { Y_PROGRAMME = (float)Convert.ToDouble(a); });
+            HAUTEUR_PROGRAMME = c.GetParametre("Programme Hauteur", 0.6f, (a) => { HAUTEUR_PROGRAMME = (float)Convert.ToDouble(a); });
+            LARGEUR_PROGRAMME = c.GetParametre("Programme Largeur", 0.6f, (a) => { LARGEUR_PROGRAMME = (float)Convert.ToDouble(a); });
+            HAUTEUR_CASE_PROGRAMME = c.GetParametre("Programme Hauteur Case", LARGEUR_PROGRAMME / 4.0f, (a) => { HAUTEUR_CASE_PROGRAMME = (float)Convert.ToDouble(a); });
+            LARGEUR_CASE_PROGRAMME = c.GetParametre("Programme Largeur Case", HAUTEUR_PROGRAMME / 4.0f, (a) => { LARGEUR_CASE_PROGRAMME = (float)Convert.ToDouble(a); });
         }
 
         public void Dessine(OpenGL gl, Color couleur, MachineDeTuring.Instruction[] instructions, MachineDeTuring.ETAPE_TURING etatOrdonnateur)
@@ -84,17 +81,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
             // Cases du programme
             _textureSymbolesProgramme.Bind(gl);
-            afficheCaseProgramme(gl, 0, 0, MachineDeTuring.SYMBOLE_LECTURE, couleur);
-            afficheCaseProgramme(gl, 1, 0, MachineDeTuring.SYMBOLE_ECRITURE, couleur);
-            afficheCaseProgramme(gl, 2, 0, MachineDeTuring.SYMBOLE_DEPLACEMENT, couleur);
-            afficheCaseProgramme(gl, 3, 0, MachineDeTuring.SYMBOLE_ETAT, couleur);
+            AfficheCaseProgramme(gl, 0, 0, MachineDeTuring.SYMBOLE_LECTURE, couleur);
+            AfficheCaseProgramme(gl, 1, 0, MachineDeTuring.SYMBOLE_ECRITURE, couleur);
+            AfficheCaseProgramme(gl, 2, 0, MachineDeTuring.SYMBOLE_DEPLACEMENT, couleur);
+            AfficheCaseProgramme(gl, 3, 0, MachineDeTuring.SYMBOLE_ETAT, couleur);
 
             for (int i = 0; i < instructions.Length; i++)
             {
-                afficheCaseProgramme(gl, 0, i + 1, getTextureForChiffre(" 01"[i]), couleur);
-                afficheCaseProgramme(gl, 1, i + 1, getTextureForChiffre(instructions[i]._valeurAEcrire), couleur);
-                afficheCaseProgramme(gl, 2, i + 1, getTextureForChiffre(instructions[i]._decaleRuban), couleur);
-                afficheCaseProgramme(gl, 3, i + 1, getTextureForEtat(instructions[i]._etatSuivant), couleur);
+                AfficheCaseProgramme(gl, 0, i + 1, GetTextureForChiffre(" 01"[i]), couleur);
+                AfficheCaseProgramme(gl, 1, i + 1, GetTextureForChiffre(instructions[i]._valeurAEcrire), couleur);
+                AfficheCaseProgramme(gl, 2, i + 1, GetTextureForChiffre(instructions[i]._decaleRuban), couleur);
+                AfficheCaseProgramme(gl, 3, i + 1, GetTextureForEtat(instructions[i]._etatSuivant), couleur);
             }
 
             // Indicateur horizontal d'instruction active
@@ -103,21 +100,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Color(couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f);
             gl.PushMatrix();
+            gl.Translate(0, -(HAUTEUR_CASE_PROGRAMME * (_positionIndicateur + 1)), 0);
+            using (new GLBegin(gl, OpenGL.GL_QUADS))
             {
-                gl.Translate(0, -(HAUTEUR_CASE_PROGRAMME * (_positionIndicateur + 1)), 0);
-                gl.Begin(OpenGL.GL_QUADS);
-                {
-                    gl.Vertex(0, 0, 0);
-                    gl.Vertex(0, HAUTEUR_CASE_PROGRAMME, 0);
-                    gl.Vertex(LARGEUR_CASE_PROGRAMME * 4.0f, HAUTEUR_CASE_PROGRAMME, 0);
-                    gl.Vertex(LARGEUR_CASE_PROGRAMME * 4.0f, 0, 0);
-                }
-                gl.End();
+                gl.Vertex(0, 0, 0);
+                gl.Vertex(0, HAUTEUR_CASE_PROGRAMME, 0);
+                gl.Vertex(LARGEUR_CASE_PROGRAMME * 4.0f, HAUTEUR_CASE_PROGRAMME, 0);
+                gl.Vertex(LARGEUR_CASE_PROGRAMME * 4.0f, 0, 0);
             }
+
             gl.PopMatrix();
             //
             //// Indicateur d'étape dans l'instruction
-            int noColonne = getNoColonneFromEtatOrdonnateur(etatOrdonnateur);
+            int noColonne = GetNoColonneFromEtatOrdonnateur(etatOrdonnateur);
             if (noColonne >= 0)
             {
                 gl.Enable(OpenGL.GL_BLEND);
@@ -128,16 +123,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                     ratioCouleur = _progressionEtat / 512.0f;
                 gl.Color(couleur.R * ratioCouleur, couleur.G * ratioCouleur, couleur.B * ratioCouleur);
                 gl.PushMatrix();
+
+                gl.Translate(LARGEUR_CASE_PROGRAMME * noColonne, 0, 0);
+                using (new GLBegin(gl, OpenGL.GL_QUADS))
                 {
-                    gl.Translate(LARGEUR_CASE_PROGRAMME * noColonne, 0, 0);
-                    gl.Begin(OpenGL.GL_QUADS);
-                    {
-                        gl.Vertex(0, HAUTEUR_CASE_PROGRAMME, 0);
-                        gl.Vertex(0, HAUTEUR_CASE_PROGRAMME * -3.0f, 0);
-                        gl.Vertex(LARGEUR_CASE_PROGRAMME, HAUTEUR_CASE_PROGRAMME * -3.0f, 0);
-                        gl.Vertex(LARGEUR_CASE_PROGRAMME, HAUTEUR_CASE_PROGRAMME, 0);
-                    }
-                    gl.End();
+                    gl.Vertex(0, HAUTEUR_CASE_PROGRAMME, 0);
+                    gl.Vertex(0, HAUTEUR_CASE_PROGRAMME * -3.0f, 0);
+                    gl.Vertex(LARGEUR_CASE_PROGRAMME, HAUTEUR_CASE_PROGRAMME * -3.0f, 0);
+                    gl.Vertex(LARGEUR_CASE_PROGRAMME, HAUTEUR_CASE_PROGRAMME, 0);
                 }
                 gl.PopMatrix();
             }
@@ -158,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             gl.PopMatrix();
         }
 
-        private void afficheCaseProgramme(OpenGL gl, int x, int y, int texture, Color couleur)
+        private void AfficheCaseProgramme(OpenGL gl, int x, int y, int texture, Color couleur)
         {
             gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f);
 
@@ -177,7 +170,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
             gl.PopMatrix();
         }
 
-        private int getTextureForEtat(int etape)
+        private int GetTextureForEtat(int etape)
         {
             if (etape >= 0 && etape <= 9)
                 return MachineDeTuring.SYMBOLE_ZERO + etape;
@@ -187,7 +180,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
 
 
-        private int getTextureForChiffre(char chiffre)
+        private int GetTextureForChiffre(char chiffre)
         {
             switch (chiffre)
             {
@@ -196,7 +189,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 default: return MachineDeTuring.SYMBOLE_VIDE;
             }
         }
-        private int getTextureForChiffre(MachineDeTuring.VALEUR chiffre)
+        private int GetTextureForChiffre(MachineDeTuring.VALEUR chiffre)
         {
             switch (chiffre)
             {
@@ -205,7 +198,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
                 default: return MachineDeTuring.SYMBOLE_VIDE;
             }
         }
-        private int getTextureForChiffre(MachineDeTuring.DEPLACEMENT chiffre)
+        private int GetTextureForChiffre(MachineDeTuring.DEPLACEMENT chiffre)
         {
             switch (chiffre)
             {
@@ -252,7 +245,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         }
 
 
-        private int getNoColonneFromEtatOrdonnateur(MachineDeTuring.ETAPE_TURING etatOrdonnateur)
+        private int GetNoColonneFromEtatOrdonnateur(MachineDeTuring.ETAPE_TURING etatOrdonnateur)
         {
             switch (etatOrdonnateur)
             {

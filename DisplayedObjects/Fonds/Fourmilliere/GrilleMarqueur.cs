@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
+using SharpGL;
 using System;
 using System.Drawing;
 
@@ -6,7 +7,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 {
     internal class GrilleMarqueur
     {
-        private float[,] _marqueurs;
+        private readonly float[,] _marqueurs;
         private readonly int _LARGEUR, _HAUTEUR;
         public GrilleMarqueur(int l, int h)
         {
@@ -34,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                     if (_marqueurs[x, y] > 0.01f)
                     {
                         int alpha = Math.Min(255, (int)(_marqueurs[x, y] / maxPheromone * 255));
-                        Color c = DisplayedObject.getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(alpha));
+                        Color c = OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(alpha));
                         gl.Color(Convert.ToByte(c.R), Convert.ToByte(c.G), Convert.ToByte(c.B));
 
                         gl.Begin(OpenGL.GL_QUADS);
@@ -64,17 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                 _marqueurs[X, Y] = 1.0f;
         }
 
-        internal void Renforce(float x, float y, float valeur)
-        {
-            int X = (int)Math.Round(x * _LARGEUR);
-            int Y = (int)Math.Round(y * _HAUTEUR);
-            X = Contraint(X, 0, _LARGEUR - 1);
-            Y = Contraint(Y, 0, _HAUTEUR - 1);
-
-            _marqueurs[X, Y] += valeur;
-            if (_marqueurs[X, Y] > 1.0f)
-                _marqueurs[X, Y] = 1.0f;
-        }
+        internal void Renforce(float x, float y, float valeur) => PoseMarqueur(x, y, valeur);
 
         /// <summary>
         /// Diminue la valeur de tous les marqueurs

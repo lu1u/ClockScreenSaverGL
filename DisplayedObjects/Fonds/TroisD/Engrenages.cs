@@ -45,21 +45,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private readonly uint _genLists;
         public Engrenages(OpenGL gl) : base(gl)
         {
-            c = Configuration.getCategorie(CAT);
-            VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-            FOG_DENSITY = c.getParametre("Densite brouillard", 10.0f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-            NB_ENGRENAGES = c.getParametre("NbEngrenages", 500);
-            LONGUEUR_AXE = c.getParametre("Longueur Axe", 1.5f);
-            VITESSE = c.getParametre("Vitesse", 20.0f);
-            RAYON_MIN = c.getParametre("Rayon Min", 0.2f);
-            RAYON_MAX = c.getParametre("Rayon Max", 0.8f);
-            RATIO_COULEUR_MIN = c.getParametre("Ration Couleur Min", 0.8f);
-            RATIO_COULEUR_MAX = c.getParametre("Ration Couleur Max", 1.2f);
-            VITESSE_GROSSISSEMENT = c.getParametre("Vitesse grossissement", 2.0f);
-            NB_DENTS = c.getParametre("Nb Dents", 20);
-            NB_FACES_PAR_DENT = c.getParametre("Nb faces par dent", 6);
-            EPAISSEUR = c.getParametre("Epaisseur", 0.5f);
-            TAILLE_DENT = c.getParametre("Taille dent", 0.05f);
+            c = Configuration.GetCategorie(CAT);
+            VITESSE_ROTATION = c.GetParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+            FOG_DENSITY = c.GetParametre("Densite brouillard", 10.0f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+            NB_ENGRENAGES = c.GetParametre("NbEngrenages", 500);
+            LONGUEUR_AXE = c.GetParametre("Longueur Axe", 1.5f);
+            VITESSE = c.GetParametre("Vitesse", 20.0f);
+            RAYON_MIN = c.GetParametre("Rayon Min", 0.2f);
+            RAYON_MAX = c.GetParametre("Rayon Max", 0.8f);
+            RATIO_COULEUR_MIN = c.GetParametre("Ration Couleur Min", 0.8f);
+            RATIO_COULEUR_MAX = c.GetParametre("Ration Couleur Max", 1.2f);
+            VITESSE_GROSSISSEMENT = c.GetParametre("Vitesse grossissement", 2.0f);
+            NB_DENTS = c.GetParametre("Nb Dents", 20);
+            NB_FACES_PAR_DENT = c.GetParametre("Nb faces par dent", 6);
+            EPAISSEUR = c.GetParametre("Epaisseur", 0.5f);
+            TAILLE_DENT = c.GetParametre("Taille dent", 0.05f);
 
             _angleVue = 3.14f;// FloatRandom(0, DEUX_PI);
             _genLists = gl.GenLists(NB_ENGRENAGES);
@@ -88,10 +88,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             return c;
         }
 

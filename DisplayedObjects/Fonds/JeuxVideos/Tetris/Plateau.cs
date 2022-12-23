@@ -19,7 +19,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <summary>
         /// Classe pour representer une case
         /// </summary>
-        private class Case
+        private sealed class Case
         {
             public T_CASE contenu;
             public float changeCouleur;
@@ -36,8 +36,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
-        private int _nbLignes, _nbColonnes;
-        private Case[,] _cases;
+        private readonly int _nbLignes, _nbColonnes;
+        private readonly Case[,] _cases;
 
         /// <summary>
         /// Constructeur public
@@ -78,18 +78,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="hauteurCase"></param>
         /// <param name="couleur"></param>
         /// <param name="clignoterCompletes"></param>
-        public void affiche(OpenGL gl, float X, float Y, float largeurCase, float hauteurCase, Color couleur, bool clignoterCompletes)
+        public void Affiche(OpenGL gl, float X, float Y, float largeurCase, float hauteurCase, Color couleur, bool clignoterCompletes)
         {
             gl.PushMatrix();
             gl.Translate(X, Y, 0);
             gl.Begin(OpenGL.GL_QUADS);
             for (int ligne = 0; ligne < _nbLignes; ligne++)
             {
-                bool afficherSurbrillance = clignoterCompletes ? LigneComplete(ligne) : false;
+                bool afficherSurbrillance = clignoterCompletes && LigneComplete(ligne);
                 for (int colonne = 0; colonne < _nbColonnes; colonne++)
                     if (_cases[ligne, colonne].contenu != CASE_VIDE)
                     {
-                        Color Couleur = afficherSurbrillance ? Color.White : Fond.getColorWithHueChange(couleur, _cases[ligne, colonne].changeCouleur);
+                        Color Couleur = afficherSurbrillance ? Color.White : Fond.GetColorWithHueChange(couleur, _cases[ligne, colonne].changeCouleur);
                         gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 1.0f);
 
                         gl.TexCoord(0.0f, 0.0f); gl.Vertex(colonne * largeurCase, ligne * hauteurCase);
@@ -167,8 +167,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="piece"></param>
         internal void DeposePiece(PieceTetris piece)
         {
-            Log.instance.verbose("Tetris: depose piece");
-            Log.instance.verbose("Piece X,Y " + piece.CaseX + " x " + piece.CaseY);
+            Log.Instance.Verbose("Tetris: depose piece");
+            Log.Instance.Verbose("Piece X,Y " + piece.CaseX + " x " + piece.CaseY);
 
             int LargeurPiece = piece.NbColonnes;
             int HauteurPiece = piece.NbLignes;
@@ -181,12 +181,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             for (int ligne = PieceY; ligne < MaxY; ligne++)
             {
-                Log.instance.verbose("Depose ligne " + ligne);
+                Log.Instance.Verbose("Depose ligne " + ligne);
                 for (int colonne = PieceX; colonne < MaxX; colonne++)
                 {
                     T_CASE casePiece = piece.Case(colonne - PieceX, ligne - PieceY);
-                    if (casePiece != CASE_VIDE)
-                        if (_cases[ligne, colonne].contenu == CASE_VIDE)
+                    if (casePiece != CASE_VIDE && _cases[ligne, colonne].contenu == CASE_VIDE)
                         {
                             _cases[ligne, colonne].contenu = casePiece;
                             _cases[ligne, colonne].changeCouleur = changeCouleur;
@@ -203,9 +202,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="piece"></param>
         public void CalculeCible(PieceTetris piece, out int colonneCible, out int rotationCible)
         {
-            //using (new Chronometre("Plateau Tetris: evaluation"))
-            //{
-            //    Debug.WriteLine("*************************** CalculeCible **************************************************");
             PieceTetris clonePiece = piece.Clone();
             float score = float.MinValue;
             colonneCible = 0;
@@ -223,11 +219,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     int niveau = plateauClone.DeposeAuPlusBas(clonePiece);
                     float scoreColonne = plateauClone.EvaluePlateau() + (COEFF_LIGNE_HAUTE * niveau);
 
-                    //Debug.WriteLine("========================================");
-                    //plateauClone.Dump();
-                    //Debug.WriteLine("Score: " + scoreColonne);
-                    //Debug.WriteLine("========================================");
-
                     if (scoreColonne > score)
                     {
                         score = scoreColonne;
@@ -236,7 +227,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     }
                 }
             }
-            //}
         }
 
         internal void Vide()

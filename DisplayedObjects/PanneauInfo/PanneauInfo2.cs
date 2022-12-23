@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 if (_textureEphemeride?.Pret == true)
                 {
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
-                    _textureEphemeride.texture.Bind(gl);
+                    _textureEphemeride.Texture.Bind(gl);
                     gl.Begin(OpenGL.GL_QUADS);
                     gl.TexCoord(0, 0.0f); gl.Vertex(X_DEBUT + MARGE_EPHEMERIDE, 1 - MARGE_EPHEMERIDE);
                     gl.TexCoord(0, 1.0f); gl.Vertex(X_DEBUT + MARGE_EPHEMERIDE, BAS_EPHEMERIDE);
@@ -97,7 +97,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 if (_textureMeteo?.Pret == true)
                 {
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
-                    _textureMeteo.texture.Bind(gl);
+                    _textureMeteo.Texture.Bind(gl);
                     gl.Begin(OpenGL.GL_QUADS);
                     gl.TexCoord(0, 0.0f); gl.Vertex(X_DEBUT + MARGE_EPHEMERIDE, BAS_HEURE - MARGE_EPHEMERIDE);
                     gl.TexCoord(0, 1.0f); gl.Vertex(X_DEBUT + MARGE_EPHEMERIDE, BAS_METEO);
@@ -141,28 +141,28 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _textureEphemeride.Init();
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                X_DEBUT = c.getParametre("X Debut", 0.75f);
-                X_FIN = c.getParametre("X Fin", 1.0f);
-                ALPHA_PANNEAU = c.getParametre("Alpha panneau", 0.5f);
-                LATITUDE = c.getParametre("Latitude", 45.188529f);
-                LONGITUDE = c.getParametre("Longitude", 5.724524f);
-                TIMEZONE = c.getParametre("Timezone", 14);
-                HEURE_ETE = c.getParametre("Heure été", false);
-                TAILLE_TEXTE_EPHEMERIDE = c.getParametre("Taille texte ephemeride", 16);
-                TAILLE_TEXTE_METEO = c.getParametre("Taille Texte Meteo", 18);
-                TAILLE_TITRE_METEO = c.getParametre("Taille Titre Meteo", 24);
-                MARGE_H = c.getParametre("MargeH", 12);
-                MARGE_EPHEMERIDE = c.getParametre("Marge ephemeride", 0.01f);
-                BAS_EPHEMERIDE = c.getParametre("Bas ephemeride", 0.8f);
-                BAS_HEURE = c.getParametre("Bas heure", 0.7f);
-                BAS_METEO = c.getParametre("Bas météo", 0.01f);
-                NB_MAX_LIGNES = c.getParametre("Nb max lignes", 5);
-                TAILLE_ICONE_METEO = c.getParametre("Taille icone Meteo", 64);
+                c = Configuration.GetCategorie(CAT);
+                X_DEBUT = c.GetParametre("X Debut", 0.75f);
+                X_FIN = c.GetParametre("X Fin", 1.0f);
+                ALPHA_PANNEAU = c.GetParametre("Alpha panneau", 0.5f);
+                LATITUDE = c.GetParametre("Latitude", 45.188529f);
+                LONGITUDE = c.GetParametre("Longitude", 5.724524f);
+                TIMEZONE = c.GetParametre("Timezone", 14);
+                HEURE_ETE = c.GetParametre("Heure été", false);
+                TAILLE_TEXTE_EPHEMERIDE = c.GetParametre("Taille texte ephemeride", 16);
+                TAILLE_TEXTE_METEO = c.GetParametre("Taille Texte Meteo", 18);
+                TAILLE_TITRE_METEO = c.GetParametre("Taille Titre Meteo", 24);
+                MARGE_H = c.GetParametre("MargeH", 12);
+                MARGE_EPHEMERIDE = c.GetParametre("Marge ephemeride", 0.01f);
+                BAS_EPHEMERIDE = c.GetParametre("Bas ephemeride", 0.8f);
+                BAS_HEURE = c.GetParametre("Bas heure", 0.7f);
+                BAS_METEO = c.GetParametre("Bas météo", 0.01f);
+                NB_MAX_LIGNES = c.GetParametre("Nb max lignes", 5);
+                TAILLE_ICONE_METEO = c.GetParametre("Taille icone Meteo", 64);
             }
             return c;
         }
@@ -170,7 +170,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         protected override void Init(OpenGL gl)
         {
             base.Init(gl);
-            getConfiguration();
+            GetConfiguration();
 
             _fonte = new Font(FontFamily.GenericSansSerif, 128, FontStyle.Bold);
             _textureMeteo = new TextureMeteo(gl, TAILLE_TITRE_METEO, TAILLE_TEXTE_METEO, MARGE_H, NB_MAX_LIGNES, TAILLE_ICONE_METEO);

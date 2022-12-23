@@ -21,37 +21,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         private const string CAT = "HeureTexte";
         protected CategorieConfiguration c;
-        private int HAUTEUR_FONTE;
-        private OpenGLFonte _glFonte;
+        private readonly OpenGLFonte _glFonte;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                HAUTEUR_FONTE = c.getParametre("TailleFonte", 80);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }
         public HeureTexte(OpenGL gl, int Px, int Py, int tailleFonte) : base(gl)
         {
-            getConfiguration();
-            HAUTEUR_FONTE = tailleFonte;
-            _alpha = c.getParametre("Alpha", (byte)160);
+            GetConfiguration();
+            _alpha = c.GetParametre("Alpha", (byte)160);
             _glFonte = new OpenGLFonte(gl, "0123456789 :/-", tailleFonte, FontFamily.GenericMonospace, FontStyle.Bold);
             _fonte = CreerFonte(tailleFonte);
-            _trajectoire = new TrajectoireDiagonale(Px, Py, -c.getParametre("VX", 15), 0);
+            _trajectoire = new TrajectoireDiagonale(Px, Py, -c.GetParametre("VX", 15), 0);
         }
 
         protected override Font CreerFonte(int tailleFonte)
         {
             return new Font(FontFamily.GenericSansSerif, tailleFonte, FontStyle.Bold, GraphicsUnit.Pixel);
-        }
-
-        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
-        {
-            base.Deplace(maintenant, tailleEcran);
-            //tailleEcran = new Rectangle(tailleEcran.Left, tailleEcran.Top, tailleEcran.Width, tailleEcran.Height - (int)_taille.Height);
         }
 
         protected override SizeF getTexte(Temps maintenant, out string texte)
@@ -66,15 +57,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
         protected override bool TexteChange() { return false; }
 
-        /// <summary>
-        /// Appelee quand la date change: mettre la date a jour
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        public override void DateChangee(OpenGL gl, Temps maintenant)
-        {
-
-        }
 
         protected override void drawOpenGL(OpenGL gl, Rectangle tailleEcran, Color couleur, Temps maintenant)
         {

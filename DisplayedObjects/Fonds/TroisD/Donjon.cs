@@ -93,11 +93,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
                 //NB_ESCALIERS = c.getParametre("NbEscaliers", 500);
                 //RATIO_COULEUR_MIN = c.getParametre("Ratio Couleur Min", 0.95f, (a) => { RATIO_COULEUR_MIN = (float)Convert.ToDouble(a); });
                 //RATIO_COULEUR_MAX = c.getParametre("Ratio Couleur Max", 1.05f, (a) => { RATIO_COULEUR_MAX = (float)Convert.ToDouble(a); });

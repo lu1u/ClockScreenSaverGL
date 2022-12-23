@@ -8,10 +8,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
 {
     public class Console : IDisposable
     {
-        private OpenGLFonte _fonte;
-        private class LIGNE
+        private readonly OpenGLFonte _fonte;
+        sealed private class Ligne
         {
-            public LIGNE(Color c, string s)
+            public Ligne(Color c, string s)
             {
                 couleur = c;
                 texte = s;
@@ -20,11 +20,11 @@ namespace ClockScreenSaverGL.DisplayedObjects
             public string texte;
         };
 
-        private List<LIGNE> _lignes;
+        private readonly List<Ligne> _lignes;
 
         private static Console INSTANCE = null;
 
-        static public Console getInstance(OpenGL gl)
+        static public Console GetInstance(OpenGL gl)
         {
             if (INSTANCE == null)
                 INSTANCE = new Console(gl);
@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         {
 
             _fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, 12, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _lignes = new List<LIGNE>();
+            _lignes = new List<Ligne>();
         }
 
         public void Dispose()
@@ -51,10 +51,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         public void AddLigne(Color couleur, string Texte)
         {
-            _lignes.Add(new LIGNE(couleur, Texte));
+            _lignes.Add(new Ligne(couleur, Texte));
         }
 
-        public void trace(OpenGL gl, Rectangle tailleEcran, float X = 0, float Y = 0)
+        public void Trace(OpenGL gl, Rectangle tailleEcran, float X = 0, float Y = 0)
         {
             using (Viewport2D v = new Viewport2D(gl, 0, 0, tailleEcran.Width, tailleEcran.Height))
             {
@@ -67,7 +67,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
                 float y = tailleEcran.Height - _fonte.Hauteur() - Y;
-                foreach (LIGNE ligne in _lignes)
+                foreach (Ligne ligne in _lignes)
                 {
                     _fonte.drawOpenGL(gl, ligne.texte, X, y, ligne.couleur);
                     y -= _fonte.Hauteur();

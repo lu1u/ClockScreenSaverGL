@@ -21,39 +21,37 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         private const string CAT = "DateTexte";
         protected CategorieConfiguration c;
-        private string _date; // Sera initialise dans OnDateChange
-
+        
 
         public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte) : base(gl)
         {
-            getConfiguration();
-            _alpha = c.getParametre("Alpha", (byte)160);
+            GetConfiguration();
+            _alpha = c.GetParametre("Alpha", (byte)160);
             _fonte = CreerFonte(tailleFonte);
-            _trajectoire = new TrajectoireDiagonale(Px, Py, c.getParametre("VX", -17), 0);
+            _trajectoire = new TrajectoireDiagonale(Px, Py, c.GetParametre("VX", -17), 0);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            _date = maintenant.temps.ToLongDateString();
-            texte = _date;
+            texte = maintenant.temps.ToLongDateString(); 
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-                return g.MeasureString(_date, _fonte);
+                return g.MeasureString(texte, _fonte);
         }
 
 
         public override void DateChangee(OpenGL gl, Temps maintenant)
         {
-            _date = maintenant.temps.ToLongDateString();
+            string date = maintenant.temps.ToLongDateString();
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-                _taille = g.MeasureString(_date, _fonte);
+                _taille = g.MeasureString(date, _fonte);
         }
 
     }

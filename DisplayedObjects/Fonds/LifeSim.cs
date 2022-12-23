@@ -45,24 +45,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private Particule[] _particules;                    // Tableau des particules
         private float[,] _regles;                           // Tableau des regles d'attraction entre types de particules
         private CouleurParticule[] _couleursAffichees;                 // Tableau des couleurs visibles par type de particules
-        private Texture _texture = new Texture();
+        private readonly Texture _texture = new Texture();
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                REGLES_SYMETRIQUES = c.getParametre("Règles symétriques", false);
-                TAILLE_PARTICULE = c.getParametre("Taille particules", 0.01f, (a) => { TAILLE_PARTICULE = (float)Convert.ToDouble(a); });
-                NB_PARTICULES = c.getParametre("Nb particules", 4000);
-                NB_COULEURS = c.getParametre("Nb couleurs", 4);
-                DISTANCE_MAX = c.getParametre("Distance max", 0.12f, (a) => { DISTANCE_MAX = (float)Convert.ToDouble(a); });
-                COEFF_DISTANCE = c.getParametre("Coeff Distance", 1f, (a) => { COEFF_DISTANCE = (float)Convert.ToDouble(a); });
-                FLUIDITE = c.getParametre("Fluidité", 0.001f, (a) => { FLUIDITE = (float)Convert.ToDouble(a); });
-                ADDITIF = c.getParametre("Additif", false, (a) => { ADDITIF = Convert.ToBoolean(a); });
-                ATTRACTION_MAX = c.getParametre("Attraction max", 0.75f);
-                ATTRACTION_MIN = c.getParametre("Attraction min", 0.02f);
+                c = Configuration.GetCategorie(CAT);
+                REGLES_SYMETRIQUES = c.GetParametre("Règles symétriques", false);
+                TAILLE_PARTICULE = c.GetParametre("Taille particules", 0.01f, (a) => { TAILLE_PARTICULE = (float)Convert.ToDouble(a); });
+                NB_PARTICULES = c.GetParametre("Nb particules", 4000);
+                NB_COULEURS = c.GetParametre("Nb couleurs", 4);
+                DISTANCE_MAX = c.GetParametre("Distance max", 0.12f, (a) => { DISTANCE_MAX = (float)Convert.ToDouble(a); });
+                COEFF_DISTANCE = c.GetParametre("Coeff Distance", 1f, (a) => { COEFF_DISTANCE = (float)Convert.ToDouble(a); });
+                FLUIDITE = c.GetParametre("Fluidité", 0.001f, (a) => { FLUIDITE = (float)Convert.ToDouble(a); });
+                ADDITIF = c.GetParametre("Additif", false, (a) => { ADDITIF = Convert.ToBoolean(a); });
+                ATTRACTION_MAX = c.GetParametre("Attraction max", 0.75f);
+                ATTRACTION_MIN = c.GetParametre("Attraction min", 0.02f);
             }
             return c;
         }
@@ -72,7 +72,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         protected override void Init(OpenGL gl)
         {
-            string nomImage = c.getParametre("Etoile", Configuration.getImagePath("particuleTexture.png"));
+            string nomImage = c.GetParametre("Etoile", Configuration.GetImagePath("particuleTexture.png"));
             _texture.Create(gl, nomImage);
 
             _regles = new float[NB_COULEURS, NB_COULEURS];
@@ -105,12 +105,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             for (int i = 0; i < NB_PARTICULES; i++)
             {
-                Particule p = new Particule();
-                p.x = FloatRandom(MIN_VIEWPORT_X, MAX_VIEWPORT_X);
-                p.y = FloatRandom(MIN_VIEWPORT_Y, MAX_VIEWPORT_Y);
-                p.vx = 0;
-                p.vy = 0;
-                p.couleur = i % NB_COULEURS;
+                Particule p = new Particule
+                {
+                    x = FloatRandom(MIN_VIEWPORT_X, MAX_VIEWPORT_X),
+                    y = FloatRandom(MIN_VIEWPORT_Y, MAX_VIEWPORT_Y),
+                    vx = 0,
+                    vy = 0,
+                    couleur = i % NB_COULEURS
+                };
 
                 _particules[i] = p;
             }
@@ -131,7 +133,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             _texture.Bind(gl);
-            remplitCouleurs(couleur);
+            RemplitCouleurs(couleur);
 
             using (new Viewport2D(gl, MIN_VIEWPORT_X, MIN_VIEWPORT_Y, MAX_VIEWPORT_X, MAX_VIEWPORT_Y))
             {
@@ -160,13 +162,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// Calcule le tableau des couleurs pour chaque type de particule, en fonction de la couleur globale courante
         /// </summary>
         /// <param name="couleur"></param>
-        private void remplitCouleurs(Color couleur)
+        private void RemplitCouleurs(Color couleur)
         {
             CouleurGlobale c = new CouleurGlobale(couleur);
 
             for (int i = 0; i < NB_COULEURS; i++)
             {
-                Color col = c.getColorWithHueChange(i / (float)NB_COULEURS);
+                Color col = c.GetColorWithHueChange(i / (float)NB_COULEURS);
                 _couleursAffichees[i].R = col.R;
                 _couleursAffichees[i].G = col.G;
                 _couleursAffichees[i].B = col.B;
@@ -258,10 +260,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
         }
-        public override void fillConsole(OpenGL gl)
+        public override void FillConsole(OpenGL gl)
         {
-            base.fillConsole(gl);
-            Console c = Console.getInstance(gl);
+            base.FillConsole(gl);
+            Console c = Console.GetInstance(gl);
             for (int i = 0; i < NB_COULEURS; i++)
             {
                 String s = "";

@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private const int EST = 1 << 5;
         private const int OUEST = 1 << 6;
         private const int FIN = 1 << 7;
-        private int[] directions = { HAUT, BAS, NORD, SUD, EST, OUEST };
+        private readonly int[] _directions = { HAUT, BAS, NORD, SUD, EST, OUEST };
         #region Parametres
         private int DELAI_TIMER;
         private int DELAI_TIMER_REINIT;
@@ -59,36 +59,36 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private List<Point3> _nouveauxDeparts;
         private float _angle = 0;
-        private Sphere _sphere = new Sphere();
+        private readonly Sphere _sphere = new Sphere();
         public TroisDPipes(OpenGL gl) : base(gl)
         {
-            c = Configuration.getCategorie(CAT);
+            c = Configuration.GetCategorie(CAT);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE = c.getParametre("Taille", 10);
-                DELAI_TIMER = c.getParametre("Delai Trace", 200, (a) => { DELAI_TIMER = Convert.ToInt32(a); timer = new TimerIsole(DELAI_TIMER); });
-                DELAI_TIMER_REINIT = c.getParametre("Delai Trace Reinit", 5000);
-                PROBA_CHANGE_ALEATOIRE = c.getParametre("Probabilité changement aléatoire", 0.5f, (a) => { PROBA_CHANGE_ALEATOIRE = (float)Convert.ToDouble(a); });
-                DIAMETRE_TUYAU = c.getParametre("Diametre tuyau", 0.4f, (a) => { DIAMETRE_TUYAU = (float)Convert.ToDouble(a); });
-                DIAMETRE_JOINT = c.getParametre("Diametre joint", 0.4f, (a) => { DIAMETRE_JOINT = (float)Convert.ToDouble(a); });
-                DIAMETRE_FIN = c.getParametre("Diametre fin", 0.6f, (a) => { DIAMETRE_FIN = (float)Convert.ToDouble(a); });
-                VITESSE_ROTATION = c.getParametre("Vitesse rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                DISTANCE = c.getParametre("Distance", 0.9f, (a) => { DISTANCE = (float)Convert.ToDouble(a); });
-                AFFICHER_NOUVEAUX_DEPARTS = c.getParametre("Afficher nouveaux departs", false, (a) => { AFFICHER_NOUVEAUX_DEPARTS = Convert.ToBoolean(a); });
-                DETAIL_CYLINDRES = c.getParametre("Details cylindres", 5, (a) => { DETAIL_CYLINDRES = Convert.ToInt32(a); });
-                DETAIL_SPHERES = c.getParametre("Details spheres", 5, (a) => { DETAIL_SPHERES = Convert.ToInt32(a); _sphere.Slices = DETAIL_CYLINDRES; _sphere.Stacks = DETAIL_CYLINDRES; });
+                c = Configuration.GetCategorie(CAT);
+                TAILLE = c.GetParametre("Taille", 10);
+                DELAI_TIMER = c.GetParametre("Delai Trace", 200, (a) => { DELAI_TIMER = Convert.ToInt32(a); timer = new TimerIsole(DELAI_TIMER); });
+                DELAI_TIMER_REINIT = c.GetParametre("Delai Trace Reinit", 5000);
+                PROBA_CHANGE_ALEATOIRE = c.GetParametre("Probabilité changement aléatoire", 0.5f, (a) => { PROBA_CHANGE_ALEATOIRE = (float)Convert.ToDouble(a); });
+                DIAMETRE_TUYAU = c.GetParametre("Diametre tuyau", 0.4f, (a) => { DIAMETRE_TUYAU = (float)Convert.ToDouble(a); });
+                DIAMETRE_JOINT = c.GetParametre("Diametre joint", 0.4f, (a) => { DIAMETRE_JOINT = (float)Convert.ToDouble(a); });
+                DIAMETRE_FIN = c.GetParametre("Diametre fin", 0.6f, (a) => { DIAMETRE_FIN = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("Vitesse rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                DISTANCE = c.GetParametre("Distance", 0.9f, (a) => { DISTANCE = (float)Convert.ToDouble(a); });
+                AFFICHER_NOUVEAUX_DEPARTS = c.GetParametre("Afficher nouveaux departs", false, (a) => { AFFICHER_NOUVEAUX_DEPARTS = Convert.ToBoolean(a); });
+                DETAIL_CYLINDRES = c.GetParametre("Details cylindres", 5, (a) => { DETAIL_CYLINDRES = Convert.ToInt32(a); });
+                DETAIL_SPHERES = c.GetParametre("Details spheres", 5, (a) => { DETAIL_SPHERES = Convert.ToInt32(a); _sphere.Slices = DETAIL_CYLINDRES; _sphere.Stacks = DETAIL_CYLINDRES; });
             }
             return c;
         }
 
         protected override void Init(OpenGL gl)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
             LIGHTPOS[0] = TAILLE * 2;
             LIGHTPOS[1] = TAILLE * 2;
             LIGHTPOS[2] = TAILLE * 2;
@@ -105,7 +105,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _Y = TAILLE / 2;
             _Z = TAILLE / 2;
             _direction = GetDirectionLibre(_X, _Y, _Z);
-            calculDecalage(_direction, out _dx, out _dy, out _dz);
+            CalculDecalage(_direction, out _dx, out _dy, out _dz);
             _nbTuyaux = 0;
             _nouveauxDeparts = new List<Point3>();
 
@@ -118,7 +118,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _sphere.Radius = 1.0f;
         }
 
-        private void calculDecalage(int direction, out int dx, out int dy, out int dz)
+        private void CalculDecalage(int direction, out int dx, out int dy, out int dz)
         {
             switch (direction)
             {
@@ -199,34 +199,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
                             gl.Color(_couleurs[x, y, z].R, _couleurs[x, y, z].G, _couleurs[x, y, z].B);
 
-                            if (!unBit(_grille[x, y, z]) && morceauxNonAlignes(_grille[x, y, z]))
-                                renderSphere(gl, coordX, coordY, coordZ, DIAMETRE_JOINT);
+                            if (!UnBit(_grille[x, y, z]) && MorceauxNonAlignes(_grille[x, y, z]))
+                                RenderSphere(gl, coordX, coordY, coordZ, DIAMETRE_JOINT);
 
                             // Dans le cas ou on a 2 demi tuyaux alignes, on les regroupe en un seul cylindre
                             if (((_grille[x, y, z] & HAUT) != 0) && ((_grille[x, y, z] & BAS) != 0))
-                                renderCylinderZ(gl, coordX, coordY, coordZ - 0.5f, coordZ + 0.5f, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                RenderCylinderZ(gl, coordX, coordY, coordZ - 0.5f, coordZ + 0.5f, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             else
                             {
-                                if ((_grille[x, y, z] & HAUT) != 0) renderCylinderZ(gl, coordX, coordY, coordZ - 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
-                                if ((_grille[x, y, z] & BAS) != 0) renderCylinderZ(gl, coordX, coordY, coordZ, coordZ + 0.5f, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & HAUT) != 0) RenderCylinderZ(gl, coordX, coordY, coordZ - 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & BAS) != 0) RenderCylinderZ(gl, coordX, coordY, coordZ, coordZ + 0.5f, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             }
 
                             if (((_grille[x, y, z] & EST) != 0) && ((_grille[x, y, z] & OUEST) != 0))
-                                renderCylinderX(gl, coordX - 0.5f, coordX + 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                RenderCylinderX(gl, coordX - 0.5f, coordX + 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             else
                             {
-                                if ((_grille[x, y, z] & EST) != 0) renderCylinderX(gl, coordX, coordX + 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
-                                if ((_grille[x, y, z] & OUEST) != 0) renderCylinderX(gl, coordX - 0.5f, coordX, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & EST) != 0) RenderCylinderX(gl, coordX, coordX + 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & OUEST) != 0) RenderCylinderX(gl, coordX - 0.5f, coordX, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             }
 
                             if (((_grille[x, y, z] & SUD) != 0) && ((_grille[x, y, z] & NORD) != 0))
-                                renderCylinderY(gl, coordX, coordY - 0.5f, coordY + 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                RenderCylinderY(gl, coordX, coordY - 0.5f, coordY + 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             else
                             {
-                                if ((_grille[x, y, z] & SUD) != 0) renderCylinderY(gl, coordX, coordY, coordY + 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
-                                if ((_grille[x, y, z] & NORD) != 0) renderCylinderY(gl, coordX, coordY - 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & SUD) != 0) RenderCylinderY(gl, coordX, coordY, coordY + 0.5f, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
+                                if ((_grille[x, y, z] & NORD) != 0) RenderCylinderY(gl, coordX, coordY - 0.5f, coordY, coordZ, DIAMETRE_TUYAU, DETAIL_CYLINDRES);
                             }
-                            if ((_grille[x, y, z] & FIN) != 0) renderCube(gl, coordX, coordY, coordZ, DIAMETRE_FIN);
+                            if ((_grille[x, y, z] & FIN) != 0) RenderCube(gl, coordX, coordY, coordZ, DIAMETRE_FIN);
                         }
                     }
                 }
@@ -239,7 +239,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 gl.Color(1.0f, 1.0f, 1.0f, 0.2f);
 
                 foreach (Point3 p in _nouveauxDeparts)
-                    renderSphere(gl, p.X - TAILLE / 2, p.Y - TAILLE / 2, p.Z - TAILLE / 2, DIAMETRE_JOINT * 1.5f);
+                    RenderSphere(gl, p.X - TAILLE / 2, p.Y - TAILLE / 2, p.Z - TAILLE / 2, DIAMETRE_JOINT * 1.5f);
             }
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -254,7 +254,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <param name="taille"></param>
-        private void renderCube(OpenGL gl, float x, float y, float z, float taille)
+        private void RenderCube(OpenGL gl, float x, float y, float z, float taille)
         {
             gl.Begin(OpenGL.GL_QUADS);
             // Bas
@@ -302,7 +302,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.End();
         }
 
-        private static void renderCylinderZ(OpenGL gl, float X, float Y, float Z1, float Z2, float rayon, int nbFaces)
+        private static void RenderCylinderZ(OpenGL gl, float X, float Y, float Z1, float Z2, float rayon, int nbFaces)
         {
             gl.Begin(OpenGL.GL_QUAD_STRIP);
 
@@ -323,7 +323,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.End();
         }
 
-        private static void renderCylinderX(OpenGL gl, float X1, float X2, float Y, float Z, float rayon, int nbFaces)
+        private static void RenderCylinderX(OpenGL gl, float X1, float X2, float Y, float Z, float rayon, int nbFaces)
         {
             gl.Begin(OpenGL.GL_QUAD_STRIP);
 
@@ -344,7 +344,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.End();
         }
 
-        private static void renderCylinderY(OpenGL gl, float X, float Y1, float Y2, float Z, float rayon, int nbFaces)
+        private static void RenderCylinderY(OpenGL gl, float X, float Y1, float Y2, float Z, float rayon, int nbFaces)
         {
             gl.Begin(OpenGL.GL_QUAD_STRIP);
             for (int i = 0; i <= nbFaces; i++)
@@ -369,7 +369,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// </summary>
         /// <param name="valeur"></param>
         /// <returns></returns>
-        private bool unBit(int valeur)
+        private bool UnBit(int valeur)
         {
             return valeur == NORD || valeur == SUD || valeur == EST || valeur == OUEST || valeur == EST || valeur == HAUT || valeur == BAS;
         }
@@ -379,12 +379,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// </summary>
         /// <param name="valeur"></param>
         /// <returns></returns>
-        private bool morceauxNonAlignes(int valeur)
+        private bool MorceauxNonAlignes(int valeur)
         {
             return valeur != (NORD | SUD) && valeur != (EST | OUEST) && valeur != (HAUT | BAS);
         }
 
-        private void renderSphere(OpenGL gl, float X, float Y, float Z, float diametre)
+        private void RenderSphere(OpenGL gl, float X, float Y, float Z, float diametre)
         {
             gl.PushMatrix();
 
@@ -467,7 +467,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     {
                         _nbTuyaux++;
                         // Premiere moitie du tuyau
-                        _grille[_X, _Y, _Z] = oppose(_direction);
+                        _grille[_X, _Y, _Z] = Oppose(_direction);
                         _couleurs[_X, _Y, _Z] = _derniereCouleur;
                     }
                     else
@@ -475,12 +475,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                         int nX = _X + _dx;
                         int nY = _Y + _dy;
                         int nZ = _Z + _dz;
-                        if (!libre(nX, nY, nZ) || Probabilite(PROBA_CHANGE_ALEATOIRE))
+                        if (!Libre(nX, nY, nZ) || Probabilite(PROBA_CHANGE_ALEATOIRE))
                         {
                             _nouveauxDeparts.Add(new Point3(_X, _Y, _Z));
                             _direction = GetDirectionLibre(_X, _Y, _Z);
                             if (_direction != -1)
-                                calculDecalage(_direction, out _dx, out _dy, out _dz);
+                                CalculDecalage(_direction, out _dx, out _dy, out _dz);
                             else
                                 _grille[_X, _Y, _Z] |= FIN;
                         }
@@ -501,7 +501,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
 
 
-        private int oppose(int direction)
+        private int Oppose(int direction)
         {
             switch (direction)
             {
@@ -516,21 +516,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private int GetDirectionLibre(int x, int y, int z)
         {
-            int indice = r.Next(directions.Length);
-            int dx, dy, dz;
-            for (int i = 0; i < directions.Length; i++)
+            int indice = random.Next(_directions.Length);
+            for (int i = 0; i < _directions.Length; i++)
             {
-                int d = directions[indice];
-                calculDecalage(d, out dx, out dy, out dz);
-                if (libre(x + dx, y + dy, z + dz))
+                int d = _directions[indice];
+                CalculDecalage(d, out int dx, out int dy, out int dz);
+                if (Libre(x + dx, y + dy, z + dz))
                     return d;
-                indice = (indice + 1) % directions.Length;
+                indice = (indice + 1) % _directions.Length;
             }
 
             return -1;
         }
 
-        private bool libre(int x, int y, int z)
+        private bool Libre(int x, int y, int z)
         {
             if (x < 0 || y < 0 || z < 0)
                 return false;

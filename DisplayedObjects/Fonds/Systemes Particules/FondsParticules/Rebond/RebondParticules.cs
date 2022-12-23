@@ -22,13 +22,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public RebondParticules(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             // Ajouter les particules (pas d'emetteur: le nb de particules reste fixe)
             for (int i = 0; i < NB_MAX_PARTICULES; i++)
                 AjouteParticule();
 
             couleurParticules = COULEUR_PARTICULES.BLANC;
-            AjouteTexture(c.getParametre("Balle", Config.Configuration.getImagePath("balle.png")), 1);
+            AjouteTexture(c.GetParametre("Balle", Config.Configuration.GetImagePath("balle.png")), 1);
 
             AjouteModificateur(new ModificateurGravite(GRAVITE_X, GRAVITE_Y));
             AjouteModificateur(new ModificateurRebond(MIN_X, MAX_X, MIN_Y, MAX_Y));
@@ -36,16 +36,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurVitesseLineaire());
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 50);
-                GRAVITE_X = c.getParametre("Gravite X", 0.0f);
-                GRAVITE_Y = c.getParametre("Gravite Y", -0.5f);
-                TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.05f);
-                VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.2f);
+                c = Configuration.GetCategorie(CAT);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 50);
+                GRAVITE_X = c.GetParametre("Gravite X", 0.0f);
+                GRAVITE_Y = c.GetParametre("Gravite Y", -0.5f);
+                TAILLE_PARTICULE = c.GetParametre("TailleParticule", 0.05f);
+                VITESSE_PARTICULE = c.GetParametre("VitesseParticule", 0.2f);
             }
             return c;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 // Pour chronometrer une operation, et afficher le resultat sur la console
 // Utilisation:
@@ -11,8 +12,8 @@ namespace ClockScreenSaverGL
     internal class Chronometre : IDisposable
     {
 #if DEBUG
-                private string _message;
-                private Stopwatch _chrono;
+                private readonly string _message;
+                private readonly Stopwatch _chrono;
 #endif
         public Chronometre(string message)
         {

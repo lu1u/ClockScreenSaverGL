@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
 {
@@ -12,10 +13,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
         public Ephemeride(double latitude, double longitude, int timezone, bool heureEte)
         {
             _leverCoucher = new LeverCoucherSoleil(longitude, latitude, timezone, heureEte);
-            _lune = new Lune(255);
+            _lune = new Lune();
         }
 
-        public Bitmap getBitmap(int tailleFonte)
+        public Bitmap GetBitmap(int tailleFonte)
         {
             using (var c = new Chronometre("Texte CreateBitmap"))
             {
@@ -35,22 +36,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
 
                 int ecartJour = (int)(jourAuj - jourHier).TotalMinutes;
 
-                string texte = $"Lune:\n\n{getDate()}\n\n{aujourdhui.ToLongDateString()}\nLever:\t\t{leverAuj.ToShortTimeString()} ({formatMinutes(ecartLeverMinutes)})\nCoucher:\t{coucherAuj.ToShortTimeString()} ({formatMinutes(ecartCoucherMinutes)})"
-                    + $"\nAujourd'hui:\t{jourAuj.Hours}:{jourAuj.Minutes} ({formatMinutes(ecartJour)})";
+                string texte = $"Lune:\n\n{GetDate()}\n\n{aujourdhui.ToLongDateString()}\nLever:\t\t{leverAuj.ToShortTimeString()} ({FormatMinutes(ecartLeverMinutes)})\nCoucher:\t{coucherAuj.ToShortTimeString()} ({FormatMinutes(ecartCoucherMinutes)})"
+                    + $"\nAujourd'hui:\t{jourAuj.Hours}:{jourAuj.Minutes} ({FormatMinutes(ecartJour)})";
 
 
                 using (Font fonte = new Font(FontFamily.GenericSansSerif, tailleFonte))
                 {
                     Graphics gNull = Graphics.FromHwnd(IntPtr.Zero);
                     SizeF size = gNull.MeasureString(texte, fonte);
-                    Bitmap lune = _lune.getImageLune(null, aujourdhui);
+                    Bitmap lune = _lune.GetImageLune(aujourdhui);
 
 
                     Bitmap bitmap = new Bitmap((int)Math.Ceiling(size.Width), (int)Math.Ceiling(size.Height), PixelFormat.Format32bppArgb);
 
                     using (Graphics g = Graphics.FromImage(bitmap))
                     {
-                        int hauteurLigne = (int)(fonte.Height * g.DpiX / 72.0); ;
+                        int hauteurLigne = (int)(fonte.Height * g.DpiX / 72.0);
                         var format = new StringFormat() { Alignment = StringAlignment.Far };
                         Rectangle r = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 
@@ -58,19 +59,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
                         r.Offset(0, hauteurLigne);
                         r.Offset(0, hauteurLigne);
 
-                        g.DrawString(Beautiful(aujourdhui.ToLongDateString()), fonte, Brushes.Black, r);
+                        g.DrawString(Embellir(aujourdhui.ToLongDateString()), fonte, Brushes.Black, r);
                         r.Offset(0, hauteurLigne);
 
                         g.DrawString("Lever", fonte, Brushes.Black, r);
-                        g.DrawString($"{leverAuj.ToShortTimeString()} ({formatMinutes(ecartLeverMinutes)})", fonte, Brushes.Black, r, format);
+                        g.DrawString($"{leverAuj.ToShortTimeString()} ({FormatMinutes(ecartLeverMinutes)})", fonte, Brushes.Black, r, format);
                         r.Offset(0, hauteurLigne);
 
                         g.DrawString("Coucher", fonte, Brushes.Black, r);
-                        g.DrawString($"{coucherAuj.ToShortTimeString()} ({formatMinutes(ecartCoucherMinutes)})", fonte, Brushes.Black, r, format);
+                        g.DrawString($"{coucherAuj.ToShortTimeString()} ({FormatMinutes(ecartCoucherMinutes)})", fonte, Brushes.Black, r, format);
                         r.Offset(0, hauteurLigne);
 
                         g.DrawString("Aujoud'hui", fonte, Brushes.Black, r);
-                        g.DrawString($"{jourAuj.Hours}:{jourAuj.Minutes} ({formatMinutes(ecartJour)})", fonte, Brushes.Black, r, format);
+                        g.DrawString($"{jourAuj.Hours}:{jourAuj.Minutes} ({FormatMinutes(ecartJour)})", fonte, Brushes.Black, r, format);
                         r.Offset(0, hauteurLigne);
 
                         float ratio = (hauteurLigne * 2.0f) / lune.Width;
@@ -81,7 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
             }
         }
 
-        private string formatMinutes(int minutes)
+        private string FormatMinutes(int minutes)
         {
             if (minutes >= 0)
                 return "+" + minutes;
@@ -89,33 +90,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
                 return "" + minutes;
         }
 
-        private static string getDate()
+        private static string GetDate()
         {
-            return Beautiful(DateTime.Now.ToLongDateString());
+            return Embellir(DateTime.Now.ToLongDateString());
         }
 
-        private static string Beautiful(string v)
+        private static string Embellir(string v)
         {
             bool debutDeMot = true;
-            string res = "";
+            StringBuilder res = new StringBuilder();
+
             for (int i = 0; i < v.Length; i++)
             {
                 if (char.IsLetter(v[i]))
                 {
                     if (debutDeMot)
-                        res += char.ToUpper(v[i]);
+                        res.Append( char.ToUpper(v[i]));
                     else
-                        res += char.ToLower(v[i]);
+                        res.Append( char.ToLower(v[i]));
                     debutDeMot = false;
                 }
                 else
                 {
-                    res += v[i];
+                    res.Append( v[i]);
                     debutDeMot = true;
                 }
             }
 
-            return res;
+            return res.ToString();
         }
     }
 }

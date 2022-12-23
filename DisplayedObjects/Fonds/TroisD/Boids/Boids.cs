@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         //uint _genLists = 0;
         public Boids(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _boids = new List<Boid>();
             InitBoids(_boids);
         }
@@ -143,13 +143,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 flocking(boids, out separation, out alignement, out cohesion);
 
                 // Arbitrarily weight these forces
-                separation.multiplier_par(1.5f);
+                separation.Multiplier_par(1.5f);
                 //ali.multiplier_par(1.0f);
                 //coh.multiplier_par(1.0f);
                 // additionner the force vectors to acceleration
-                _Acceleration.additionner(separation);
-                _Acceleration.additionner(alignement);
-                _Acceleration.additionner(cohesion);
+                _Acceleration.Additionner(separation);
+                _Acceleration.Additionner(alignement);
+                _Acceleration.Additionner(cohesion);
             }
 
             private void flocking(List<Boid> boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
@@ -171,19 +171,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                             // Separation
                             Vecteur3D diff = _Position - other._Position;
                             diff.Normalize();
-                            diff.diviser_par(d);        // Weight by distance
-                            sep.additionner(diff);
+                            diff.Diviser_par(d);        // Weight by distance
+                            sep.Additionner(diff);
                             countSep++;            // Keep track of how many
                         }
 
                         if (d < DISTANCE_VOISINS)
                         {
                             // Alignement
-                            ali.additionner(other._Vitesse);
+                            ali.Additionner(other._Vitesse);
                             countAlign++;
 
                             // Cohesion
-                            coh.additionner(other._Position); // additionner location
+                            coh.Additionner(other._Position); // additionner location
                             countCoh++;
                         }
                     }
@@ -191,14 +191,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 // Separation
                 if (countSep > 0)
                 {
-                    sep.diviser_par(countSep);
+                    sep.Diviser_par(countSep);
                     // As long as the vector is greater than 0
                     if (sep.Longueur() > 0)
                     {
                         // Implement Reynolds: Steering = Desired - Velocity
                         sep.Normalize();
-                        sep.multiplier_par(MAX_SPEED);
-                        sep.soustraire(_Vitesse);
+                        sep.Multiplier_par(MAX_SPEED);
+                        sep.Soustraire(_Vitesse);
                         sep.Limiter(MAX_FORCE);
                     }
                 }
@@ -206,10 +206,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 // Alignement
                 if (countAlign > 0)
                 {
-                    ali.diviser_par(countAlign);
+                    ali.Diviser_par(countAlign);
                     ali.Normalize();
-                    ali.multiplier_par(MAX_SPEED);
-                    ali.soustraire(_Vitesse);
+                    ali.Multiplier_par(MAX_SPEED);
+                    ali.Soustraire(_Vitesse);
                     ali.Limiter(MAX_FORCE);
 
                 }
@@ -217,7 +217,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 // Cohesion
                 if (countCoh > 0)
                 {
-                    coh.diviser_par(countCoh);
+                    coh.Diviser_par(countCoh);
                     coh = seek(coh);
                 }
             }
@@ -226,12 +226,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             public virtual void update(Temps maintenant)
             {
                 // Update velocity
-                _Vitesse.additionner(_Acceleration);
+                _Vitesse.Additionner(_Acceleration);
                 // Limiter speed
                 _Vitesse.Limiter(MAX_SPEED);
-                _Position.additionner(_Vitesse * maintenant.intervalleDepuisDerniereFrame);
+                _Position.Additionner(_Vitesse * maintenant.intervalleDepuisDerniereFrame);
                 // Reset accelertion to 0 each cycle
-                _Acceleration.set(0, 0, 0);
+                _Acceleration.Set(0, 0, 0);
 
                 Restreint();
             }
@@ -260,7 +260,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 Vecteur3D desired = target - _Position;  // A vector pointing from the location to the target
                                                          // Scale to maximum speed
                 desired.Normalize();
-                desired.multiplier_par(MAX_SPEED);
+                desired.Multiplier_par(MAX_SPEED);
 
                 // Steering = Desired minus Velocity
                 Vecteur3D steer = desired - _Vitesse;

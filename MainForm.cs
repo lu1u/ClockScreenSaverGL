@@ -27,20 +27,20 @@ namespace ClockScreenSaverGL
     /// <summary>
     /// Description of MainForm.
     /// </summary>
-    public partial class MainForm : Form, IDisposable
+    public partial class MainForm : Form
     {
 
         #region Parametres
         public const string CAT = "Main";
-        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
+        static protected CategorieConfiguration c = Configuration.GetCategorie(CAT);
         private const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
         private const string PARAM_FONDDESAISON = "FondDeSaison";
         private const string PARAM_TYPEFOND = "TypeFond";
 
         #endregion
 
-        private CouleurGlobale _couleur = new CouleurGlobale(c.getParametre("Couleur Globale Hue", 0.5f), c.getParametre("Couleur Globale Saturation", 0.5f), c.getParametre("Couleur Globale Luminance", 0.5f));        // La couleur de base pour tous les affichages
-        private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
+        private readonly CouleurGlobale _couleur = new CouleurGlobale(c.GetParametre("Couleur Globale Hue", 0.5f), c.GetParametre("Couleur Globale Saturation", 0.5f), c.GetParametre("Couleur Globale Luminance", 0.5f));        // La couleur de base pour tous les affichages
+        private readonly List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
 
         private bool _fondDeSaison;                           // Vrai si on doit commencer par le fond 'de saison'
@@ -49,18 +49,12 @@ namespace ClockScreenSaverGL
         private bool wireframe = false;
         private int INDICE_FOND;
         private int INDICE_TRANSITION;
-        private int noFrame = 0;
-
-
-
 
 #if TRACER
-        private bool _afficheDebug = c.getParametre("Debug", true);
+        private bool _afficheDebug = c.GetParametre("Debug", true);
         private DateTime lastFrame = DateTime.Now;
         private PanneauMessage _panneau;
-        private Process currentProc = Process.GetCurrentProcess();
-        private PerformanceCounter cpuCounter;
-        private PerformanceCounter ramCounter;
+        private readonly Process currentProc = Process.GetCurrentProcess();
 #endif
         #region Preview API's
 
@@ -79,7 +73,7 @@ namespace ClockScreenSaverGL
         #endregion
 
         #region Screensaver
-        private bool IsPreviewMode = false;
+        private readonly bool IsPreviewMode = false;
         public MainForm()
         {
             //
@@ -91,9 +85,10 @@ namespace ClockScreenSaverGL
 
                 _temps = new Temps(DateTime.Now, _derniereFrame);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message + "\ndans : " + ex.Source + "\n" + ex.StackTrace, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                MessageBox.Show(e.Message + "\ndans : " + e.Source + "\n" + e.StackTrace, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }
@@ -113,8 +108,7 @@ namespace ClockScreenSaverGL
                 SetWindowLong(this.Handle, -16, new IntPtr(GetWindowLong(this.Handle, -16) | 0x40000000));
 
                 //set our window's size to the size of our window's new parent
-                Rectangle ParentRect;
-                GetClientRect(PreviewHandle, out ParentRect);
+                GetClientRect(PreviewHandle, out Rectangle ParentRect);
                 this.Size = ParentRect.Size;
 
                 //set our location at (0, 0)
@@ -122,9 +116,10 @@ namespace ClockScreenSaverGL
 
                 IsPreviewMode = true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message + "\ndans : " + ex.Source, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                MessageBox.Show(e.Message + "\ndans : " + e.Source, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }
@@ -135,14 +130,14 @@ namespace ClockScreenSaverGL
         /// Creer l'objet qui anime le fond d'ecran
         /// </summary>
         /// <returns></returns>
-        private Fond createBackgroundObject(DisplayedObjectFactory.FONDS type, bool initial)
+        private Fond CreateBackgroundObject(DisplayedObjectFactory.FONDS type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
             if (!initial)
                 gl.PopAttrib();
 
             //gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
-            Fond ret = DisplayedObjectFactory.getObjetFond(gl, type, initial, _fondDeSaison);
+            Fond ret = DisplayedObjectFactory.GetObjetFond(gl, type, initial, _fondDeSaison);
             ret.Initialisation(gl);
             return ret;
         }
@@ -157,22 +152,15 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onLoad(object sender, System.EventArgs e)
+        private void OnLoad(object sender, System.EventArgs e)
         {
             try
             {
                 UpdateStyles();
                 Cursor.Hide();
 
-                timerChangeFond.Interval = c.getParametre(PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
+                timerChangeFond.Interval = c.GetParametre(PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
                 timerChangeFond.Enabled = true;
-#if TRACER
-                cpuCounter = new PerformanceCounter();
-                cpuCounter.CategoryName = "Processor";
-                cpuCounter.CounterName = "% Processor Time";
-                cpuCounter.InstanceName = "_Total";
-                ramCounter = new PerformanceCounter("Memory", "Available MBytes");
-#endif
             }
             catch (Exception ex)
             {
@@ -187,10 +175,10 @@ namespace ClockScreenSaverGL
         /// Affichage des informations de debug et performance
         /// </summary>
         /// <param name="g"></param>
-        private void remplitDebug(OpenGL gl)
+        private void RemplitDebug(OpenGL gl)
         {
             double NbMillisec = _temps.temps.Subtract(lastFrame).TotalMilliseconds;
-            DisplayedObjects.Console console = DisplayedObjects.Console.getInstance(gl);
+            DisplayedObjects.Console console = DisplayedObjects.Console.GetInstance(gl);
             console.Clear();
 #if DEBUG
             console.AddLigne(Color.White, "Version DEBUG ");
@@ -208,9 +196,9 @@ namespace ClockScreenSaverGL
                 //console.AddLigne(Color.White, "Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n");
                 console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
             }
 
             foreach (DisplayedObject b in _listeObjets)
@@ -226,83 +214,91 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void deplaceTous()
+        private void DeplaceTous()
         {
-            _couleur.AvanceCouleur();
-            Rectangle bnd = Bounds;
-            foreach (DisplayedObject b in _listeObjets)
-                b.Deplace(_temps, bnd);
-
-            if (_jourActuel != _temps.jourDeLAnnee)
+            Log log = Log.Instance;
+            try
             {
-                // Detection de changement de date, avertir les objets qui sont optimises pour ne changer
-                // qu'une fois par jour
-
-                OpenGL gl = openGLControl.OpenGL;
+                _couleur.AvanceCouleur();
+                Rectangle bnd = Bounds;
                 foreach (DisplayedObject b in _listeObjets)
-                    b.DateChangee(gl, _temps);
+                    b.Deplace(_temps, bnd);
 
-                _jourActuel = _temps.jourDeLAnnee;
+                if (_jourActuel != _temps.jourDeLAnnee)
+                {
+                    // Detection de changement de date, avertir les objets qui sont optimises pour ne changer
+                    // qu'une fois par jour
+
+                    OpenGL gl = openGLControl.OpenGL;
+                    foreach (DisplayedObject b in _listeObjets)
+                        b.DateChangee(gl, _temps);
+
+                    _jourActuel = _temps.jourDeLAnnee;
+                }
+
+                _derniereFrame = _temps.temps;
             }
-
-            _derniereFrame = _temps.temps;
+            catch (Exception e)
+            {
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                log.Error("Exception dans MainForm.deplaceTous");
+                log.Error(e.Message);
+                log.Error(e.StackTrace);
+            }
         }
 
-        private void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
+        private void OnOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
         {
-            //Debug.WriteLine("onOpenGLDraw");
-            _temps = new Temps(DateTime.Now, _derniereFrame);
-            noFrame++;
-
-            if (!_initTermine)
+            Log log = Log.Instance;
+            try
             {
-                Debug.WriteLine("Init pas terminé");
-                return;
-            }
+                _temps = new Temps(DateTime.Now, _derniereFrame);
 
-            deplaceTous();
+                if (!_initTermine)
+                {
+                    Debug.WriteLine("Init pas terminé");
+                    return;
+                }
 
-            //if (_frameInitiale)
-            //{
-            //    Debug.WriteLine("Frame Initiale");
-            //    _frameInitiale = false;
-            //    _derniereFrame = DateTime.Now;
-            //    return;
-            //}
+                DeplaceTous();
+
+                //if (_frameInitiale)
+                //{
+                //    Debug.WriteLine("Frame Initiale");
+                //    _frameInitiale = false;
+                //    _derniereFrame = DateTime.Now;
+                //    return;
+                //}
 
 
-            OpenGL gl = openGLControl.OpenGL;
+                OpenGL gl = openGLControl.OpenGL;
 
 #if TRACER
-            if (_afficheDebug)
-                remplitDebug(gl);
+                if (_afficheDebug)
+                    RemplitDebug(gl);
 #endif
-            Color Couleur = _couleur.GetARGB();
+                Color Couleur = _couleur.GetARGB();
 
-            gl.MatrixMode(OpenGL.GL_PROJECTION);                        // Select The Projection Matrix
-            gl.LoadIdentity();                                   // Reset The Projection Matrix
-            gl.Perspective(60, Bounds.Width / (float)Bounds.Height, .1f, 1000f);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);                         // Select The Modelview Matrix
-            gl.LoadIdentity();
-            //gl.Disable(OpenGL.GL_MULTISAMPLE);
-            //gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_FASTEST);
+                gl.MatrixMode(OpenGL.GL_PROJECTION);                        // Select The Projection Matrix
+                gl.LoadIdentity();                                   // Reset The Projection Matrix
+                gl.Perspective(60, Bounds.Width / (float)Bounds.Height, .1f, 1000f);
+                gl.MatrixMode(OpenGL.GL_MODELVIEW);                         // Select The Modelview Matrix
+                gl.LoadIdentity();
 
-            // Deplacer et Afficher tous les objets
-            if (_effacerFond)
+                // Deplacer et Afficher tous les objets
+                if (_effacerFond)
+                    foreach (DisplayedObject b in _listeObjets)
+                        if (b.ClearBackGround(gl, Couleur))
+                            break;
+
+                if (wireframe)
+                {
+                    gl.LineWidth(1);
+                    gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
+                }
+
+                // Deplacer et Afficher tous les objets
                 foreach (DisplayedObject b in _listeObjets)
-                    if (b.ClearBackGround(gl, Couleur))
-                        break;
-
-            if (wireframe)
-            {
-                gl.LineWidth(1);
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
-            }
-
-            // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject b in _listeObjets)
-            {
-                //using (var v = new Chronometre("Affichage " + b.GetType().Name))
                 {
                     gl.PushMatrix();
                     gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_CURRENT_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
@@ -310,23 +306,30 @@ namespace ClockScreenSaverGL
                     gl.PopAttrib();
                     gl.PopMatrix();
                 }
+
+                if (wireframe)
+                    gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
+
+                if (_afficheDebug)
+                {
+                    foreach (DisplayedObject b in _listeObjets)
+                        if (b is Fond fond)
+                            fond.FillConsole(gl);
+
+                    DisplayedObjects.Console console = DisplayedObjects.Console.GetInstance(gl);
+                    console.Trace(gl, Bounds);
+                    console.Clear();
+                }
+
+                _panneau.AfficheOpenGL(gl, Couleur);
             }
-
-            if (wireframe)
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
-
-            if (_afficheDebug)
+            catch (Exception e)
             {
-                foreach (DisplayedObject b in _listeObjets)
-                    if (b is Fond)
-                        ((Fond)b).fillConsole(gl);
-
-                DisplayedObjects.Console c = DisplayedObjects.Console.getInstance(gl);
-                c.trace(gl, Bounds);
-                c.Clear();
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                log.Error("Exception dans MainForm.createAllObjects");
+                log.Error(e.Message);
+                log.Error(e.StackTrace);
             }
-
-            _panneau.AfficheOpenGL(gl, _temps, Bounds, Couleur);
         }
 
         /// <summary>
@@ -334,14 +337,14 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onOpenGLInitialized(object sender, System.EventArgs e)
+        private void OnOpenGLInitialized(object sender, System.EventArgs e)
         {
             Debug.WriteLine("onOpenGLInitialized");
             _initTermine = false;
 
             OpenGL gl = openGLControl.OpenGL;
             gl.Clear(0);
-            createAllObjects();
+            CreateAllObjects();
             _initTermine = true;
         }
 
@@ -349,58 +352,65 @@ namespace ClockScreenSaverGL
         /// <summary>
         /// Creer tous les objets qui seront affiches
         /// </summary>
-        private void createAllObjects()
+        private void CreateAllObjects()
         {
-            Log log = Log.instance;
-            log.verbose(">>> Initialisation");
-
-            OpenGL gl = openGLControl.OpenGL;
-            int CentreX = Bounds.Width / 2;
-            int CentreY = Bounds.Height / 2;
-            int TailleHorloge = c.getParametre("TailleCadran", 400);
-            if (IsPreviewMode)
+            Log log = Log.Instance;
+            log.Verbose(">>> Initialisation");
+            try
             {
-                TailleHorloge = 10;
-                //_listeObjets.Add(new HorlogeRonde(gl, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
-                return;
-            }
+                OpenGL gl = openGLControl.OpenGL;
+                //int TailleHorloge = c.getParametre("TailleCadran", 400);
+                //if (IsPreviewMode)
+                //{
+                //    TailleHorloge = 10;
+                //    //_listeObjets.Add(new HorlogeRonde(gl, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+                //    return;
+                //}
 
-            _fondDeSaison = c.getParametre(PARAM_FONDDESAISON, true);
-            // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
-            INDICE_FOND = 0;
-            _listeObjets.Add(createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), true));
-            //
-            INDICE_TRANSITION = 1;
-            _listeObjets.Add(new Transition(gl));
+                _fondDeSaison = c.GetParametre(PARAM_FONDDESAISON, true);
+                // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
+                INDICE_FOND = 0;
+                _listeObjets.Add(CreateBackgroundObject((DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0), true));
+                //
+                INDICE_TRANSITION = 1;
+                _listeObjets.Add(new Transition(gl));
 
-            // Copyright
-            if (c.getParametre("Copyright", true))
-                _listeObjets.Add(new TexteCopyright(gl, -4, 100));
-            // citations
-            if (c.getParametre("Citation", true))
-                _listeObjets.Add(new Citations(gl, this, 200, 200));
+                // Copyright
+                if (c.GetParametre("Copyright", true))
+                    _listeObjets.Add(new TexteCopyright(gl, -4, 100));
+                // citations
+                if (c.GetParametre("Citation", true))
+                    _listeObjets.Add(new Citations(gl, this, 200, 200));
 
-            _listeObjets.Add(new Actualites(gl));
-            _listeObjets.Add(new PanneauInfo2(gl));
+                _listeObjets.Add(new PanneauInfo2(gl));
+                _listeObjets.Add(new Actualites(gl));
 
-            using (var c = new Chronometre("Initialisations"))
-            {
-                for (int i = 1; i < _listeObjets.Count; i++)
+                using ( new Chronometre("Initialisations"))
                 {
-                    using (var v = new Chronometre("Init " + _listeObjets[i].GetType().Name))
+                    for (int i = 1; i < _listeObjets.Count; i++)
                     {
-                        _listeObjets[i].Initialisation(gl);
+                        using (var v = new Chronometre("Init " + _listeObjets[i].GetType().Name))
+                        {
+                            _listeObjets[i].Initialisation(gl);
+                        }
                     }
                 }
+                _panneau = PanneauMessage.Instance;
             }
-            _panneau = PanneauMessage.instance;
+            catch (Exception e)
+            {
+                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                log.Error("Exception dans MainForm.createAllObjects");
+                log.Error(e.Message);
+                log.Error(e.StackTrace);
+            }
 
-            log.verbose(">>> Fin initialisation");
+            log.Verbose(">>> Fin initialisation");
         }
 
-        private void onTimerChangeBackground(object sender, EventArgs e)
+        private void OnTimerChangeBackground(object sender, EventArgs e)
         {
-            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
             Type = ProchainFond(Type);
             ChangeFond(Type);
         }
@@ -413,7 +423,7 @@ namespace ClockScreenSaverGL
                 return (DisplayedObjectFactory.FONDS)((int)type + 1);
         }
 
-        private void onKeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (!IsPreviewMode) //disable exit functions for preview
             {
@@ -429,7 +439,7 @@ namespace ClockScreenSaverGL
                     case DisplayedObject.TOUCHE_REINIT:
                         _panneau.SetMessage(openGLControl.OpenGL, "Réinitialisation du fond d'écran");
                         //_listeObjets[0].Dispose();
-                        _listeObjets[0] = createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                        _listeObjets[0] = CreateBackgroundObject((DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
                         timerChangeFond.Stop();
                         timerChangeFond.Start();
                         break;
@@ -453,8 +463,8 @@ namespace ClockScreenSaverGL
                             _panneau.SetMessage(openGLControl.OpenGL, "Fond de saison");
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
-                            c.setParametre(PARAM_FONDDESAISON, _fondDeSaison);
-                            _listeObjets[0] = createBackgroundObject((DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                            c.SetParametre(PARAM_FONDDESAISON, _fondDeSaison);
+                            _listeObjets[0] = CreateBackgroundObject((DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
                     case DisplayedObject.TOUCHE_PROCHAIN_FOND:
@@ -462,7 +472,7 @@ namespace ClockScreenSaverGL
                             _panneau.SetMessage(openGLControl.OpenGL, "Prochain fond");
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
-                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
                             Type = ProchainFond(Type);
                             ChangeFond(Type);
                         }
@@ -474,7 +484,7 @@ namespace ClockScreenSaverGL
 
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
-                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.getParametre(PARAM_TYPEFOND, 0);
+                            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
                             if (Type == DisplayedObjectFactory.PREMIER_FOND)
                                 Type = DisplayedObjectFactory.DERNIER_FOND;
                             else
@@ -492,7 +502,7 @@ namespace ClockScreenSaverGL
                         {
                             _panneau.SetMessage(openGLControl.OpenGL, "Console");
                             _afficheDebug = !_afficheDebug;
-                            c.setParametre("Debug", _afficheDebug);
+                            c.SetParametre("Debug", _afficheDebug);
                         }
                         break;
 #endif
@@ -516,14 +526,14 @@ namespace ClockScreenSaverGL
 
         private void ChangeFond(DisplayedObjectFactory.FONDS type)
         {
-            c.setParametre(PARAM_TYPEFOND, (int)type);
+            c.SetParametre(PARAM_TYPEFOND, (int)type);
             // Remplacer le premier objet de la liste par le nouveau fond
             DisplayedObject dO = _listeObjets[INDICE_FOND];
             DisplayedObject tr = _listeObjets[INDICE_TRANSITION];
-            if (tr is Transition)
-                ((Transition)tr).InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetARGB());
+            if (tr is Transition transition)
+                transition.InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetARGB());
 
-            _listeObjets[INDICE_FOND] = createBackgroundObject(type, false);
+            _listeObjets[INDICE_FOND] = CreateBackgroundObject(type, false);
         }
 
         //start off OriginalLoction with an X and Y of int.MaxValue, because
@@ -539,12 +549,12 @@ namespace ClockScreenSaverGL
             if (!IsPreviewMode) //disable exit functions for preview
             {
                 //see if originallocat5ion has been set
-                if (OriginalLocation.X == int.MaxValue & OriginalLocation.Y == int.MaxValue)
+                if (OriginalLocation.X == int.MaxValue && OriginalLocation.Y == int.MaxValue)
                 {
                     OriginalLocation = e.Location;
                 }
                 //see if the mouse has moved more than 20 pixels in any direction. If it has, close the application.
-                if (Math.Abs(e.X - OriginalLocation.X) > 20 | Math.Abs(e.Y - OriginalLocation.Y) > 20)
+                if (Math.Abs(e.X - OriginalLocation.X) > 20 || Math.Abs(e.Y - OriginalLocation.Y) > 20)
                 {
                     Cursor.Show();
                     Application.Exit();
@@ -552,13 +562,13 @@ namespace ClockScreenSaverGL
             }
         }
 
-        private void onFormClosed(object sender, FormClosedEventArgs e)
+        private void OnFormClosed(object sender, FormClosedEventArgs e)
         {
-            c.setParametre("Couleur Globale Hue", (float)_couleur.hue);
-            c.setParametre("Couleur Globale Saturation", (float)_couleur.saturation);
-            c.setParametre("Couleur Globale Luminance", (float)_couleur.luminance);
+            c.SetParametre("Couleur Globale Hue", (float)_couleur.hue);
+            c.SetParametre("Couleur Globale Saturation", (float)_couleur.saturation);
+            c.SetParametre("Couleur Globale Luminance", (float)_couleur.luminance);
 
-            Configuration.Instance.flush();
+            Configuration.Instance.Flush();
         }
     }
 }

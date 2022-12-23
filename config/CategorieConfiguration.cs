@@ -26,7 +26,7 @@ namespace ClockScreenSaverGL.Config
         private const string DEBUT_COMMENTAIRE = "#";
         public string _fileName, _nom;
         private bool _propre = true;
-        private SortedDictionary<string, Parametre> _valeurs = new SortedDictionary<string, Parametre>();
+        private readonly SortedDictionary<string, Parametre> _valeurs = new SortedDictionary<string, Parametre>();
 
         private string keyCourante;
 
@@ -43,7 +43,7 @@ namespace ClockScreenSaverGL.Config
         public CategorieConfiguration(string nom)
         {
             _nom = nom;
-            _fileName = getFileName(nom);
+            _fileName = GetFileName(nom);
             LireFichier(_fileName);
         }
 
@@ -66,22 +66,22 @@ namespace ClockScreenSaverGL.Config
         /// </summary>
         /// <param name="nom"></param>
         /// <returns></returns>
-        public static string getFileName(string nom)
+        public static string GetFileName(string nom)
         {
-            return Path.Combine(Configuration.getRepertoire(), nom + EXTENSION_CONF);
+            return Path.Combine(Configuration.GetRepertoire(), nom + EXTENSION_CONF);
         }
 
         public virtual void Dispose(bool disposing)
         {
             if (disposing)
-                flush();
+                Flush();
         }
         public virtual void Dispose()
         {
-            flush();
+            Flush();
         }
 
-        public string[] getLignesParametres()
+        public string[] GetLignesParametres()
         {
             string[] res = new string[_valeurs.Count];
             int i = 0;
@@ -91,12 +91,12 @@ namespace ClockScreenSaverGL.Config
                 if (keyCourante == null)
                     keyCourante = p._nom;
 
-                if (p.modifiable)
+                if (p.Modifiable)
                     couleur = p._nom.Equals(keyCourante) ? 'Y' : 'G';
                 else
                     couleur = p._nom.Equals(keyCourante) ? 'W' : 'r';
 
-                res[i] = couleur + p._nom + " = " + p.valueToString();
+                res[i] = couleur + p._nom + " = " + p.ValueToString();
                 i++;
             }
             return res;
@@ -107,9 +107,9 @@ namespace ClockScreenSaverGL.Config
         /// Ajoute les parametre dans la console texte
         /// </summary>
         /// <param name="gl"></param>
-        public void fillConsole(OpenGL gl)
+        public void FillConsole(OpenGL gl)
         {
-            DisplayedObjects.Console c = DisplayedObjects.Console.getInstance(gl);
+            DisplayedObjects.Console c = DisplayedObjects.Console.GetInstance(gl);
             c.AddLigne(Color.LightGreen, "");
             c.AddLigne(Color.LightGreen, _nom);
             c.AddLigne(Color.LightGreen, "");
@@ -121,17 +121,17 @@ namespace ClockScreenSaverGL.Config
             foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
                 if (p._type != Parametre.TYPE_PARAMETRE.T_STRING)
                 {
-                    if (p.modifiable)
-                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.Yellow : Color.Green, p._nom + " = " + p.valueToString());
+                    if (p.Modifiable)
+                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.Yellow : Color.Green, p._nom + " = " + p.ValueToString());
                     else
-                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.White : Color.Gray, p._nom + " = " + p.valueToString());
+                        c.AddLigne(p._nom.Equals(keyCourante) ? Color.White : Color.Gray, p._nom + " = " + p.ValueToString());
                 }
         }
 #endif
         /// <summary>
         /// S'assurer que les modifications sur la categorie sont bien ecrites dans le fichier
         /// </summary>
-        public void flush()
+        public void Flush()
         {
             if (OnDoitEcrire())
             {
@@ -145,7 +145,7 @@ namespace ClockScreenSaverGL.Config
                     tw.WriteLine("");
                     foreach (Parametre p in _valeurs.Values.OrderBy(p => p._nom))
                         if (p._utilisé)
-                            p.ecritDansFichier(tw);
+                            p.EcritDansFichier(tw);
 
                     tw.Close();
                 }
@@ -210,8 +210,7 @@ namespace ClockScreenSaverGL.Config
 
                 case Keys.NumPad4:
                     {
-                        Parametre p;
-                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        if (_valeurs.TryGetValue(keyCourante, out Parametre p))
                         {
                             p.Diminue();
                             _propre = false;
@@ -222,8 +221,7 @@ namespace ClockScreenSaverGL.Config
 
                 case Keys.NumPad6:
                     {
-                        Parametre p;
-                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        if (_valeurs.TryGetValue(keyCourante, out Parametre p))
                         {
                             p.Augmente();
                             _propre = false;
@@ -234,8 +232,7 @@ namespace ClockScreenSaverGL.Config
 
                 case Keys.NumPad5:
                     {
-                        Parametre p;
-                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        if (_valeurs.TryGetValue(keyCourante, out Parametre p))
                         {
                             p.Defaut();
                             _propre = false;
@@ -245,8 +242,7 @@ namespace ClockScreenSaverGL.Config
                     }
                 case Keys.NumPad0:
                     {
-                        Parametre p;
-                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        if (_valeurs.TryGetValue(keyCourante, out Parametre p))
                         {
                             p.Nulle();
                             _propre = false;
@@ -257,8 +253,7 @@ namespace ClockScreenSaverGL.Config
 
                 case Keys.Subtract:
                     {
-                        Parametre p;
-                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        if (_valeurs.TryGetValue(keyCourante, out Parametre p))
                         {
                             p.Negatif();
                             _propre = false;
@@ -300,9 +295,9 @@ namespace ClockScreenSaverGL.Config
                             }
                             catch (Exception e)
                             {
-                                Log.instance.error("Exception dans CategorieConfiguration.LireFichier " + filename);
-                                Log.instance.error(line);
-                                Log.instance.error(e.Message);
+                                Log.Instance.Error("Exception dans CategorieConfiguration.LireFichier " + filename);
+                                Log.Instance.Error(line);
+                                Log.Instance.Error(e.Message);
                             }
                         }
                 }
@@ -315,30 +310,30 @@ namespace ClockScreenSaverGL.Config
             {
                 // C'est normal: par encore de fichier de configuration (premier lancement)
             }
-            catch (Exception)
-            {
-                // Erreur inconnue
-                throw;
-            }
+            //catch (Exception)
+            //{
+            //    // Erreur inconnue
+            //    throw;
+            //}
         }
 
         #endregion Private Methods
 
         #region setParametre
 
-        public void setParametre(string nom, bool valeur)
+        public void SetParametre(string nom, bool valeur)
         {
-            setParametre(nom, Parametre.TYPE_PARAMETRE.T_BOOL, valeur);
+            SetParametre(nom, Parametre.TYPE_PARAMETRE.T_BOOL, valeur);
         }
 
-        public void setParametre(string nom, float valeur)
+        public void SetParametre(string nom, float valeur)
         {
-            setParametre(nom, Parametre.TYPE_PARAMETRE.T_FLOAT, valeur);
+            SetParametre(nom, Parametre.TYPE_PARAMETRE.T_FLOAT, valeur);
         }
 
-        public void setParametre(string nom, int valeur)
+        public void SetParametre(string nom, int valeur)
         {
-            setParametre(nom, Parametre.TYPE_PARAMETRE.T_INT, valeur);
+            SetParametre(nom, Parametre.TYPE_PARAMETRE.T_INT, valeur);
         }
 
         /// <summary>
@@ -347,13 +342,15 @@ namespace ClockScreenSaverGL.Config
         /// <param name="valueName"></param>
         /// <param name="type"></param>
         /// <param name="defaut"></param>
-        private void setParametre(string valueName, Parametre.TYPE_PARAMETRE type, object defaut)
+        private void SetParametre(string valueName, Parametre.TYPE_PARAMETRE type, object defaut)
         {
             if (_valeurs.ContainsKey(valueName))
                 _valeurs.Remove(valueName);
 
-            Parametre parametre = new Parametre(valueName, type, defaut);
-            parametre._utilisé = true;
+            Parametre parametre = new Parametre(valueName, type, defaut)
+            {
+                _utilisé = true
+            };
             _valeurs.Add(valueName, parametre);
 
             _propre = false;
@@ -363,34 +360,34 @@ namespace ClockScreenSaverGL.Config
 
         #region getParametre
 
-        public int getParametre(string name, int defaut, Action<object> actionModif = null)
+        public int GetParametre(string name, int defaut, Action<object> actionModif = null)
         {
-            return (int)(getParametre(name, Parametre.TYPE_PARAMETRE.T_INT, defaut, actionModif));
+            return (int)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_INT, defaut, actionModif));
         }
 
-        public bool getParametre(string name, bool defaut, Action<object> actionModif = null)
+        public bool GetParametre(string name, bool defaut, Action<object> actionModif = null)
         {
-            return (bool)(getParametre(name, Parametre.TYPE_PARAMETRE.T_BOOL, defaut, actionModif));
+            return (bool)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_BOOL, defaut, actionModif));
         }
 
-        public float getParametre(string name, float defaut, Action<object> actionModif = null)
+        public float GetParametre(string name, float defaut, Action<object> actionModif = null)
         {
-            return (float)(getParametre(name, Parametre.TYPE_PARAMETRE.T_FLOAT, defaut, actionModif));
+            return (float)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_FLOAT, defaut, actionModif));
         }
 
-        public double getParametre(string name, double defaut, Action<object> actionModif = null)
+        public double GetParametre(string name, double defaut, Action<object> actionModif = null)
         {
-            return (double)(getParametre(name, Parametre.TYPE_PARAMETRE.T_DOUBLE, defaut, actionModif));
+            return (double)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_DOUBLE, defaut, actionModif));
         }
 
-        public string getParametre(string name, string defaut, Action<object> actionModif = null)
+        public string GetParametre(string name, string defaut, Action<object> actionModif = null)
         {
-            return (string)(getParametre(name, Parametre.TYPE_PARAMETRE.T_STRING, defaut, actionModif));
+            return (string)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_STRING, defaut, actionModif));
         }
 
-        public byte getParametre(string name, byte defaut, Action<object> actionModif = null)
+        public byte GetParametre(string name, byte defaut, Action<object> actionModif = null)
         {
-            return (byte)(getParametre(name, Parametre.TYPE_PARAMETRE.T_BYTE, defaut, actionModif));
+            return (byte)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_BYTE, defaut, actionModif));
         }
 
         /// <summary>
@@ -401,11 +398,10 @@ namespace ClockScreenSaverGL.Config
         /// <param name="defaut"></param>
         /// <param name="modifiable"></param>
         /// <returns></returns>
-        private object getParametre(string nom, Parametre.TYPE_PARAMETRE type, object defaut, Action<object> actionModif = null)
+        private object GetParametre(string nom, Parametre.TYPE_PARAMETRE type, object defaut, Action<object> actionModif = null)
         {
-            Parametre p;
-            _valeurs.TryGetValue(nom, out p);
-            if ((p != null) && (p is Parametre))
+            _valeurs.TryGetValue(nom, out Parametre p);
+            if (p != null)
             {
                 if (p._type != type)
                     return defaut;
@@ -415,8 +411,10 @@ namespace ClockScreenSaverGL.Config
                 return p._value;
             }
 
-            p = new Parametre(nom, type, defaut, actionModif);
-            p._utilisé = true;                      // Le parametre etait manquant dans le fichier, il faut l'ajouter a la prochaine ecriture
+            p = new Parametre(nom, type, defaut, actionModif)
+            {
+                _utilisé = true                      // Le parametre etait manquant dans le fichier, il faut l'ajouter a la prochaine ecriture
+            };
             _valeurs.Add(nom, p);
             _propre = false;
 

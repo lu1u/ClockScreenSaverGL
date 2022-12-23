@@ -35,8 +35,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
         public void Init()
         {
             _initLancé = true;
-            Thread t = new Thread(FonctionThread);
-            t.Priority = _priorité;
+            Thread t = new Thread(FonctionThread)
+            {
+                Priority = _priorité
+            };
             t.Start();
         }
 

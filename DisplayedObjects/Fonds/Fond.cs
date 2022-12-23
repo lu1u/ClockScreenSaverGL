@@ -7,20 +7,31 @@
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
 using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
+
     /// <summary>
     /// Description of Class1.
     /// </summary>
     public abstract class Fond : DisplayedObject
     {
+
+        TextureAsynchrone _textureArcade, _textureEcran;
+        float DERIVE_Y, ALPHA_ARCADE;
+        bool APPLIQUER_LOOK_ARCADE;
         public Fond(OpenGL gl) : base(gl)
         {
-
+            CategorieConfiguration c = GetConfiguration();
+            DERIVE_Y = c.GetParametre("Arcade Dérive Y", 0.01f, a => DERIVE_Y = (float)Convert.ToDouble(a));
+            ALPHA_ARCADE = c.GetParametre("Arcade Alpha", 0.5f, a => ALPHA_ARCADE = (float)Convert.ToDouble(a));
+            APPLIQUER_LOOK_ARCADE = c.GetParametre("Arcade Appliquer", true, a => APPLIQUER_LOOK_ARCADE = Convert.ToBoolean(a));
         }
 
         public override bool ClearBackGround(OpenGL gl, Color c)
@@ -35,11 +46,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         //	base.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
         //}
 
-        public virtual void fillConsole(OpenGL gl)
+        public virtual void FillConsole(OpenGL gl)
         {
             //getConfiguration()?.fillConsole(gl);
-            string[] lignes = getConfiguration().getLignesParametres();
-            Console c = Console.getInstance(gl);
+            string[] lignes = GetConfiguration().GetLignesParametres();
+            Console c = Console.GetInstance(gl);
             c.AddLigne(Color.LightGreen, "");
             //c.AddLigne(Color.LightGreen, getConfiguration().);
             c.AddLigne(Color.LightGreen, "");
@@ -71,26 +82,85 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public override bool KeyDown(Form f, Keys k)
         {
-            CategorieConfiguration c = getConfiguration();
+            CategorieConfiguration c = GetConfiguration();
             if (c?.KeyDown(k) == true)
                 return true;
 
             return base.KeyDown(f, k);
         }
 
-        static public Color getColorWithHueChange(Color couleur, double change)
+        static public Color GetColorWithHueChange(Color couleur, double change)
         {
-            return new CouleurGlobale(couleur).getColorWithHueChange(change);
+            return new CouleurGlobale(couleur).GetColorWithHueChange(change);
         }
 
-        static public Color getColorWithLuminanceChange(Color couleur, double change)
+        static public Color GetColorWithLuminanceChange(Color couleur, double change)
         {
-            return new CouleurGlobale(couleur).getColorWithValueChange(change);
+            return new CouleurGlobale(couleur).GetColorWithValueChange(change);
         }
-        protected void setColorWithHueChange(OpenGL gl, Color couleur, double change)
+        public static void SetColorWithHueChange(OpenGL gl, Color couleur, double change)
         {
-            Color cG = getColorWithHueChange(couleur, change);
+            Color cG = GetColorWithHueChange(couleur, change);
             gl.Color(cG.R / 256.0f, cG.G / 256.0f, cG.B / 256.0f, cG.A / 256.0f);
+        }
+
+        public static void SetColorWithLuminanceChange(OpenGL gl, Color couleur, double change)
+        {
+            Color cG = GetColorWithLuminanceChange(couleur, change);
+            gl.Color(cG.R / 256.0f, cG.G / 256.0f, cG.B / 256.0f, cG.A / 256.0f);
+        }
+
+
+        protected void LookArcade(OpenGL gl, Color couleur)
+        {
+            if (!APPLIQUER_LOOK_ARCADE)
+                return;
+
+            if (_textureArcade==null)
+            {
+                _textureArcade = new TextureAsynchrone(gl, Configuration.GetImagePath("Arcade\\arcade.png"));
+                _textureArcade.Init();
+            }
+
+            if (_textureEcran == null)
+            {
+                _textureEcran = new TextureAsynchrone(gl, Configuration.GetImagePath("Arcade\\ecran.png"));
+                _textureEcran.Init();
+            }
+
+            using (new Viewport2D(gl, 0, 0, 1, 1))
+            {
+                gl.Enable(OpenGL.GL_BLEND);
+                gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+                gl.Enable(OpenGL.GL_TEXTURE_2D);
+                gl.Disable(OpenGL.GL_DEPTH);
+                if (_textureArcade.Pret)
+                {
+                    _textureArcade.Texture.Bind(gl);
+                    gl.Color(0, 0, 0, ALPHA_ARCADE);
+                    using (new GLBegin(gl, OpenGL.GL_QUADS))
+                    {
+                        float yCoord = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 16.0f;
+                        gl.TexCoord(0.0f, yCoord); gl.Vertex(0, FloatRandom(1 - DERIVE_Y, 1 + DERIVE_Y));
+                        gl.TexCoord(1.0f, yCoord); gl.Vertex(1, FloatRandom(1 - DERIVE_Y, 1 + DERIVE_Y));
+                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, FloatRandom(0 - DERIVE_Y, 0 + DERIVE_Y));
+                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, FloatRandom(0 - DERIVE_Y, 0 + DERIVE_Y));
+                    }
+                }
+
+                if (_textureEcran.Pret)
+                {
+                    OpenGLColor.Couleur(gl, couleur,0.5f);
+                    _textureEcran.Texture.Bind(gl);
+                    using (new GLBegin(gl, OpenGL.GL_QUADS))
+                    {
+                        gl.TexCoord(0.0f, 1.0f); gl.Vertex(0, 0);
+                        gl.TexCoord(1.0f, 1.0f); gl.Vertex(1, 0);
+                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
+                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, 1);
+                    }
+                }
+            }
         }
     }
 }

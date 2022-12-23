@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public FeuDArtifice(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur(new EmetteurFeuArtifice(TAILLE_PARTICULE, VITESSE_PARTICULE, 2000));
 
@@ -39,19 +39,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurTaille(TAILLE_MODIFIEUR));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_EMETTEURS = c.getParametre("Nb Emetteurs", 1);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 5000);
-                GRAVITE_X = c.getParametre("Gravite X", 0.0f);
-                GRAVITE_Y = -c.getParametre("Gravite Y", 0.5f);
-                ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.4f);
-                TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.001f);
-                TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.002f);
-                VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.5f);
+                c = Configuration.GetCategorie(CAT);
+                NB_EMETTEURS = c.GetParametre("Nb Emetteurs", 1);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 5000);
+                GRAVITE_X = c.GetParametre("Gravite X", 0.0f);
+                GRAVITE_Y = -c.GetParametre("Gravite Y", 0.5f);
+                ALPHA_MODIFIEUR = c.GetParametre("Modifieur Alpha", 0.4f);
+                TAILLE_MODIFIEUR = c.GetParametre("Modifieur Taille", 0.001f);
+                TAILLE_PARTICULE = c.GetParametre("TailleParticule", 0.002f);
+                VITESSE_PARTICULE = c.GetParametre("VitesseParticule", 0.5f);
             }
             return c;
         }

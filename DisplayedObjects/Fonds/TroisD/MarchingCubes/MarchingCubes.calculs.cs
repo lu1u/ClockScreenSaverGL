@@ -391,7 +391,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
             for (int i = 0; triTable[cubeindex, i] != -1; i += 3)
             {
                 gl.Begin(OpenGL.GL_LINE_LOOP);
-                Vecteur3D.normale(vertlist[triTable[cubeindex, i]], vertlist[triTable[cubeindex, i + 1]], vertlist[triTable[cubeindex, i + 2]]).Normal(gl);
+                Vecteur3D.Normale(vertlist[triTable[cubeindex, i]], vertlist[triTable[cubeindex, i + 1]], vertlist[triTable[cubeindex, i + 2]]).Normal(gl);
                 gl.Vertex((vertlist[triTable[cubeindex, i]].x - (TAILLE_X * 0.5f)) * tX, (vertlist[triTable[cubeindex, i]].y - (TAILLE_Y * 0.5f)) * tY, (vertlist[triTable[cubeindex, i]].z - (TAILLE_Z * 0.5f)) * tZ);
                 gl.Vertex((vertlist[triTable[cubeindex, i + 1]].x - (TAILLE_X * 0.5f)) * tX, (vertlist[triTable[cubeindex, i + 1]].y - (TAILLE_Y * 0.5f)) * tY, (vertlist[triTable[cubeindex, i + 1]].z - (TAILLE_Z * 0.5f)) * tZ);
                 gl.Vertex((vertlist[triTable[cubeindex, i + 2]].x - (TAILLE_X * 0.5f)) * tX, (vertlist[triTable[cubeindex, i + 2]].y - (TAILLE_Y * 0.5f)) * tY, (vertlist[triTable[cubeindex, i + 2]].z - (TAILLE_Z * 0.5f)) * tZ);

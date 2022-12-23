@@ -1,7 +1,6 @@
 ﻿using SharpGL;
 using System;
 
-
 /// <summary>
 /// Moyen simple pour passer en viewport 2D sur toute la fenetre
 /// utilisation:
@@ -27,6 +26,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Viewport2D(OpenGL gl, float left, float top, float right, float bottom)
         {
             _gl = gl;
+
+
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();

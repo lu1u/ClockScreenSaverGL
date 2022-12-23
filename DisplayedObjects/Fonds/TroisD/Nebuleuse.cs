@@ -42,25 +42,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             public float x, y, z;
             public float rR, rG, rB;
         }
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_ETOILES = c.getParametre("NbEtoiles", 100);
-                NB_NUAGES = c.getParametre("NbNuages", 50);
-                RATIO_VITESSE_NUAGES = c.getParametre("Ratio Vitesse Nuages", 1.5f, (a) => { RATIO_VITESSE_NUAGES = (float)Convert.ToDouble(a); });
-                PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, (a) => { PERIODE_TRANSLATION = (float)Convert.ToDouble(a); });
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 10f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.1f, (a) => { VITESSE_TRANSLATION = (float)Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse", 5.0f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
-                DELTA_COULEUR = c.getParametre("Delta Couleur", 0.1f, (a) => { DELTA_COULEUR = (float)Convert.ToDouble(a); });
-                ADDITIVE = c.getParametre("Additive", false, (a) => { ADDITIVE = Convert.ToBoolean(a); });
-                ALPHA_ETOILE = c.getParametre("Alpha Etoile", (byte)255, (a) => { ALPHA_ETOILE = Convert.ToByte(a); });
-                ALPHA_NUAGE = c.getParametre("Alpha Nuage", (byte)64, (a) => { ALPHA_NUAGE = Convert.ToByte(a); });
-                TAILLE_ETOILE = c.getParametre("Taille Etoiles", 0.25f, (a) => { TAILLE_ETOILE = (float)Convert.ToDouble(a); });
-                TAILLE_NUAGE = c.getParametre("Taille Nuages", 10.0f, (a) => { TAILLE_NUAGE = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                NB_ETOILES = c.GetParametre("NbEtoiles", 100);
+                NB_NUAGES = c.GetParametre("NbNuages", 50);
+                RATIO_VITESSE_NUAGES = c.GetParametre("Ratio Vitesse Nuages", 1.5f, (a) => { RATIO_VITESSE_NUAGES = (float)Convert.ToDouble(a); });
+                PERIODE_TRANSLATION = c.GetParametre("PeriodeTranslation", 13.0f, (a) => { PERIODE_TRANSLATION = (float)Convert.ToDouble(a); });
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 10.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 10f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                VITESSE_TRANSLATION = c.GetParametre("VitesseTranslation", 0.1f, (a) => { VITESSE_TRANSLATION = (float)Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse", 5.0f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
+                DELTA_COULEUR = c.GetParametre("Delta Couleur", 0.1f, (a) => { DELTA_COULEUR = (float)Convert.ToDouble(a); });
+                ADDITIVE = c.GetParametre("Additive", false, (a) => { ADDITIVE = Convert.ToBoolean(a); });
+                ALPHA_ETOILE = c.GetParametre("Alpha Etoile", (byte)255, (a) => { ALPHA_ETOILE = Convert.ToByte(a); });
+                ALPHA_NUAGE = c.GetParametre("Alpha Nuage", (byte)64, (a) => { ALPHA_NUAGE = Convert.ToByte(a); });
+                TAILLE_ETOILE = c.GetParametre("Taille Etoiles", 0.25f, (a) => { TAILLE_ETOILE = (float)Convert.ToDouble(a); });
+                TAILLE_NUAGE = c.GetParametre("Taille Nuages", 10.0f, (a) => { TAILLE_NUAGE = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -87,11 +87,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="gl"></param>
         public Nebuleuse(OpenGL gl) : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            getConfiguration();
+            GetConfiguration();
             _etoiles = new Etoile[NB_ETOILES];
             _nuages = new Nuage[NB_NUAGES];
-            _textureNuage.Create(gl, c.getParametre("Nuage nebuleuse", Config.Configuration.getImagePath("nuages_nebuleuse.png")));
-            _textureEtoile.Create(gl, c.getParametre("Etoile", Config.Configuration.getImagePath("etoile2.png")));
+            _textureNuage.Create(gl, c.GetParametre("Nuage nebuleuse", Config.Configuration.GetImagePath("nuages_nebuleuse.png")));
+            _textureEtoile.Create(gl, c.GetParametre("Etoile", Config.Configuration.GetImagePath("etoile2.png")));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -148,7 +148,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.tx = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.ty = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.Alpha = (ALPHA_NUAGE / 256.0f) * FloatRandom(0.5f, 1.2f);
-            f.Type = r.Next(0, NB_TYPES_NUAGES);
+            f.Type = random.Next(0, NB_TYPES_NUAGES);
         }
 
         /// <summary>

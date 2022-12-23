@@ -18,14 +18,9 @@ namespace ClockScreenSaverGL
     /// </summary>
     public class Lune
     {
-        private int _ageLune = -1;
+        private readonly int _ageLune = -1;
         private DateTime _maintenant;
-        private byte ALPHA_AIGUILLES;
-
-        public Lune(byte alpha)
-        {
-            ALPHA_AIGUILLES = alpha;
-        }
+        
         private static int JulianDate(int d, int m, int y)
         {
             int mm, yy;
@@ -37,7 +32,7 @@ namespace ClockScreenSaverGL
 
             if (mm >= 12)
             {
-                mm = mm - 12;
+                mm -= 12;
             }
             k1 = (int)(365.25 * (yy + 4712));
             k2 = (int)(30.6001 * mm + 0.5);
@@ -47,19 +42,12 @@ namespace ClockScreenSaverGL
             if (j > 2299160)
             {
                 // For Gregorian calendar:
-                j = j - k3; // 'j' is the Julian date at 12h UT (Universal Time)
+                j -= k3; // 'j' is the Julian date at 12h UT (Universal Time)
             }
             return j;
         }
 
-        private static double MoonAge(int d, int m, int y)
-        {
-            int j = JulianDate(d, m, y);
-            //Calculate the approximate phase of the moon
-            double ip = (j + 4.867) / 29.53059;
-            ip = ip - Math.Floor(ip);
-            return ip;
-        }
+
         public static double CalcMoonAge(DateTime dDate)
         {
             double fJD, fIP, fAge;
@@ -72,10 +60,10 @@ namespace ClockScreenSaverGL
 
         private static double Normalize(double fN)
         {
-            fN = fN - Math.Floor(fN);
+            fN -= Math.Floor(fN);
             if (fN < 0)
             {
-                fN = fN + 1;
+                fN++;
             }
             return fN;
         }
@@ -85,15 +73,14 @@ namespace ClockScreenSaverGL
             return "Lune " + _ageLune + "/" + CalcMoonAge(_maintenant);
         }
 
-        public Bitmap getImageLune(Graphics g, DateTime maintenant)
+        public Bitmap GetImageLune(DateTime maintenant)
         {
             _maintenant = maintenant;
             int lune = (int)Math.Round(CalcMoonAge(_maintenant) / 29.530588853 * 26);
 
-            string nomFichier = Path.Combine(Config.Configuration.getImagesDirectory() + "\\Lunes");
+            string nomFichier = Path.Combine(Config.Configuration.GetImagesDirectory() + "\\Lunes");
             nomFichier += "\\Lune" + lune.ToString("D2") + ".png";
-            Image bmp = Image.FromFile(nomFichier);
-            return (Bitmap)bmp;
+            return (Bitmap)Image.FromFile(nomFichier);
             //switch (lune)
             //{
             //    case 0: bmp = Ressources.Lune00; break;

@@ -56,8 +56,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _atomes = new List<Atome>();
             _liens = new List<Lien>();
-            getConfiguration();
-            _changeMolecule = new TimerIsole(c.getParametre("Delai change", 60000));
+            GetConfiguration();
+            _changeMolecule = new TimerIsole(c.GetParametre("Delai change", 60000));
 
             _fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, TAILLE_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);
 
@@ -86,19 +86,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             LIGHTPOS = new float[] { -5, -2f, 0, 1 };
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE_FONTE = c.getParametre("Taille Fonte", 32);
-                ZCAMERA = c.getParametre("ZCamera", -5.0f, (a) => { ZCAMERA = (float)Convert.ToDouble(a); });
-                VITESSE_CAM = c.getParametre("VitesseCamera", 5.0f, (a) => { VITESSE_CAM = (float)Convert.ToDouble(a); });
-                ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f, (a) => { ECHELLE_RAYON = (float)Convert.ToDouble(a); });
-                RAYON_LIENS = c.getParametre("Rayon liens", 0.2f, (a) => { RAYON_LIENS = (float)Convert.ToDouble(a); });
-                FICHIER_EN_COURS = c.getParametre("Fichier en cours", -1, (a) => { FICHIER_EN_COURS = Convert.ToInt32(a); });
-                DETAIL_ATOMES = c.getParametre("Detail atomes", 5);
-                DETAIL_LIENS = c.getParametre("Detail liens", 5);
+                c = Configuration.GetCategorie(CAT);
+                TAILLE_FONTE = c.GetParametre("Taille Fonte", 32);
+                ZCAMERA = c.GetParametre("ZCamera", -5.0f, (a) => { ZCAMERA = (float)Convert.ToDouble(a); });
+                VITESSE_CAM = c.GetParametre("VitesseCamera", 5.0f, (a) => { VITESSE_CAM = (float)Convert.ToDouble(a); });
+                ECHELLE_RAYON = c.GetParametre("Echelle rayon", 1.0f, (a) => { ECHELLE_RAYON = (float)Convert.ToDouble(a); });
+                RAYON_LIENS = c.GetParametre("Rayon liens", 0.2f, (a) => { RAYON_LIENS = (float)Convert.ToDouble(a); });
+                FICHIER_EN_COURS = c.GetParametre("Fichier en cours", -1, (a) => { FICHIER_EN_COURS = Convert.ToInt32(a); });
+                DETAIL_ATOMES = c.GetParametre("Detail atomes", 5);
+                DETAIL_LIENS = c.GetParametre("Detail liens", 5);
 
             }
             return c;
@@ -113,8 +113,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             if (FICHIER_EN_COURS >= _fichiers.Count)
                 FICHIER_EN_COURS = 0;
 
-            c.setParametre("Fichier en cours", FICHIER_EN_COURS);
-            c.flush();
+            c.SetParametre("Fichier en cours", FICHIER_EN_COURS);
+            c.Flush();
 
             LireFichierPdb(_fichiers[FICHIER_EN_COURS]);
         }
@@ -126,7 +126,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _fichiers = new List<string>();
 
-            string repertoire = Path.Combine(Config.Configuration.getDataDirectory(), "molecules");
+            string repertoire = Path.Combine(Config.Configuration.GetDataDirectory(), "molecules");
             string[] filePaths = Directory.GetFiles(repertoire);
             foreach (string filename in filePaths)
                 _fichiers.Add(filename);
@@ -185,9 +185,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             }
 
             if (_liens == null || _liens.Count == 0)
-                ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f) * 2.0f;
+                ECHELLE_RAYON = c.GetParametre("Echelle rayon", 1.0f) * 2.0f;
             else
-                ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f);
+                ECHELLE_RAYON = c.GetParametre("Echelle rayon", 1.0f);
         }
 
         /// <summary>

@@ -43,6 +43,7 @@
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SonarQubeTestProject>False</SonarQubeTestProject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -150,6 +151,7 @@
       <HintPath>packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chronometre.cs" />
@@ -173,6 +175,9 @@
     <Compile Include="DisplayedObjects\DisplayedObjectFactory.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\Ephemeride.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\LeverCoucherSoleil.cs" />
+    <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroid.cs" />
+    <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroids.cs" />
+    <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Vaisseau.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\CasseBriques\Balle.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\CasseBriques\Brique.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\CasseBriques\CasseBrique.cs" />
@@ -212,7 +217,9 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\MarchingCubes\SimplexNoise.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Moto.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\TroisDPipes.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Utils\MathUtils.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\GlBegin.cs" />
+    <Compile Include="DisplayedObjects\OpenGLUtils\OpenGLColor.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Vecteur2D.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Viewport2D.cs" />
     <Compile Include="DisplayedObjects\Fonds\Turing\Interpolateur.cs" />
@@ -334,6 +341,7 @@
     <Compile Include="Trajectoires\TrajectoireOvale.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="app.config" />
     <None Include="ClockScreenSaverGL_TemporaryKey.pfx" />
     <None Include="packages.config" />

@@ -27,8 +27,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public Myriade(OpenGL gl) : base(gl, VIEWPORT, VIEWPORT, VIEWPORT, 100)
         {
-            getConfiguration();
-            string nomImage = c.getParametre("Etoile", Config.Configuration.getImagePath("etoile.png"));
+            GetConfiguration();
+            string nomImage = c.GetParametre("Etoile", Config.Configuration.GetImagePath("etoile.png"));
             NB_IMAGES = getNbImagesTexture(nomImage);
             _texture.Create(gl, nomImage);
 
@@ -41,7 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 float z = FloatRandom(-VIEWPORT, VIEWPORT);
 
                 _points[i] = new Point(new Vecteur3D(x, y, z),
-                    FloatRandom(0.7f, 1.3f), FloatRandom(0.7f, 1.3f), FloatRandom(0.7f, 1.3f), r.Next(0, NB_IMAGES));
+                    FloatRandom(0.7f, 1.3f), FloatRandom(0.7f, 1.3f), FloatRandom(0.7f, 1.3f), random.Next(0, NB_IMAGES));
             }
         }
 
@@ -135,19 +135,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _texture.Destroy(_gl);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                ADDITIVE = c.getParametre("Additive", true, (a) => { ADDITIVE = Convert.ToBoolean(a); });
-                ALPHA_ETOILE = c.getParametre("Alpha Etoile", (byte)255, (a) => { ALPHA_ETOILE = Convert.ToByte(a); });
-                DISTANCE = c.getParametre("Ratio Distance", 1.0f, (a) => { DISTANCE = (float)Convert.ToDouble(a); });
-                FOG_DENSITY = c.getParametre("Fog density", 0.1f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-                NB_POINTS = c.getParametre("Nb Etoiles", 20000);
-                FREQUENCE_TRI = c.getParametre("Frequence tri", 10, (a) => { FREQUENCE_TRI = Convert.ToInt32(a); });
-                TAILLE = c.getParametre("Taille", 0.4f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
-                VITESSE_ROTATION = c.getParametre("Vitesse rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                ADDITIVE = c.GetParametre("Additive", true, (a) => { ADDITIVE = Convert.ToBoolean(a); });
+                ALPHA_ETOILE = c.GetParametre("Alpha Etoile", (byte)255, (a) => { ALPHA_ETOILE = Convert.ToByte(a); });
+                DISTANCE = c.GetParametre("Ratio Distance", 1.0f, (a) => { DISTANCE = (float)Convert.ToDouble(a); });
+                FOG_DENSITY = c.GetParametre("Fog density", 0.1f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                NB_POINTS = c.GetParametre("Nb Etoiles", 20000);
+                FREQUENCE_TRI = c.GetParametre("Frequence tri", 10, (a) => { FREQUENCE_TRI = Convert.ToInt32(a); });
+                TAILLE = c.GetParametre("Taille", 0.4f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("Vitesse rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
             }
             return c;
         }

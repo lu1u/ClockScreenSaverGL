@@ -12,6 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const string CAT = "Pong";
         private CategorieConfiguration c;
         private float COEFF_ACCELERATION_RAQUETTE, VITESSE_BALLE_X, VITESSE_BALLE_Y;
+        float CHANGE_LUMINANCE_TERRAIN;
         #endregion
 
         private const float MIN_VIEWPORT_X = -1;
@@ -22,44 +23,53 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const float TAILLE_BALLE = TAILLE_PIXEL * 0.5f;
         private const float TAILLE_RAQUETTE = TAILLE_PIXEL * 10.0f;
 
-        private class Balle
+        sealed private class Balle
         {
             public float x, y, dx, dy;
         }
-        private class Raquette
+        sealed private class Raquette
         {
-            public float x, y, v;
+            public float x, y;
         }
 
-        private Balle _balle;
-        private Raquette _raquetteGauche, _raquetteDroite;
-        public override CategorieConfiguration getConfiguration()
+        private readonly Balle _balle;
+        private readonly Raquette _raquetteGauche;
+        private readonly Raquette _raquetteDroite;
+
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                COEFF_ACCELERATION_RAQUETTE = c.getParametre("Coeff accélération raquette", 10.0f, a => COEFF_ACCELERATION_RAQUETTE = (float)Convert.ToDouble(a));
-                VITESSE_BALLE_X = c.getParametre("Vitesse balle X", 0.57f, a => _balle.dy = (float)Convert.ToDouble(a));
-                VITESSE_BALLE_Y = c.getParametre("Vitesse balle Y", 0.42f, a => _balle.dy = (float)Convert.ToDouble(a));
+                c = Configuration.GetCategorie(CAT);
+                COEFF_ACCELERATION_RAQUETTE = c.GetParametre("Coeff accélération raquette", 10.0f, a => COEFF_ACCELERATION_RAQUETTE = (float)Convert.ToDouble(a));
+                VITESSE_BALLE_X = c.GetParametre("Vitesse balle X", 0.57f, a => _balle.dy = (float)Convert.ToDouble(a));
+                VITESSE_BALLE_Y = c.GetParametre("Vitesse balle Y", 0.42f, a => _balle.dy = (float)Convert.ToDouble(a));
+                CHANGE_LUMINANCE_TERRAIN = c.GetParametre("Luminance terrain", -0.2f, a => CHANGE_LUMINANCE_TERRAIN = (float)Convert.ToDouble(a));
             }
             return c;
         }
 
         public Pong(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
-            _balle = new Balle();
-            _balle.x = 0;
-            _balle.y = 0;
-            _balle.dx = 0.57f;
-            _balle.dy = 0.42f;
+            c = GetConfiguration();
+            _balle = new Balle
+            {
+                x = 0,
+                y = 0,
+                dx = VITESSE_BALLE_X,
+                dy = VITESSE_BALLE_Y
+            };
 
-            _raquetteDroite = new Raquette();
-            _raquetteDroite.x = MAX_VIEWPORT_X - TAILLE_PIXEL;
-            _raquetteDroite.y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / 2.0f;
-            _raquetteGauche = new Raquette();
-            _raquetteGauche.x = MIN_VIEWPORT_X;
-            _raquetteGauche.y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / 2.0f;
+            _raquetteDroite = new Raquette
+            {
+                x = MAX_VIEWPORT_X - TAILLE_PIXEL,
+                y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / 2.0f
+            };
+            _raquetteGauche = new Raquette
+            {
+                x = MIN_VIEWPORT_X,
+                y = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / 2.0f
+            };
 
         }
 
@@ -77,7 +87,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             {
                 gl.Disable(OpenGL.GL_BLEND);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
-                gl.Color(couleur.R / 1024.0f, couleur.G / 1024.0f, couleur.B / 1024.0f, 1.0f);
+                SetColorWithLuminanceChange(gl, couleur, CHANGE_LUMINANCE_TERRAIN);
                 gl.Begin(OpenGL.GL_QUADS);
 
                 // Bande haute
@@ -124,6 +134,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Vertex(_balle.x - TAILLE_BALLE, _balle.y - TAILLE_BALLE);
                 gl.End();
             }
+
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -206,13 +218,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             if (raquette.y - TAILLE_RAQUETTE * 0.5f < MIN_VIEWPORT_Y)
             {
                 raquette.y = MIN_VIEWPORT_Y + TAILLE_RAQUETTE * 0.5f;
-                raquette.v = 0;
             }
             else
                 if (raquette.y + TAILLE_RAQUETTE * 0.5f > MAX_VIEWPORT_Y)
             {
                 raquette.y = MAX_VIEWPORT_Y - TAILLE_RAQUETTE * 0.5f;
-                raquette.v = 0;
             }
         }
 

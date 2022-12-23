@@ -56,7 +56,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Escaliers(OpenGL gl) : base(gl)
         {
 
-            getConfiguration();
+            GetConfiguration();
             _angleVue = 3.14f;
             _genLists = gl.GenLists(1);
 
@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             _xEscalier = 0;
             _sensEscalierZ = SigneRandom();
-            _nbMarchesPalier = r.Next(5, 10);
+            _nbMarchesPalier = random.Next(5, 10);
             _largeurMarche = FloatRandom(MIN_TAILLE_X, MAX_TAILLE_X);
             _profondeurMarche = FloatRandom(MIN_TAILLE_Z, MAX_TAILLE_Z);
             Marche e = new Marche();
@@ -144,23 +144,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.EndList();
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_ESCALIERS = c.getParametre("NbEscaliers", 500);
-                RATIO_COULEUR_MIN = c.getParametre("Ratio Couleur Min", 0.95f, (a) => { RATIO_COULEUR_MIN = (float)Convert.ToDouble(a); });
-                RATIO_COULEUR_MAX = c.getParametre("Ratio Couleur Max", 1.05f, (a) => { RATIO_COULEUR_MAX = (float)Convert.ToDouble(a); });
-                MIN_TAILLE_X = c.getParametre("Min tailleX", 0.3f);
-                MAX_TAILLE_X = c.getParametre("Max tailleX", 0.8f);
-                MIN_TAILLE_Y = c.getParametre("Min tailleY", 0.1f);
-                MAX_TAILLE_Y = c.getParametre("Max tailleY", 0.2f);
-                MIN_TAILLE_Z = c.getParametre("Min tailleZ", 0.2f);
-                MAX_TAILLE_Z = c.getParametre("Max tailleZ", 0.5f);
-                VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                SEUIL_DECALAGE = c.getParametre("Seuil Decalage", 0.01f, (a) => { SEUIL_DECALAGE = (float)Convert.ToDouble(a); });
-                ACCELERATION_DECALAGE = c.getParametre("Acceleration Decalage", 0.9f, (a) => { ACCELERATION_DECALAGE = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                NB_ESCALIERS = c.GetParametre("NbEscaliers", 500);
+                RATIO_COULEUR_MIN = c.GetParametre("Ratio Couleur Min", 0.95f, (a) => { RATIO_COULEUR_MIN = (float)Convert.ToDouble(a); });
+                RATIO_COULEUR_MAX = c.GetParametre("Ratio Couleur Max", 1.05f, (a) => { RATIO_COULEUR_MAX = (float)Convert.ToDouble(a); });
+                MIN_TAILLE_X = c.GetParametre("Min tailleX", 0.3f);
+                MAX_TAILLE_X = c.GetParametre("Max tailleX", 0.8f);
+                MIN_TAILLE_Y = c.GetParametre("Min tailleY", 0.1f);
+                MAX_TAILLE_Y = c.GetParametre("Max tailleY", 0.2f);
+                MIN_TAILLE_Z = c.GetParametre("Min tailleZ", 0.2f);
+                MAX_TAILLE_Z = c.GetParametre("Max tailleZ", 0.5f);
+                VITESSE_ROTATION = c.GetParametre("Vitesse Rotation", 10.0f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                SEUIL_DECALAGE = c.GetParametre("Seuil Decalage", 0.01f, (a) => { SEUIL_DECALAGE = (float)Convert.ToDouble(a); });
+                ACCELERATION_DECALAGE = c.GetParametre("Acceleration Decalage", 0.9f, (a) => { ACCELERATION_DECALAGE = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -278,7 +278,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                         _xEscalier += (_largeurMarche / 2.0f) * _prochainDecalage;
                         _largeurMarche = _prochaineLargeur;
                         _profondeurMarche = FloatRandom(MIN_TAILLE_Z, MAX_TAILLE_Z);
-                        _nbMarchesPalier = r.Next(5, 10);
+                        _nbMarchesPalier = random.Next(5, 10);
                         NouvelleMarche();
                         break;
 

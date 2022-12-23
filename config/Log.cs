@@ -10,11 +10,10 @@ namespace ClockScreenSaverGL.Config
     {
         private static Log _instance;
         public const string CAT = "Log";
-        private CategorieConfiguration c;
         #region parametres
-        private bool LOG_VERBOSE;
-        private bool LOG_WARNING;
-        private bool LOG_ERROR;
+        private readonly bool LOG_VERBOSE;
+        private readonly bool LOG_WARNING;
+        private readonly bool LOG_ERROR;
         #endregion
 
         /// <summary>
@@ -22,13 +21,13 @@ namespace ClockScreenSaverGL.Config
         /// </summary>
         private Log()
         {
-            c = Configuration.getCategorie(CAT);
-            LOG_VERBOSE = c.getParametre("Verbose", false);
-            LOG_WARNING = c.getParametre("Warning", false);
-            LOG_ERROR = c.getParametre("Error", true);
+            CategorieConfiguration c = Configuration.GetCategorie(CAT);
+            LOG_VERBOSE = c.GetParametre("Verbose", false);
+            LOG_WARNING = c.GetParametre("Warning", false);
+            LOG_ERROR = c.GetParametre("Error", true);
         }
 
-        private string getLogName()
+        private string GetLogName()
         {
             string res = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), Configuration.NOM_PROGRAMME);
 
@@ -38,7 +37,7 @@ namespace ClockScreenSaverGL.Config
             return Path.Combine(res, "journal.txt");
         }
 
-        public static Log instance
+        public static Log Instance
         {
             get
             {
@@ -49,16 +48,16 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        public void verbose(string message)
+        public void Verbose(string message)
         {
             if (LOG_VERBOSE)
-                Write("W:" + date() + " " + message);
+                Write("W:" + Date() + " " + message);
         }
 
-        public void warning(string message)
+        public void Warning(string message)
         {
             if (LOG_WARNING)
-                Write("W:" + date() + " " + message);
+                Write("W:" + Date() + " " + message);
         }
 
         private void Write(string v)
@@ -66,7 +65,7 @@ namespace ClockScreenSaverGL.Config
             try
             {
                 TextWriter tw;
-                tw = new StreamWriter(getLogName(), true);
+                tw = new StreamWriter(GetLogName(), true);
                 tw.WriteLine(v);
                 tw.Close();
             }
@@ -78,13 +77,13 @@ namespace ClockScreenSaverGL.Config
 
         }
 
-        public void error(string message)
+        public void Error(string message)
         {
             if (LOG_ERROR)
-                Write("E:" + date() + " " + message);
+                Write("E:" + Date() + " " + message);
         }
 
-        private string date()
+        private string Date()
         {
             return DateTime.Now.ToString("o");
         }

@@ -26,15 +26,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 
         public Neige(OpenGL gl, int cx, int cy) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }
@@ -49,19 +49,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         protected override void GetPreferences(ref int L, ref int H, ref int N, ref int C)
         {
             base.GetPreferences(ref L, ref H, ref N, ref C);
-            L = c.getParametre("Largeur", 400);
-            H = c.getParametre("Hauteur", 300);
-            C = c.getParametre("Niveaux", 512);
-            RATIO_COULEURS = c.getParametre("RatioCouleur", 0.9f);
+            L = c.GetParametre("Largeur", 400);
+            H = c.GetParametre("Hauteur", 300);
+            C = c.GetParametre("Niveaux", 512);
+            RATIO_COULEURS = c.GetParametre("RatioCouleur", 0.9f);
         }
 
         protected override void ConstruitMetaballes()
         {
-            TailleMax = c.getParametre("TailleMax", 40);
-            TailleMin = c.getParametre("TailleMin", 30);
-            IntensiteMax = c.getParametre("IntensiteMax", 1.0f); ;
-            IntensiteMin = c.getParametre("IntensiteMin", 0.5f);
-            NbMax = c.getParametre("Nombre", 40);
+            TailleMax = c.GetParametre("TailleMax", 40);
+            TailleMin = c.GetParametre("TailleMin", 30);
+            IntensiteMax = c.GetParametre("IntensiteMax", 1.0f); ;
+            IntensiteMin = c.GetParametre("IntensiteMin", 0.5f);
+            NbMax = c.GetParametre("Nombre", 40);
             NbMetaballes = 0;
             _metaballes = new MetaBalle[NbMax];
             NouvelleMetaballe(ref _metaballes[0]);

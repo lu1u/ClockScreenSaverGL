@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         private int NB_PLUS_PROCHES = 3;
         private int indicePointEnCours = 0;
-        private class Triangle
+        sealed private class Triangle
         {
             public float _x;
             public float _y;
@@ -46,7 +46,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 changeCouleur = FloatRandom(-1.0f, 1.0f);
             }
         }
-        private class Distance
+        sealed private class Distance
         {
             public float _distance;
             public int _indice;
@@ -57,29 +57,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_TRIANGLES = c.getParametre("Nb triangles", 100);
-                NB_PLUS_PROCHES = c.getParametre("Nb plus proches", 3);
-                FORCE = c.getParametre("Force", 0.001f, a => { FORCE = (float)Convert.ToDouble(a); });
-                AMORTISSEMENT = c.getParametre("Amortissement", 0.99f, a => { AMORTISSEMENT = (float)Convert.ToDouble(a); });
-                MAX_DISTANCE = c.getParametre("Max distance", 0.0254f, a => { MAX_DISTANCE = (float)Convert.ToDouble(a); });
-                MIN_DISTANCE = c.getParametre("Min distance", 0.0154f, a => { MIN_DISTANCE = (float)Convert.ToDouble(a); });
-                DISTANCE_CIBLE = c.getParametre("Distance cible", 0.02f, a => { DISTANCE_CIBLE = (float)Convert.ToDouble(a); if (DISTANCE_CIBLE < MIN_DISTANCE) DISTANCE_CIBLE = MIN_DISTANCE; if (DISTANCE_CIBLE > MAX_DISTANCE) DISTANCE_CIBLE = MAX_DISTANCE; });
-                LARGEUR_LIGNE = c.getParametre("Largeur lignes", 2.0f, a => { LARGEUR_LIGNE = (float)Convert.ToDouble(a); });
-                TAILLE_X = c.getParametre("Taille X", 0.0005f, a => { TAILLE_X = (float)Convert.ToDouble(a); });
-                TAILLE_Y = c.getParametre("Taille Y", 0.0005f, a => { TAILLE_Y = (float)Convert.ToDouble(a); });
-                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                NB_TRIANGLES = c.GetParametre("Nb triangles", 100);
+                NB_PLUS_PROCHES = c.GetParametre("Nb plus proches", 3);
+                FORCE = c.GetParametre("Force", 0.001f, a => { FORCE = (float)Convert.ToDouble(a); });
+                AMORTISSEMENT = c.GetParametre("Amortissement", 0.99f, a => { AMORTISSEMENT = (float)Convert.ToDouble(a); });
+                MAX_DISTANCE = c.GetParametre("Max distance", 0.0254f, a => { MAX_DISTANCE = (float)Convert.ToDouble(a); });
+                MIN_DISTANCE = c.GetParametre("Min distance", 0.0154f, a => { MIN_DISTANCE = (float)Convert.ToDouble(a); });
+                DISTANCE_CIBLE = c.GetParametre("Distance cible", 0.02f, a => { DISTANCE_CIBLE = (float)Convert.ToDouble(a); if (DISTANCE_CIBLE < MIN_DISTANCE) DISTANCE_CIBLE = MIN_DISTANCE; else if (DISTANCE_CIBLE > MAX_DISTANCE) DISTANCE_CIBLE = MAX_DISTANCE; });
+                LARGEUR_LIGNE = c.GetParametre("Largeur lignes", 2.0f, a => { LARGEUR_LIGNE = (float)Convert.ToDouble(a); });
+                TAILLE_X = c.GetParametre("Taille X", 0.0005f, a => { TAILLE_X = (float)Convert.ToDouble(a); });
+                TAILLE_Y = c.GetParametre("Taille Y", 0.0005f, a => { TAILLE_Y = (float)Convert.ToDouble(a); });
+                CHANGE_COULEUR = c.GetParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
             }
             return c;
         }
 
         public Triangles(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _triangles = new Triangle[NB_TRIANGLES];
 
             for (int i = 0; i < NB_TRIANGLES; i++)
@@ -129,7 +129,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 Color cG = Color.FromArgb(64, couleur.R, couleur.G, couleur.B);
                 foreach (Triangle o in _triangles)
                 {
-                    setColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
+                    SetColorWithHueChange(gl, cG, o.changeCouleur * CHANGE_COULEUR);
                     gl.Begin(OpenGL.GL_TRIANGLE_FAN);
                     gl.Vertex(o._x, o._y);
                     for (int i = 0; i < o._plusProches.Count; i++)
@@ -205,7 +205,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             // Ajouter tous les points suffisament proches
             for (int i = 0; i < _triangles.Length; i++)
-                if (i != indicePointEnCours && notIn(_triangles[indicePointEnCours], i))
+                if (i != indicePointEnCours && NotIn(_triangles[indicePointEnCours], i))
                 {
                     float distance = CalculeDistance(_triangles[indicePointEnCours], _triangles[i]);
                     if (distance < MIN_DISTANCE)
@@ -228,7 +228,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
 
 
-        private bool notIn(Triangle triangle, int val)
+        private bool NotIn(Triangle triangle, int val)
         {
             for (int i = 0; i < triangle._plusProches.Count; i++)
                 if (triangle._plusProches[i]._indice == val)

@@ -25,7 +25,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="gl"></param>
         public Transition(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
         }
 
         // <summary>
@@ -35,24 +35,24 @@ namespace ClockScreenSaverGL.DisplayedObjects
         // <returns></returns>
         protected override void Init(OpenGL gl)
         {
-            _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
+            _texture = CreateEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                DureeTransition = c.getParametre("Duree transition", 2000) / 1000.0f; // En millisecondes
-                LARGEUR_TEXTURE = c.getParametre("Largeur texture", 512);
-                HAUTEUR_TEXTURE = c.getParametre("Hauteur texture", 512);
+                c = Configuration.GetCategorie(CAT);
+                DureeTransition = c.GetParametre("Duree transition", 2000) / 1000.0f; // En millisecondes
+                LARGEUR_TEXTURE = c.GetParametre("Largeur texture", 512);
+                HAUTEUR_TEXTURE = c.GetParametre("Hauteur texture", 512);
             }
             return c;
         }
         public override void Dispose()
         {
             base.Dispose();
-            deleteEmptyTexture(_texture);
+            DeleteEmptyTexture(_texture);
             _objetTransition?.Dispose();
             _objetTransition = null;
         }
@@ -71,7 +71,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _etapeTransition = 0;
             RenderToTexture(gl, maintenant, tailleEcran, couleur);
             _transitionEnCours = true;
-            _typeDeTransition = (TYPE_TRANSITION)r.Next(5);
+            _typeDeTransition = (TYPE_TRANSITION)random.Next(5);
         }
 
         /// <summary>

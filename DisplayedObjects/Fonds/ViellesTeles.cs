@@ -16,6 +16,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     {
         public const String CAT = "ToTexture";
         private static CategorieConfiguration c;
+        private int LARGEUR_TEXTURE = 256;
+        private int HAUTEUR_TEXTURE = 256;
+
         protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
         protected float[] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
         protected float[] COL_SPECULAR = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -27,50 +30,55 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected float[] LIG_AMBIENT = { 0.5f, 0.5f, 0.5f };
         protected float[] LIG_DIFFUSE = { 1.0f, 1.0f, 1.0f };
         protected float RATIO_COULEUR = 1.0f / 256.0f;
-        private const int LARGEUR_TEXTURE = 256;
-        private const int HAUTEUR_TEXTURE = 256;
         protected uint texture = 0;
-        protected DisplayedObject _objet;
+        protected Fond _objet;
         protected Texture tv;
         protected TimerIsole _timer = new TimerIsole(30000);
-        private class Quad
+        sealed private class Quad
         {
             public Vecteur3D position, angle, taille;
         }
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
+            LARGEUR_TEXTURE = c.GetParametre("Largeur texture", 256);
+            HAUTEUR_TEXTURE = c.GetParametre("Hauteur texture", 256);
             return c;
         }
 
-        private const int NB_QUADS = 10;
-        private List<Quad> quads = new List<Quad>();
+        private readonly List<Quad> quads = new List<Quad>();
 
         public ViellesTeles(OpenGL gl) : base(gl)
         {
             _objet = InitObjet(gl);
 
-            Quad quad = new Quad();
-            quad.position = new Vecteur3D(5f, 0.8f, -3);
-            quad.angle = new Vecteur3D(0, -45, 0);
-            quad.taille = new Vecteur3D(2, 1.5f, 1);
+            Quad quad = new Quad
+            {
+                position = new Vecteur3D(5f, 0.8f, -3),
+                angle = new Vecteur3D(0, -45, 0),
+                taille = new Vecteur3D(2, 1.5f, 1)
+            };
             quads.Add(quad);
 
-            quad = new Quad();
-            quad.position = new Vecteur3D(-6f, -0.5f, -4);
-            quad.angle = new Vecteur3D(0, 35, 0);
-            quad.taille = new Vecteur3D(2.5f, 2.5f, 1);
+            quad = new Quad
+            {
+                position = new Vecteur3D(-6f, -0.5f, -4),
+                angle = new Vecteur3D(0, 35, 0),
+                taille = new Vecteur3D(2.5f, 2.5f, 1)
+            };
             quads.Add(quad);
 
-            quad = new Quad();
-            quad.position = new Vecteur3D(0f, 0f, -6f);
-            quad.angle = new Vecteur3D(0, 0, 0);
-            quad.taille = new Vecteur3D(1f, 0.75f, 1);
+            quad = new Quad
+            {
+                position = new Vecteur3D(0f, 0f, -6f),
+                angle = new Vecteur3D(0, 0, 0),
+                taille = new Vecteur3D(1f, 0.75f, 1)
+            };
             quads.Add(quad);
 
             tv = new Texture();
-            tv.Create(gl, Config.Configuration.getImagePath(r.Next(2) == 0 ? "tv1.png" : "tv2.png"));
+            tv.Create(gl, Config.Configuration.GetImagePath(Probabilite(0.5f) ? "ViellesTeles\\tv1.png" : "ViellesTeles\\tv2.png"));
         }
 
         /// <summary>
@@ -80,39 +88,42 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <returns></returns>
         protected override void Init(OpenGL gl)
         {
-            texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
+            texture = CreateEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            deleteEmptyTexture(texture);
+            DeleteEmptyTexture(texture);
         }
 
-        protected static DisplayedObject InitObjet(OpenGL gl)
+        protected static Fond InitObjet(OpenGL gl)
         {
-            switch (r.Next(18))
-            {
-                case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 2: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 3: return new Life(gl);
-                case 4: return new Couronnes(gl);
-                case 5: return new Nuages2(gl);
-                case 6: return new Tunnel(gl);
-                case 7: return new CarresEspace(gl);
-                case 8: return new GravitationParticules(gl);
-                case 9: return new TerreOpenGL(gl);
-                case 10: return new ParticulesGalaxie(gl);
-                case 11: return new ParticulesFusees(gl);
-                case 12: return new FeuDArtifice(gl);
-                case 13: return new AttracteurParticules(gl);
-                case 14: return new Engrenages(gl);
-                case 15: return new ADN(gl);
-                case 16: return new Cubes(gl);
-                default:
-                    return new Metaballes.Metaballes(gl);
-            }
+            Fond f = DisplayedObjectFactory.CreerFondAleatoire(gl, random);
+            f.Initialisation(gl);
+            return f;
+            //switch (r.Next(18))
+            //{
+            //    case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            //    case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            //    case 2: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            //    case 3: return new Life(gl);
+            //    case 4: return new Couronnes(gl);
+            //    case 5: return new Nuages2(gl);
+            //    case 6: return new Tunnel(gl);
+            //    case 7: return new CarresEspace(gl);
+            //    case 8: return new GravitationParticules(gl);
+            //    case 9: return new TerreOpenGL(gl);
+            //    case 10: return new ParticulesGalaxie(gl);
+            //    case 11: return new ParticulesFusees(gl);
+            //    case 12: return new FeuDArtifice(gl);
+            //    case 13: return new AttracteurParticules(gl);
+            //    case 14: return new Engrenages(gl);
+            //    case 15: return new ADN(gl);
+            //    case 16: return new Cubes(gl);
+            //    default:
+            //        return new Metaballes.Metaballes(gl);
+            //}
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
@@ -162,11 +173,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 tv.Bind(gl);
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-
+                
                 foreach (Quad q in quads)
                     DessineRectangleTV(gl, q);
             }
-            Console.getInstance(gl).AddLigne(Color.Green, _objet.GetType().Name);
+            Console.GetInstance(gl).AddLigne(Color.Green, _objet.GetType().Name);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -257,7 +268,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Viewport(0, 0, r.Width, r.Height);                    // Set Our Viewport (Match Texture Size)
             gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
 
+            _objet.ClearBackGround(gl, couleur);
             _objet.AfficheOpenGL(gl, maintenant, r, couleur);
+            LookArcade(gl, couleur);
 
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, texture);          // Bind To The Blur Texture
@@ -266,8 +279,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.CopyTexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGB16, 0, 0, LARGEUR_TEXTURE, HAUTEUR_TEXTURE, 0);
 
             gl.PopAttrib();
-
             gl.Viewport(0, 0, tailleEcran.Width, tailleEcran.Height);
+        }
+
+        public override string DumpRender()
+        {
+            return base.DumpRender() + " " + _objet.DumpRender();
         }
     }
 }

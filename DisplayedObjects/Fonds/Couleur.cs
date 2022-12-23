@@ -8,6 +8,7 @@
  */
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Bandes;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System.Collections.Generic;
 using System.Drawing;
@@ -27,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Couleur(OpenGL gl, int Cx, int Cy) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             int CentreX = Cx / 2;
             int CentreY = Cy / 2;
 
@@ -42,12 +43,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                _fondCouleur = c.getParametre("Valeur", (byte)100);
+                c = Configuration.GetCategorie(CAT);
+                _fondCouleur = c.GetParametre("Valeur", (byte)100);
             }
             return c;
         }
@@ -89,13 +90,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         protected virtual Color getCouleur(Color couleur)
         {
-            return getCouleurOpaqueAvecAlpha(couleur, _fondCouleur);
+            return OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, _fondCouleur);
         }
 
-        public override bool ClearBackGround(OpenGL gl, Color couleur)
+        public override bool ClearBackGround(OpenGL gl, Color c)
         {
-            Color c = getCouleur(couleur);
-            gl.ClearColor(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1.0f);
+            Color couleur = getCouleur(c);
+            gl.ClearColor(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
             return true;
         }

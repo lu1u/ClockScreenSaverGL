@@ -27,7 +27,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         private enum CASE { VIDE = 0, POMME = 1, NORD = 2, SUD = 3, EST = 4, OUEST = 5 };
 
-        private class Case
+        sealed private class Case
         {
             public Case(CASE c)
             {
@@ -41,28 +41,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private enum MODE_JEU { MODE_NORMAL, PERDU }
 
         private MODE_JEU _mode;
-        private Case[,] _cases;
+        private readonly Case[,] _cases;
         private int _xTete, _yTete, _xQueue, _yQueue;
         private CASE _directionDeplacement;
         private TimerIsole _timerJeu;
-        private TextureAsynchrone _texture;
+        private readonly TextureAsynchrone _texture;
         private bool _clignotePerdu;
         private int _compteurPerdu;
         private int _longueurSnake;
         private float _stepCouleur;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_LIGNES = c.getParametre("Nb lignes", 30);
-                NB_COLONNES = c.getParametre("Nb Colonnes", 40);
-                NB_POMMES = c.getParametre("Nb Pommes", 10);
+                c = Configuration.GetCategorie(CAT);
+                NB_LIGNES = c.GetParametre("Nb lignes", 30);
+                NB_COLONNES = c.GetParametre("Nb Colonnes", 40);
+                NB_POMMES = c.GetParametre("Nb Pommes", 10);
                 LARGEUR_CASE = (MAX_VIEWPORT_X - MIN_VIEWPORT_X) / NB_COLONNES;
                 HAUTEUR_CASE = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / NB_LIGNES;
-                DELAI_TIMER_JEUX = c.getParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
-                NB_STEP = c.getParametre("Nb Etapes couleur", 100, a => { NB_STEP = Convert.ToInt32(a); });
+                DELAI_TIMER_JEUX = c.GetParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
+                NB_STEP = c.GetParametre("Nb Etapes couleur", 100, a => { NB_STEP = Convert.ToInt32(a); });
             }
 
             return c;
@@ -70,8 +70,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Snake(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
-            _texture = new TextureAsynchrone(gl, Configuration.getImagePath("snake2.png"));
+            c = GetConfiguration();
+            _texture = new TextureAsynchrone(gl, Configuration.GetImagePath("snake2.png"));
             _texture.Init();
             _cases = new Case[NB_LIGNES, NB_COLONNES];
             _timerJeu = new TimerIsole(DELAI_TIMER_JEUX);
@@ -85,13 +85,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             _mode = MODE_JEU.MODE_NORMAL;
             // Vider le plateau de jeu
-            for (int l = 0; l < NB_LIGNES; l++)
-                for (int c = 0; c < NB_COLONNES; c++)
-                    _cases[l, c] = new Case(CASE.VIDE);
+            for (int ligne = 0; ligne < NB_LIGNES; ligne++)
+                for (int colonne = 0; colonne < NB_COLONNES; colonne++)
+                    _cases[ligne, colonne] = new Case(CASE.VIDE);
 
             // Placer quelques pommes
             for (int i = 0; i < NB_POMMES; i++)
-                _cases[r.Next(NB_LIGNES), r.Next(NB_COLONNES)] = new Case(CASE.POMME);
+                _cases[random.Next(NB_LIGNES), random.Next(NB_COLONNES)] = new Case(CASE.POMME);
 
             // Depart du serpent: milieu, longueur: 5, la queue vers la gauche
             _longueurSnake = 5;
@@ -120,7 +120,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            //gl.LoadIdentity();            
             using (new Viewport2D(gl, MIN_VIEWPORT_X, MAX_VIEWPORT_Y, MAX_VIEWPORT_X, MIN_VIEWPORT_Y))
             {
                 if (_texture.Pret)
@@ -131,32 +130,32 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.Enable(OpenGL.GL_BLEND);
                     gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
-                    _texture.texture.Bind(gl);
+                    _texture.Texture.Bind(gl);
                     gl.Begin(OpenGL.GL_QUADS);
 
-                    for (int l = 0; l < NB_LIGNES; l++)
-                        for (int c = 0; c < NB_COLONNES; c++)
+                    for (int ligne = 0; ligne < NB_LIGNES; ligne++)
+                        for (int colonne = 0; colonne < NB_COLONNES; colonne++)
                         {
-                            if (_cases[l, c]._case != CASE.VIDE)
+                            if (_cases[ligne, colonne]._case != CASE.VIDE)
                             {
                                 Color Couleur;
 
                                 if (_mode == MODE_JEU.PERDU && _clignotePerdu)
                                     Couleur = Color.White;
                                 else
-                                    Couleur = getColorWithHueChange(couleur, _cases[l, c].changeCouleur);
+                                    Couleur = GetColorWithHueChange(couleur, _cases[ligne, colonne].changeCouleur);
 
                                 gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 1.0f);
 
-                                float image = (float)_cases[l, c]._case;
+                                float image = (float)_cases[ligne, colonne]._case;
 
                                 float imageG = (float)image / NB_IMAGES_TEXTURE;
                                 float imageD = (float)(image + 1) / NB_IMAGES_TEXTURE;
 
-                                gl.TexCoord(imageG, 1.0f); gl.Vertex(c * LARGEUR_CASE, (l + 1.0f) * HAUTEUR_CASE);
-                                gl.TexCoord(imageD, 1.0f); gl.Vertex((c + 1.0f) * LARGEUR_CASE, (l + 1.0f) * HAUTEUR_CASE);
-                                gl.TexCoord(imageD, 0.0f); gl.Vertex((c + 1.0f) * LARGEUR_CASE, l * HAUTEUR_CASE);
-                                gl.TexCoord(imageG, 0.0f); gl.Vertex(c * LARGEUR_CASE, l * HAUTEUR_CASE);
+                                gl.TexCoord(imageG, 1.0f); gl.Vertex(colonne * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
+                                gl.TexCoord(imageD, 1.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
+                                gl.TexCoord(imageD, 0.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, ligne * HAUTEUR_CASE);
+                                gl.TexCoord(imageG, 0.0f); gl.Vertex(colonne * LARGEUR_CASE, ligne * HAUTEUR_CASE);
                             }
                         }
 
@@ -165,6 +164,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                 gl.End();
             }
+
+            OpenGLColor.Couleur(gl, couleur);
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -256,18 +258,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private CASE AvanceTete()
         {
             // Decider de la nouvelle direction
-            (int dx, int dy) = getDeplacement(_directionDeplacement);
+            (int dx, int dy) = GetDeplacement(_directionDeplacement);
 
-            if (chercheDevant())
+            if (ChercheDevant())
             {
                 // Rien a changer, on continue dans la meme direction
             }
             else
-                if (chercheADroite())
-                _directionDeplacement = tourneADroite(_directionDeplacement);
+                if (ChercheADroite())
+                _directionDeplacement = TourneADroite(_directionDeplacement);
             else
-                if (chercheAGauche())
-                _directionDeplacement = tourneAGauche(_directionDeplacement);
+                if (ChercheAGauche())
+                _directionDeplacement = TourneAGauche(_directionDeplacement);
 
             if ((dx != 0) && (_xTete <= 0 || _xTete >= NB_COLONNES - 1) || ((dy != 0) && (_yTete <= 0 || _yTete >= NB_LIGNES - 1)))
             {
@@ -278,13 +280,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 if (_yTete > NB_LIGNES - 1) _yTete = NB_LIGNES - 1;
             }
 
-            (dx, dy) = getDeplacement(_directionDeplacement);
+            (dx, dy) = GetDeplacement(_directionDeplacement);
 
             // Memoriser la nouvelle direction dans la case actuelle
             CASE ret = _cases[_yTete, _xTete]._case;
             _cases[_yTete, _xTete]._case = _directionDeplacement;
             _stepCouleur++;
-            if (_stepCouleur >= NB_STEP)
+            if (_stepCouleur > NB_STEP)
                 _stepCouleur = 0;
             _cases[_yTete, _xTete].changeCouleur = NB_STEP / (_stepCouleur + 1.0f);
 
@@ -301,31 +303,30 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// Evaluer le deplacement apres avoir tourné a gauche
         /// </summary>
         /// <returns></returns>
-        private bool chercheAGauche()
+        private bool ChercheAGauche()
         {
-            CASE direction = tourneAGauche(_directionDeplacement);
-            (int dx, int dy) = getDeplacement(direction);
-            return cherche(_xTete, _yTete, dx, dy);
+            CASE direction = TourneAGauche(_directionDeplacement);
+            (int dx, int dy) = GetDeplacement(direction);
+            return Cherche(_xTete, _yTete, dx, dy);
         }
 
-        private bool chercheADroite()
+        private bool ChercheADroite()
         {
-            Debug.WriteLine("ChercheADroite");
-            CASE direction = tourneADroite(_directionDeplacement);
-            (int dx, int dy) = getDeplacement(direction);
-            return cherche(_xTete, _yTete, dx, dy);
+            CASE direction = TourneADroite(_directionDeplacement);
+            (int dx, int dy) = GetDeplacement(direction);
+            return Cherche(_xTete, _yTete, dx, dy);
         }
 
         /// <summary>
         /// Evaluer le deplacement en continuant tout droit
         /// </summary>
         /// <returns></returns>
-        private bool chercheDevant()
+        private bool ChercheDevant()
         {
-            (int dx, int dy) = getDeplacement(_directionDeplacement);
-            return cherche(_xTete, _yTete, dx, dy);
+            (int dx, int dy) = GetDeplacement(_directionDeplacement);
+            return Cherche(_xTete, _yTete, dx, dy);
         }
-        private bool cherche(int x, int y, int dx, int dy)
+        private bool Cherche(int x, int y, int dx, int dy)
         {
             while (true)
             {
@@ -360,7 +361,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        static private CASE tourneAGauche(CASE direction)
+        static private CASE TourneAGauche(CASE direction)
         {
             switch (direction)
             {
@@ -377,7 +378,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        static private CASE tourneADroite(CASE direction)
+        static private CASE TourneADroite(CASE direction)
         {
             switch (direction)
             {
@@ -443,7 +444,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             return direction;
         }
 
-        private (int, int) getDeplacement(CASE direction)
+        private (int, int) GetDeplacement(CASE direction)
         {
             int dx, dy;
 
@@ -472,39 +473,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
 
 
-        private void TourneNordOuSud()
-        {
-            if (_yTete <= 0)
-                _directionDeplacement = CASE.SUD;
-            else
-            if (_yTete >= NB_LIGNES - 1)
-                _directionDeplacement = CASE.NORD;
-            else
-            {
-                if (Probabilite(0.5f))
-                    _directionDeplacement = CASE.NORD;
-                else
-                    _directionDeplacement = CASE.SUD;
-            }
-        }
-
-        private void TourneEstOuOuest()
-        {
-            if (_xTete <= 0)
-                _directionDeplacement = CASE.OUEST;
-            else
-            if (_xTete >= NB_COLONNES - 1)
-                _directionDeplacement = CASE.EST;
-            else
-            {
-                if (Probabilite(0.5f))
-                    _directionDeplacement = CASE.EST;
-                else
-                    _directionDeplacement = CASE.OUEST;
-            }
-        }
-
-
+        
         private void Perdu()
         {
             _mode = MODE_JEU.PERDU;
@@ -521,8 +490,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             bool ajouté = false;
             while (!ajouté)
             {
-                int x = r.Next(NB_COLONNES);
-                int y = r.Next(NB_LIGNES);
+                int x = random.Next(NB_COLONNES);
+                int y = random.Next(NB_LIGNES);
                 if (_cases[y, x]._case == CASE.VIDE)
                 {
                     _cases[y, x]._case = CASE.POMME;

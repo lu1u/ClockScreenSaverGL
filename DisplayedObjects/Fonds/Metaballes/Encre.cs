@@ -29,15 +29,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         private int NbMax = 0;
         public Encre(OpenGL gl, int cx, int cy) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
-            base.getConfiguration();
+            base.GetConfiguration();
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }
@@ -51,20 +51,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         protected override void GetPreferences(ref int L, ref int H, ref int N, ref int C)
         {
             base.GetPreferences(ref L, ref H, ref N, ref C);
-            L = c.getParametre("Largeur", 400);
-            H = c.getParametre("Hauteur", 300);
-            N = c.getParametre("Nombre", 10);
-            C = c.getParametre("Niveaux", 512);
+            L = c.GetParametre("Largeur", 400);
+            H = c.GetParametre("Hauteur", 300);
+            N = c.GetParametre("Nombre", 10);
+            C = c.GetParametre("Niveaux", 512);
         }
 
         protected override void ConstruitMetaballes()
         {
-            TailleMax = c.getParametre("TailleMax", 100f);
-            TailleMin = c.getParametre("TailleMin", 30f);
-            IntensiteMax = c.getParametre("IntensiteMax", 1.0f);
+            TailleMax = c.GetParametre("TailleMax", 100f);
+            TailleMin = c.GetParametre("TailleMin", 30f);
+            IntensiteMax = c.GetParametre("IntensiteMax", 1.0f);
 
             IntensiteMin = 0;
-            NbMax = c.getParametre("Nombre", 10);
+            NbMax = c.GetParametre("Nombre", 10);
             NbMetaballes = 0;
             xEmetteur = Largeur / 2;
 

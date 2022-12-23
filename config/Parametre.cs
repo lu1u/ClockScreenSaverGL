@@ -52,7 +52,7 @@ namespace ClockScreenSaverGL.Config
             finMot = ligneFichier.IndexOf(',');
             if (finMot == -1)
                 throw new Exception("Impossible de trouver le type du parametre " + tmp);
-            _type = stringToType(ligneFichier.Substring(0, finMot).Trim());
+            _type = StringToType(ligneFichier.Substring(0, finMot).Trim());
             ligneFichier = ligneFichier.Substring(finMot + 1);
 
             // Modifiable
@@ -62,8 +62,8 @@ namespace ClockScreenSaverGL.Config
             ligneFichier = ligneFichier.Substring(finMot + 1);
 
             // Valeur
-            _value = toObject(_type, ligneFichier);
-            _defaut = toObject(_type, ligneFichier);
+            _value = ToObject(_type, ligneFichier);
+            _defaut = ToObject(_type, ligneFichier);
             _utilisé = false;
         }
 
@@ -89,7 +89,7 @@ namespace ClockScreenSaverGL.Config
 
         #region Public Properties
 
-        public bool modifiable
+        public bool Modifiable
 
         {
             get { return _action != null; }
@@ -99,7 +99,7 @@ namespace ClockScreenSaverGL.Config
 
         #region Public Methods
 
-        static public String valueToString(TYPE_PARAMETRE type, Object value)
+        static public string ValueToString(TYPE_PARAMETRE type, object value)
         {
             switch (type)
             {
@@ -110,7 +110,7 @@ namespace ClockScreenSaverGL.Config
                 case TYPE_PARAMETRE.T_DOUBLE:
                     return ((double)value).ToString();
                 case TYPE_PARAMETRE.T_BOOL:
-                    return (stringFromBool((bool)value)).ToString();
+                    return (StringFromBool((bool)value)).ToString();
                 case TYPE_PARAMETRE.T_STRING:
                     return ((string)value);
                 case TYPE_PARAMETRE.T_BYTE:
@@ -121,9 +121,9 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        public String valueToString()
+        public string ValueToString()
         {
-            return valueToString(_type, _value);
+            return ValueToString(_type, _value);
         }
 
         #endregion Public Methods
@@ -149,7 +149,7 @@ namespace ClockScreenSaverGL.Config
                     break;
 
                 case TYPE_PARAMETRE.T_BOOL:
-                    _value = (bool)_value ? false : true;
+                    _value = !(bool)_value;
                     break;
 
                 case TYPE_PARAMETRE.T_STRING:
@@ -191,7 +191,7 @@ namespace ClockScreenSaverGL.Config
                     break;
 
                 case TYPE_PARAMETRE.T_BOOL:
-                    _value = (bool)_value ? false : true;
+                    _value = !(bool)_value;
                     break;
 
                 case TYPE_PARAMETRE.T_STRING:
@@ -210,9 +210,9 @@ namespace ClockScreenSaverGL.Config
         /// {nom}:{type},modifiable|non modifiable={valeur}|"{valeur}"
         /// </summary>
         /// <param name="tw"></param>
-        internal void ecritDansFichier(TextWriter tw)
+        internal void EcritDansFichier(TextWriter tw)
         {
-            tw.WriteLine(_nom + ":" + typeToString(_type) + "," + modifiableToString(modifiable) + "=" + valueToString(_type, _value));
+            tw.WriteLine(_nom + ":" + TypeToString(_type) + "," + ModifiableToString(Modifiable) + "=" + ValueToString(_type, _value));
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace ClockScreenSaverGL.Config
                     break;
 
                 case TYPE_PARAMETRE.T_BOOL:
-                    _value = (bool)_value ? false : true;
+                    _value = !(bool)_value;
                     break;
 
                 case TYPE_PARAMETRE.T_STRING:
@@ -287,7 +287,7 @@ namespace ClockScreenSaverGL.Config
 
         #region Private Methods
 
-        private static bool boolFromString(string s)
+        private static bool BoolFromString(string s)
         {
             if (s == null)
                 return false;
@@ -299,12 +299,12 @@ namespace ClockScreenSaverGL.Config
             return false;
         }
 
-        static private byte byteFromString(string valeur)
+        static private byte ByteFromString(string valeur)
         {
-            return (byte)(intFromString(valeur) % 256);
+            return (byte)(IntFromString(valeur) % 256);
         }
 
-        static private double doubleFromString(string valeur)
+        static private double DoubleFromString(string valeur)
         {
             try
             {
@@ -323,22 +323,22 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        static private float floatFromString(string valeur)
+        static private float FloatFromString(string valeur)
         {
-            return (float)doubleFromString(valeur);
+            return (float)DoubleFromString(valeur);
         }
 
-        static private int intFromString(string valeur)
+        static private int IntFromString(string valeur)
         {
             try
             {
-                return (int)Int64.Parse(valeur);
+                return (int)long.Parse(valeur);
             }
             catch (Exception)
             {
                 try
                 {
-                    return (int)Math.Round(Double.Parse(valeur));
+                    return (int)Math.Round(double.Parse(valeur));
                 }
                 catch (Exception)
                 {
@@ -347,17 +347,17 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        static private String modifiableToString(bool modifiable)
+        static private string ModifiableToString(bool modifiable)
         {
             return modifiable ? "modifiable" : "non_modifiable";
         }
 
-        private static string stringFromBool(bool b)
+        private static string StringFromBool(bool b)
         {
             return b ? "vrai" : "false";
         }
 
-        static private String stringFromString(string valeur)
+        static private String StringFromString(string valeur)
         {
             if (valeur.StartsWith("\""))
                 valeur = valeur.Substring(1);
@@ -374,18 +374,18 @@ namespace ClockScreenSaverGL.Config
         /// <param name="type"></param>
         /// <param name="mot"></param>
         /// <returns></returns>
-        private static Object toObject(TYPE_PARAMETRE type, string mot)
+        private static object ToObject(TYPE_PARAMETRE type, string mot)
         {
             switch (type)
             {
-                case TYPE_PARAMETRE.T_INT: return intFromString(mot);
-                case TYPE_PARAMETRE.T_FLOAT: return floatFromString(mot);
-                case TYPE_PARAMETRE.T_DOUBLE: return doubleFromString(mot);
-                case TYPE_PARAMETRE.T_BOOL: return boolFromString(mot);
-                case TYPE_PARAMETRE.T_STRING: return stringFromString(mot);
-                case TYPE_PARAMETRE.T_BYTE: return byteFromString(mot);
+                case TYPE_PARAMETRE.T_INT: return IntFromString(mot);
+                case TYPE_PARAMETRE.T_FLOAT: return FloatFromString(mot);
+                case TYPE_PARAMETRE.T_DOUBLE: return DoubleFromString(mot);
+                case TYPE_PARAMETRE.T_BOOL: return BoolFromString(mot);
+                case TYPE_PARAMETRE.T_STRING: return StringFromString(mot);
+                case TYPE_PARAMETRE.T_BYTE: return ByteFromString(mot);
                 default:
-                    return stringFromString(mot);
+                    return StringFromString(mot);
             }
         }
         /// <summary>
@@ -393,7 +393,7 @@ namespace ClockScreenSaverGL.Config
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        static private string typeToString(TYPE_PARAMETRE type)
+        static private string TypeToString(TYPE_PARAMETRE type)
         {
             switch (type)
             {
@@ -415,15 +415,8 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        private bool stringToModifiable(string modifiable)
-        {
-            if (modifiable.Equals("modifiable"))
-                return true;
 
-            return false;
-        }
-
-        private TYPE_PARAMETRE stringToType(string type)
+        private TYPE_PARAMETRE StringToType(string type)
         {
             if (type.Equals(TYPE_BOOL))
                 return TYPE_PARAMETRE.T_BOOL;

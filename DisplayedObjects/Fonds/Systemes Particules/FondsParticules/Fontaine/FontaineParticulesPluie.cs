@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie
 
         public FontaineParticulesPluie(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
 
             //AttributBlend = SystemeParticules.PARTICULES_BLEND_ADDITIVE;
             couleurParticules = COULEUR_PARTICULES.NOIR;
@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur(new EmetteurPluie(VITESSE_X, VITESSE_Y));
 
-            AjouteTexture(c.getParametre("Flares", Configuration.getImagePath(@"ete\flares.png")), 4);
+            AjouteTexture(c.GetParametre("Flares", Configuration.GetImagePath(@"ete\flares.png")), 4);
 
             AjouteModificateur(new ModificateurExclusion(MIN_X, MIN_Y, MAX_X, MAX_Y, ModificateurExclusion.Exclusions.EXCLURE_EN_DESSOUS));
             AjouteModificateur(new ModificateurLife());
@@ -40,15 +40,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie
             AjouteModificateur(new ModificateurTaille(MODIFICATEUR_TAILLE));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 2000);
-                NB_EMETTEURS = c.getParametre("NB Emetteurs", 16);
-                MODIFICATEUR_TAILLE = c.getParametre("Modifieur Taille", 0.01f);
-                MODIFICATEUR_ALPHA = c.getParametre("Modifieur Alpha", 0.2f);
+                c = Configuration.GetCategorie(CAT);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 2000);
+                NB_EMETTEURS = c.GetParametre("NB Emetteurs", 16);
+                MODIFICATEUR_TAILLE = c.GetParametre("Modifieur Taille", 0.01f);
+                MODIFICATEUR_ALPHA = c.GetParametre("Modifieur Alpha", 0.2f);
                 VITESSE_X = 0.1f;
                 VITESSE_Y = 0.7f;
                 GRAVITE_X = 0.1f;

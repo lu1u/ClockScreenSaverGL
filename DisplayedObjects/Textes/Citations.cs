@@ -45,29 +45,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private int _tailleFonte, _tailleFonteAuteur;
         public Citations(OpenGL gl, Form f, int Px, int Py) : base(gl)
         {
-            getConfiguration();
-            _alpha = c.getParametre("Alpha", (byte)160);
-            int hauteurFonte = c.getParametre("TailleFonte", 80);
+            GetConfiguration();
+            _alpha = c.GetParametre("Alpha", (byte)160);
+            int hauteurFonte = c.GetParametre("TailleFonte", 80);
             _fonte = CreerFonte(hauteurFonte);
-            _trajectoire = new TrajectoireDiagonale(Px, SystemInformation.VirtualScreen.Height - hauteurFonte * 2, -c.getParametre("VX", 15), 0);
+            _trajectoire = new TrajectoireDiagonale(Px, SystemInformation.VirtualScreen.Height - hauteurFonte * 2, -c.GetParametre("VX", 15), 0);
             LireCitations();
             MelangerCitations();
 
             _derniereCitation = new Random().Next(0, _citations.Count - 1);
             ChoisitCitation(f);
         }
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                RATIO_TAILLE_FONTE = c.getParametre("RatioTailleFonte", 0.4f);
-                DELAI_CHANGEMENT = 1000 * 60 * c.getParametre("DelaiChange", 1);    // x minutes entre les changements de citation
-                TailleMax = c.getParametre("TailleMax", 48);
-                ALPHA = c.getParametre("Alpha", (byte)250);
-                VX = c.getParametre("VX", -15);
-                VY = c.getParametre("VX", 0);
-                TAILLE_FONTE = c.getParametre("Taille Fonte", 30);
+                c = Configuration.GetCategorie(CAT);
+                RATIO_TAILLE_FONTE = c.GetParametre("RatioTailleFonte", 0.4f);
+                DELAI_CHANGEMENT = 1000 * 60 * c.GetParametre("DelaiChange", 1);    // x minutes entre les changements de citation
+                TailleMax = c.GetParametre("TailleMax", 48);
+                ALPHA = c.GetParametre("Alpha", (byte)250);
+                VX = c.GetParametre("VX", -15);
+                VY = c.GetParametre("VX", 0);
+                TAILLE_FONTE = c.GetParametre("Taille Fonte", 30);
             }
             return c;
         }
@@ -95,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private void LireCitations()
         {
             _citations = new List<string>();
-            string nomFichier = Path.Combine(Config.Configuration.getDataDirectory(), "citations.txt");
+            string nomFichier = Path.Combine(Config.Configuration.GetDataDirectory(), "citations.txt");
             try
             {
                 StreamReader file = new StreamReader(nomFichier, Encoding.UTF8);
@@ -127,7 +127,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             {
                 do
                 {
-                    DeuxiemeIndice = r.Next(0, _citations.Count);
+                    DeuxiemeIndice = random.Next(0, _citations.Count);
                 }
                 while (DeuxiemeIndice == i);
 

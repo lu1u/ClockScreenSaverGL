@@ -22,14 +22,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public ParticulesFusees(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur(new EmetteurFusee(TAILLE_PARTICULE, VITESSE_ANGLE, VITESSE_PARTICULE, VITESSE_FUSEE));
 
             AttributBlend = PARTICULES_BLEND_ADDITIVE;
             typeFond = TYPE_FOND.FOND_COULEUR;
             couleurParticules = COULEUR_PARTICULES.BLANC;
-            AjouteTexture(c.getParametre("Nuages petits", Config.Configuration.getImagePath("nuages_petits.png")), 3);
+            AjouteTexture(c.GetParametre("Nuages petits", Config.Configuration.GetImagePath("nuages_petits.png")), 3);
 
             AjouteModificateur(new ModificateurExclusion(MIN_X, MIN_Y, MAX_X, MAX_Y,
                 ModificateurExclusion.Exclusions.EXCLURE_AU_DESSUS | ModificateurExclusion.Exclusions.EXCLURE_A_DROITE | ModificateurExclusion.Exclusions.EXCLURE_A_GAUCHE));
@@ -40,21 +40,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurTaille(TAILLE_MODIFIEUR));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_EMETTEURS = c.getParametre("Nb Emetteurs", 5);
-                NB_MAX_PARTICULES = c.getParametre("Nb Particules", 1000);
-                GRAVITE_X = c.getParametre("Gravite X", 0.02f);
-                GRAVITE_Y = c.getParametre("Gravite Y", 0.02f);
-                ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.6f);
-                TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.05f);
-                TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.01f);
-                VITESSE_ANGLE = c.getParametre("VitesseAngle", 0.5f);
-                VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.2f);
-                VITESSE_FUSEE = c.getParametre("VitesseParticule", 0.5f);
+                c = Configuration.GetCategorie(CAT);
+                NB_EMETTEURS = c.GetParametre("Nb Emetteurs", 5);
+                NB_MAX_PARTICULES = c.GetParametre("Nb Particules", 1000);
+                GRAVITE_X = c.GetParametre("Gravite X", 0.02f);
+                GRAVITE_Y = c.GetParametre("Gravite Y", 0.02f);
+                ALPHA_MODIFIEUR = c.GetParametre("Modifieur Alpha", 0.6f);
+                TAILLE_MODIFIEUR = c.GetParametre("Modifieur Taille", 0.05f);
+                TAILLE_PARTICULE = c.GetParametre("TailleParticule", 0.01f);
+                VITESSE_ANGLE = c.GetParametre("VitesseAngle", 0.5f);
+                VITESSE_PARTICULE = c.GetParametre("VitesseParticule", 0.2f);
+                VITESSE_FUSEE = c.GetParametre("VitesseParticule", 0.5f);
 
             }
             return c;

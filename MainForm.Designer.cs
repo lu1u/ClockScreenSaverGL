@@ -39,8 +39,7 @@ namespace ClockScreenSaverGL
                 {
                     components.Dispose();
                 }
-                foreach (DisplayedObjects.DisplayedObject o in _listeObjets)
-                    o.Dispose();
+                
             }
             base.Dispose(disposing);
         }
@@ -72,16 +71,16 @@ namespace ClockScreenSaverGL
             this.openGLControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
             this.openGLControl.Size = new System.Drawing.Size(951, 652);
             this.openGLControl.TabIndex = 0;
-            this.openGLControl.OpenGLInitialized += new System.EventHandler(this.onOpenGLInitialized);
-            this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.onOpenGLDraw);
-            this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
+            this.openGLControl.OpenGLInitialized += new System.EventHandler(this.OnOpenGLInitialized);
+            this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.OnOpenGLDraw);
+            this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             // 
             // timerChangeFond
             // 
             this.timerChangeFond.Enabled = true;
             this.timerChangeFond.Interval = 180000;
-            this.timerChangeFond.Tick += new System.EventHandler(this.onTimerChangeBackground);
+            this.timerChangeFond.Tick += new System.EventHandler(this.OnTimerChangeBackground);
             // 
             // MainForm
             // 
@@ -97,9 +96,9 @@ namespace ClockScreenSaverGL
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ClockScreenSaverGL";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.onFormClosed);
-            this.Load += new System.EventHandler(this.onLoad);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnFormClosed);
+            this.Load += new System.EventHandler(this.OnLoad);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl)).EndInit();
             this.ResumeLayout(false);

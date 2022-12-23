@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Utils;
+using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
@@ -28,16 +29,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                 if (s._particules[i].active)
                 {
                     // Distance de la particule a l'attracteur
-                    float distX = s._particules[i].x - _traj._Px;
-                    float distY = s._particules[i].y - _traj._Py;
-                    double dist = Math.Sqrt((distX * distX) + (distY * distY));
+                    //float distX = s._particules[i].x - _traj._Px;
+                    //float distY = s._particules[i].y - _traj._Py;
+                    //double dist =Math.Sqrt((distX * distX) + (distY * distY));
 
                     // ================================================== Calcul de la distance
-                    float Distance = (float)Math.Sqrt((distX * distX) + (distY * distY));
+                    float Distance = MathUtils.Distance(s._particules[i].x, s._particules[i].y, _traj._Px, _traj._Py);//(float)Math.Sqrt((distX * distX) + (distY * distY));
                     float DistanceCube = Distance * Distance * Distance;
 
                     if (DistanceCube > SEUIL)
                     {
+                        float distX = s._particules[i].x - _traj._Px;
+                        float distY = s._particules[i].y - _traj._Py;
                         float DistanceCubeDivDelaiImage = DistanceCube / maintenant.intervalleDepuisDerniereFrame;
                         s._particules[i].vx -= dG * (distX / DistanceCubeDivDelaiImage);
                         s._particules[i].vy -= dG * (distY / DistanceCubeDivDelaiImage);

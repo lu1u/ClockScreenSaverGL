@@ -20,11 +20,11 @@ namespace ClockScreenSaverGL.DisplayedObjects
         private Bitmap _bitmap;
         private Interpolateur _interpolateur;
 
-        public CategorieConfiguration getConfiguration()
+        public CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
 
             }
             return c;
@@ -33,9 +33,9 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         private PanneauMessage()
         {
-            c = getConfiguration();
+            c = GetConfiguration();
         }
-        public static PanneauMessage instance
+        public static PanneauMessage Instance
         {
             get
             {
@@ -45,7 +45,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 return _instance;
             }
         }
-        public void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        public void AfficheOpenGL(OpenGL gl, Color couleur)
         {
             if (_texture != null)
             {
@@ -86,8 +86,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
             using (Graphics g = Graphics.FromImage(_bitmap))
             {
                 g.Clear(Color.Gray);
-                float x = (float)(_bitmap.Width - taille.Width) / 2.0f;
-                float y = (float)(_bitmap.Height - taille.Height) / 2.0f;
+                float x = (_bitmap.Width - taille.Width) / 2.0f;
+                float y = (_bitmap.Height - taille.Height) / 2.0f;
 
                 g.DrawString(message, fonte, Brushes.White, x, y);
             }

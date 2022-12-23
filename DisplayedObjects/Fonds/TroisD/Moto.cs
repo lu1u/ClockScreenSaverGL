@@ -73,29 +73,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private Vecteur3D vUp;
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_TRONCONS = c.getParametre("Nb troncons", 50);
-                LONGUEUR_TRONCON = c.getParametre("Longueur Troncon", 0.5f, (a) => { LONGUEUR_TRONCON = (float)Convert.ToDouble(a); });
-                LARGEUR_TRONCON = c.getParametre("Largeur Troncon", 0.25f, (a) => { LARGEUR_TRONCON = (float)Convert.ToDouble(a); });
-                ANGLE_TRONCON = c.getParametre("Angle Troncon", 0.5f, (a) => { ANGLE_TRONCON = (float)Convert.ToDouble(a); });
-                RATIO_FOG = c.getParametre("Ratio fog", 0.5f, (a) => { RATIO_FOG = (float)Convert.ToDouble(a); });
-                FOG_DENSITY = c.getParametre("Fog Density", 0.5f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-                ANGLE_VIRAGE = c.getParametre("Angle virage", 2.0f, (a) => { ANGLE_VIRAGE = (float)Convert.ToDouble(a); });
-                NB_PAS_MIN = c.getParametre("Pas virage min", 5, (a) => { NB_PAS_MIN = Convert.ToInt32(a); });
-                NB_PAS_MAX = c.getParametre("Pas virage max", 20, (a) => { NB_PAS_MAX = Convert.ToInt32(a); });
-                HORIZON_L = c.getParametre("Horizon Largeur", 20.0f, (a) => { HORIZON_L = (float)Convert.ToDouble(a); });
-                HORIZON_H = c.getParametre("Horizon Hauteur", 20.0f, (a) => { HORIZON_H = (float)Convert.ToDouble(a); });
-                COULEUR = c.getParametre("Couleur", 20.0f, (a) => { COULEUR = (float)Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse", 2.0f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
-                ALTITUDE = c.getParametre("Altitude", 0.25f, (a) => { ALTITUDE = (float)Convert.ToDouble(a); });
-                HAUTEUR_TALUS = c.getParametre("Hauteur Talus", 0.25f, (a) => { HAUTEUR_TALUS = (float)Convert.ToDouble(a); });
-                LARGEUR_TALUS = c.getParametre("Largeur Talus", 0.25f, (a) => { LARGEUR_TALUS = (float)Convert.ToDouble(a); });
-                MAX_PENTE = c.getParametre("Max pente", 1.0f, (a) => { MAX_PENTE = (float)Convert.ToDouble(a); });
-                VITESSE_PENTE = c.getParametre("Vitesse pente", 0.25f, (a) => { VITESSE_PENTE = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                NB_TRONCONS = c.GetParametre("Nb troncons", 50);
+                LONGUEUR_TRONCON = c.GetParametre("Longueur Troncon", 0.5f, (a) => { LONGUEUR_TRONCON = (float)Convert.ToDouble(a); });
+                LARGEUR_TRONCON = c.GetParametre("Largeur Troncon", 0.25f, (a) => { LARGEUR_TRONCON = (float)Convert.ToDouble(a); });
+                ANGLE_TRONCON = c.GetParametre("Angle Troncon", 0.5f, (a) => { ANGLE_TRONCON = (float)Convert.ToDouble(a); });
+                RATIO_FOG = c.GetParametre("Ratio fog", 0.5f, (a) => { RATIO_FOG = (float)Convert.ToDouble(a); });
+                FOG_DENSITY = c.GetParametre("Fog Density", 0.5f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                ANGLE_VIRAGE = c.GetParametre("Angle virage", 2.0f, (a) => { ANGLE_VIRAGE = (float)Convert.ToDouble(a); });
+                NB_PAS_MIN = c.GetParametre("Pas virage min", 5, (a) => { NB_PAS_MIN = Convert.ToInt32(a); });
+                NB_PAS_MAX = c.GetParametre("Pas virage max", 20, (a) => { NB_PAS_MAX = Convert.ToInt32(a); });
+                HORIZON_L = c.GetParametre("Horizon Largeur", 20.0f, (a) => { HORIZON_L = (float)Convert.ToDouble(a); });
+                HORIZON_H = c.GetParametre("Horizon Hauteur", 20.0f, (a) => { HORIZON_H = (float)Convert.ToDouble(a); });
+                COULEUR = c.GetParametre("Couleur", 20.0f, (a) => { COULEUR = (float)Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse", 2.0f, (a) => { VITESSE = (float)Convert.ToDouble(a); });
+                ALTITUDE = c.GetParametre("Altitude", 0.25f, (a) => { ALTITUDE = (float)Convert.ToDouble(a); });
+                HAUTEUR_TALUS = c.GetParametre("Hauteur Talus", 0.25f, (a) => { HAUTEUR_TALUS = (float)Convert.ToDouble(a); });
+                LARGEUR_TALUS = c.GetParametre("Largeur Talus", 0.25f, (a) => { LARGEUR_TALUS = (float)Convert.ToDouble(a); });
+                MAX_PENTE = c.GetParametre("Max pente", 1.0f, (a) => { MAX_PENTE = (float)Convert.ToDouble(a); });
+                VITESSE_PENTE = c.GetParametre("Vitesse pente", 0.25f, (a) => { VITESSE_PENTE = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -139,14 +139,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="gl"></param>
         public Moto(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            _texture = new TextureAsynchrone(gl, Configuration.getImagePath("texture_route.png"));
+            GetConfiguration();
+            _texture = new TextureAsynchrone(gl, Configuration.GetImagePath("texture_route.png"));
             _texture.Init();
-            _texturePaysage = new TextureAsynchrone(gl, c.getParametre("Texture Paysage", Configuration.getImagePath("paysage_route.png")));
+            _texturePaysage = new TextureAsynchrone(gl, c.GetParametre("Texture Paysage", Configuration.GetImagePath("paysage_route.png")));
             _texturePaysage.Init();
 
             _anglePasVirageEnCours = 0.1f * FloatRandom(-ANGLE_TRONCON, ANGLE_TRONCON);
-            _nombrePasVirageEnCours = r.Next(NB_PAS_MIN, NB_PAS_MAX);
+            _nombrePasVirageEnCours = random.Next(NB_PAS_MIN, NB_PAS_MAX);
             _troncons = new Troncon[NB_TRONCONS];
 
             for (int i = 0; i < NB_TRONCONS; i++)
@@ -184,7 +184,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 if (_nombrePasVirageEnCours <= 0)
                 {
                     _anglePasVirageEnCours = 0.1f * FloatRandom(-ANGLE_TRONCON, ANGLE_TRONCON);
-                    _nombrePasVirageEnCours = r.Next(NB_PAS_MIN, NB_PAS_MAX);
+                    _nombrePasVirageEnCours = random.Next(NB_PAS_MIN, NB_PAS_MAX);
                 }
 
                 float cosAngle = (float)Math.Cos(_troncons[i].angle);
@@ -217,7 +217,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _troncons[i].gauche.talus.z = _troncons[i].centre.z + (float)Math.Cos(_troncons[i].angle + ANGLE_DROIT) * LARGEUR_TALUS;
 
             // Decors
-            _troncons[i].gauche.decors.type = r.Next(2) > 0 ? 0 : r.Next(1, NB_TYPES);
+            _troncons[i].gauche.decors.type = random.Next(2) > 0 ? 0 : random.Next(1, NB_TYPES);
             _troncons[i].gauche.decors.taille = TAILLE_DECORS;
             if (i > 0)
             {
@@ -238,7 +238,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _troncons[i].droite.talus.z = _troncons[i].centre.z - (float)Math.Cos(_troncons[i].angle + ANGLE_DROIT) * LARGEUR_TALUS;
 
 
-            _troncons[i].droite.decors.type = r.Next(2) > 0 ? 0 : r.Next(1, NB_TYPES);
+            _troncons[i].droite.decors.type = random.Next(2) > 0 ? 0 : random.Next(1, NB_TYPES);
             _troncons[i].droite.decors.taille = TAILLE_DECORS;//* FloatRandom(0.9f, 1.1f);
 
             if (i > 0)
@@ -310,7 +310,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            _texture.texture.Bind(gl);
+            _texture.Texture.Bind(gl);
 
             for (int i = NB_TRONCONS - 1; i > 0; i--)
             {
@@ -449,7 +449,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            _texturePaysage.texture.Bind(gl);
+            _texturePaysage.Texture.Bind(gl);
             gl.Translate(_camera.x, _camera.y, _camera.z);
             gl.Begin(OpenGL.GL_QUADS);
 

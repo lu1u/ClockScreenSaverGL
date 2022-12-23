@@ -30,8 +30,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         public float X_TETE = 0.0f;
         public float Y_TETE = -0.3f;
 
-        private float X_PROGRAMME = -0.95f;
-        private float Y_PROGRAMME = 0.75f;
+        private readonly float X_PROGRAMME = -0.95f;
+        private readonly float Y_PROGRAMME = 0.75f;
         private readonly float LARGEUR_PROGRAMME = 0.6f;
 
         private string REPERTOIRE_TURING = "turing";
@@ -39,22 +39,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
         #endregion
 
-        private Texture _textureCircuit;
+        private readonly Texture _textureCircuit;
 
         private delegate bool AnimationDelegate();
 
         private AnimationDelegate _animation;
-        private Tete _tete;
-        private Ruban _ruban;
-        private Programme _programme;
-        public override CategorieConfiguration getConfiguration()
+        private readonly Tete _tete;
+        private readonly Ruban _ruban;
+        private readonly Programme _programme;
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                REPERTOIRE_TURING = c.getParametre(PARAM_REPERTOIRE, "turing");
-                FICHIER_EN_COURS = c.getParametre(PARAM_FICHIER_EN_COURS, 0);
-                DUREE_ANIMATION = c.getParametre("Duree animation", 2000, (a) => { DUREE_ANIMATION = Convert.ToInt32(a); });
+                c = Configuration.GetCategorie(CAT);
+                REPERTOIRE_TURING = c.GetParametre(PARAM_REPERTOIRE, "turing");
+                FICHIER_EN_COURS = c.GetParametre(PARAM_FICHIER_EN_COURS, 0);
+                DUREE_ANIMATION = c.GetParametre("Duree animation", 2000, (a) => { DUREE_ANIMATION = Convert.ToInt32(a); });
             }
             return c;
         }
@@ -66,7 +66,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
         /// <param name="gl"></param>
         protected override void Init(OpenGL gl)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
             InitOrdonnateur();
             _indiceRuban = ruban.Length / 2;
             _tete.Init(gl, c);
@@ -76,19 +76,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Turing
 
         public MachineDeTuring(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _tete = new Tete(gl);
             _tete.getConfiguration(c);
 
-            _ruban = new Ruban(gl);
-            _ruban.getConfiguration(c);
+            _ruban = new Ruban();
+            _ruban.GetConfiguration(c);
 
-            _programme = new Programme(gl);
-            _programme.getConfiguration(c);
+            _programme = new Programme();
+            _programme.GetConfiguration(c);
 
             _textureCircuit = new Texture();
-            _textureCircuit.Create(gl, c.getParametre("Circuit", Config.Configuration.getImagePath(REPERTOIRE_TURING + @"\circuit.png")));
-
+            _textureCircuit.Create(gl, c.GetParametre("Circuit", Configuration.GetImagePath(REPERTOIRE_TURING + @"\circuit.png")));
         }
 
 

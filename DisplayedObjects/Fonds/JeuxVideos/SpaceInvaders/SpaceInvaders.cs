@@ -13,9 +13,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #region Configuration
         private const string CAT = "SpaceInvaders";
         private CategorieConfiguration c;
-        private int DELAI_TIMER_JEUX, DELAI_TIMER_BASE, DELAI_TIMER_MISSILES_BASE, DELAI_EXPLOSION;
+        private int DELAI_TIMER_JEUX, DELAI_TIMER_BASE, DELAI_TIMER_MISSILES_BASE, DELAI_EXPLOSION, DELAI_TIMER_MISSILES;
         private float DECALAGE_ALIENS, DECALAGE_HAUT_ALIENS;
-
+        private int NB_MAX_MISSILES;
         #endregion
 
         private const float MIN_VIEWPORT_X = 0;
@@ -26,8 +26,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const float HAUTEUR_VIEWPORT = MAX_VIEWPORT_Y - MIN_VIEWPORT_Y;
         private const int NB_LIGNES_ALIENS = 5;
         private const int NB_COLONNES_ALIENS = 11;
-        private const float TAILLE_LIGNE = 0.45f * (HAUTEUR_VIEWPORT / NB_LIGNES_ALIENS);
-        private const float TAILLE_COLONNE = 0.7f * (LARGEUR_VIEWPORT / NB_COLONNES_ALIENS);
+        private const float TAILLE_LIGNE = 0.4f * (HAUTEUR_VIEWPORT / NB_LIGNES_ALIENS);
+        private const float TAILLE_COLONNE = 0.6f * (LARGEUR_VIEWPORT / NB_COLONNES_ALIENS);
 
         // Images dans la texture
         private const int IMAGE_ALIEN_1 = 0;
@@ -40,15 +40,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const int NB_IMAGES_LARGEUR = 7;
         private Sprite[,] _aliens;
         private Sprite _base;
-        private List<Missile> _missilesBase = new List<Missile>();
-        private List<Explosion> _explosions = new List<Explosion>();
+        private readonly List<Missile> _missilesBase = new List<Missile>();
+        private readonly List<Explosion> _explosions = new List<Explosion>();
         private float dxBase = 0;
         private int dernierAlienADroite;
         private int dernierAlienAGauche;
         private int dernierAlienEnBas;
         private int dernierAlienEnHaut;
-        private TimerIsole _timerJeu, _timerBase, _timerMissilesBase;
-        private TextureAsynchrone _textureAliens;
+        private TimerIsole _timerJeu, _timerBase, _timerMissilesBase, _timerMissile;
+        private readonly TextureAsynchrone _textureAliens;
         private int _phase;
         private enum SensDeplacement { DROITE, GAUCHE, BAS_PUIS_GAUCHE, BAS_PUIS_DROITE }
 
@@ -57,12 +57,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public SpaceInvaders(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
-            _textureAliens = new TextureAsynchrone(gl, Configuration.getImagePath("SpaceInvaders.png"));
+            c = GetConfiguration();
+            _textureAliens = new TextureAsynchrone(gl, Configuration.GetImagePath("SpaceInvaders.png"));
             _textureAliens.Init();
             _timerJeu = new TimerIsole(DELAI_TIMER_JEUX);
             _timerBase = new TimerIsole(DELAI_TIMER_BASE);
             _timerMissilesBase = new TimerIsole(DELAI_TIMER_MISSILES_BASE);
+            _timerMissile = new TimerIsole(DELAI_TIMER_MISSILES);
             InitJeu();
         }
 
@@ -75,7 +76,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             InitAliens(_aliens, IMAGE_ALIEN_2, 1, -0.2f);
             InitAliens(_aliens, IMAGE_ALIEN_2, 2, -0.2f);
             InitAliens(_aliens, IMAGE_ALIEN_3, 3, -0.2f);
-            InitAliens(_aliens, IMAGE_ALIEN_3, 4, -0.2f);
+            InitAliens(_aliens, IMAGE_ALIEN_3, 4, -0.1f);
 
             _nbAliens = NB_LIGNES_ALIENS * NB_COLONNES_ALIENS;
 
@@ -88,8 +89,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             _base = new Sprite(MIN_VIEWPORT_X + LARGEUR_VIEWPORT / 2.0f, MAX_VIEWPORT_X - TAILLE_LIGNE, IMAGE_BASE, 0.2f);
             dxBase = FloatRandom(0.05f, 0.1f) * SigneRandom();
+
+            _explosions.Clear();
+            _missilesBase.Clear();
         }
 
+        /// <summary>
+        /// Initialise une ligne d'aliens
+        /// </summary>
+        /// <param name="aliens">Tableau d'aliens</param>
+        /// <param name="image">Numero de l'image</param>
+        /// <param name="ligne"></param>
+        /// <param name="luminance">Ecart de luminance</param>
         private void InitAliens(Sprite[,] aliens, int image, int ligne, float luminance)
         {
             float y = ligne * TAILLE_LIGNE + DECALAGE_HAUT_ALIENS;
@@ -100,17 +111,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                DELAI_TIMER_JEUX = c.getParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
-                DELAI_TIMER_BASE = c.getParametre("Timer base", 200, a => { DELAI_TIMER_BASE = Convert.ToInt32(a); _timerBase = new TimerIsole(DELAI_TIMER_BASE); });
-                DELAI_TIMER_MISSILES_BASE = c.getParametre("Timer missiles base", 200, a => { DELAI_TIMER_MISSILES_BASE = Convert.ToInt32(a); _timerMissilesBase = new TimerIsole(DELAI_TIMER_MISSILES_BASE); });
-                DELAI_EXPLOSION = c.getParametre("Delai explosions", 500, a => DELAI_EXPLOSION = Convert.ToInt32(a));
-                DECALAGE_ALIENS = c.getParametre("Decalage aliens", 0.01f, a => DECALAGE_ALIENS = (float)Convert.ToDouble(a));
-                DECALAGE_HAUT_ALIENS = c.getParametre("Decalage haut aliens", 0.1f);
+                c = Configuration.GetCategorie(CAT);
+                DELAI_TIMER_JEUX = c.GetParametre("Timer jeux", 400, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
+                DELAI_TIMER_BASE = c.GetParametre("Timer base", 150, a => { DELAI_TIMER_BASE = Convert.ToInt32(a); _timerBase = new TimerIsole(DELAI_TIMER_BASE); });
+                DELAI_TIMER_MISSILES_BASE = c.GetParametre("Timer deplacement missiles", 50, a => { DELAI_TIMER_MISSILES_BASE = Convert.ToInt32(a); _timerMissilesBase = new TimerIsole(DELAI_TIMER_MISSILES_BASE); });
+                DELAI_TIMER_MISSILES = c.GetParametre("Timer lance missiles", 800, a => { DELAI_TIMER_MISSILES = Convert.ToInt32(a); _timerMissile = new TimerIsole(DELAI_TIMER_MISSILES); });
+                DELAI_EXPLOSION = c.GetParametre("Delai explosions", 600, a => DELAI_EXPLOSION = Convert.ToInt32(a));
+                NB_MAX_MISSILES = c.GetParametre("Nb max missiles", 2, a => NB_MAX_MISSILES =Convert.ToInt32(a));
+                DECALAGE_ALIENS = c.GetParametre("Decalage aliens", 0.01f, a => DECALAGE_ALIENS = (float)Convert.ToDouble(a));
+                DECALAGE_HAUT_ALIENS = c.GetParametre("Decalage haut aliens", 0.1f);
             }
 
             return c;
@@ -135,13 +148,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.Enable(OpenGL.GL_BLEND);
                     gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
-                    _textureAliens.texture.Bind(gl);
+                    _textureAliens.Texture.Bind(gl);
                     using (new GLBegin(gl, OpenGL.GL_QUADS))
                     {
-                        for (int l = dernierAlienEnHaut; l <= dernierAlienEnBas; l++)
-                            for (int c = dernierAlienAGauche; c <= dernierAlienADroite; c++)
+                        for (int ligne = dernierAlienEnHaut; ligne <= dernierAlienEnBas; ligne++)
+                            for (int colonne = dernierAlienAGauche; colonne <= dernierAlienADroite; colonne++)
                             {
-                                _aliens[c, l]?.Affiche(gl, NB_IMAGES_LARGEUR, 2, _phase, TAILLE_COLONNE, TAILLE_LIGNE, couleur);
+                                _aliens[colonne, ligne]?.Affiche(gl, NB_IMAGES_LARGEUR, 2, _phase, TAILLE_COLONNE, TAILLE_LIGNE, couleur);
                             }
 
 
@@ -154,6 +167,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     }
                 }
             }
+
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -171,6 +186,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             if (_timerBase.Ecoule())
                 AnimerBase();
+
+            if (_timerMissile.Ecoule())
+                LancerMissile();
         }
 
         private void AnimerExplosions()
@@ -193,7 +211,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 int ligneAlien, colonneAlien;
                 if (collisionMissileAlien(p, out colonneAlien, out ligneAlien))
                 {
-                    _explosions.Add(new Explosion(_aliens[colonneAlien, ligneAlien].x, _aliens[colonneAlien, ligneAlien].y, IMAGE_EXPLOSION, DELAI_EXPLOSION));
+                    _explosions.Add(new Explosion(_aliens[colonneAlien, ligneAlien].X, _aliens[colonneAlien, ligneAlien].Y, IMAGE_EXPLOSION, DELAI_EXPLOSION));
 
                     // Alien touché! Supprimer du tableau
                     SupprimeAlien(colonneAlien, ligneAlien);
@@ -202,9 +220,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     _missilesBase.RemoveAt(i);
                 }
                 else
-                if (p.y > MIN_VIEWPORT_Y)
+                if (p.Y > MIN_VIEWPORT_Y)
                 {
-                    p.y -= DECALAGE_ALIENS;
+                    p.Y -= DECALAGE_ALIENS;
                     i++;
                 }
                 else
@@ -248,8 +266,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <returns></returns>
         private bool LigneVide(int ligne)
         {
-            for (int c = 0; c < NB_COLONNES_ALIENS; c++)
-                if (_aliens[c, ligne] != null)
+            for (int colonne = 0; colonne < NB_COLONNES_ALIENS; colonne++)
+                if (_aliens[colonne, ligne] != null)
                     return false;
 
             return true;
@@ -274,12 +292,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <exception cref="NotImplementedException"></exception>
         private bool collisionMissileAlien(Sprite missile, out int colonneAlien, out int ligneAlien)
         {
-            RectangleF rMissile = new RectangleF(missile.x, missile.y, TAILLE_COLONNE, TAILLE_LIGNE);
+            RectangleF rMissile = new RectangleF(missile.X, missile.Y, TAILLE_COLONNE, TAILLE_LIGNE);
             for (int ligne = 0; ligne < NB_LIGNES_ALIENS; ligne++)
                 for (int colonne = 0; colonne < NB_COLONNES_ALIENS; colonne++)
                     if (_aliens[colonne, ligne] != null)
                     {
-                        RectangleF rAlien = new RectangleF(_aliens[colonne, ligne].x, _aliens[colonne, ligne].y, TAILLE_COLONNE, TAILLE_LIGNE);
+                        RectangleF rAlien = new RectangleF(_aliens[colonne, ligne].X, _aliens[colonne, ligne].Y, TAILLE_COLONNE, TAILLE_LIGNE);
 
                         if (rMissile.IntersectsWith(rAlien))
                         {
@@ -324,7 +342,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     break;
 
                 case SensDeplacement.GAUCHE:
-                    if (xGauche + DECALAGE_ALIENS > MIN_VIEWPORT_X)
+                    if (xGauche + DECALAGE_ALIENS + DECALAGE_ALIENS> MIN_VIEWPORT_X)
                     {
                         dx = -DECALAGE_ALIENS;
                         dy = 0;
@@ -364,26 +382,31 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
 
             // Maintenant qu'on a le sens de deplacement: decaler tous les aliens
-            for (int l = 0; l < NB_LIGNES_ALIENS; l++)
-                for (int c = 0; c < NB_COLONNES_ALIENS; c++)
-                    if (_aliens[c, l] != null)
+            for (int ligne = 0; ligne < NB_LIGNES_ALIENS; ligne++)
+                for (int colonne = 0; colonne < NB_COLONNES_ALIENS; colonne++)
+                    if (_aliens[colonne, ligne] != null)
                     {
-                        _aliens[c, l].x += dx;
-                        _aliens[c, l].y += dy;
+                        _aliens[colonne, ligne].X += dx;
+                        _aliens[colonne, ligne].Y += dy;
                     }
 
             foreach (Explosion e in _explosions)
             {
-                e.x += dx;
-                e.y += dy;
+                e.X += dx;
+                e.Y += dy;
             }
         }
 
+        /// <summary>
+        /// Retourne la coordonnee X d'un alien dans la collone donnee
+        /// </summary>
+        /// <param name="colonne"></param>
+        /// <returns></returns>
         private float GetX(int colonne)
         {
             for (int l = 0; l < NB_LIGNES_ALIENS; l++)
                 if (_aliens[colonne, l] != null)
-                    return _aliens[colonne, l].x;
+                    return _aliens[colonne, l].X;
 
             return 0;
         }
@@ -394,19 +417,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             if (Math.Abs(dxBase) > TAILLE_COLONNE)
                 dxBase = TAILLE_COLONNE * Signe(dxBase);
 
-            if (_base.x + dxBase < MIN_VIEWPORT_X)
+            if (_base.X + dxBase < MIN_VIEWPORT_X)
                 dxBase = SignePlus(dxBase);
             else
-                if (_base.x + dxBase + TAILLE_COLONNE > MAX_VIEWPORT_X)
+                if (_base.X + dxBase + TAILLE_COLONNE > MAX_VIEWPORT_X)
                 dxBase = SigneMoins(dxBase);
 
-            _base.x += dxBase;
+            _base.X += dxBase;
+        }
 
-            if (UneFrameSur(10))
-            {
+        private void LancerMissile()
+        {
+            if ( _missilesBase.Count< NB_MAX_MISSILES)
                 // Ajouter un missile
-                _missilesBase.Add(new Missile(_base.x, _base.y, IMAGE_MISSILE));
-            }
+                _missilesBase.Add(new Missile(_base.X, _base.Y, IMAGE_MISSILE));
         }
 
         private void Perdu()
@@ -419,18 +443,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             InitJeu();
         }
 
-        public override void fillConsole(OpenGL gl)
+        public override void FillConsole(OpenGL gl)
         {
-            base.fillConsole(gl);
-            Console c = Console.getInstance(gl);
-            c.AddLigne(Color.IndianRed, $"ViewPort X: {MIN_VIEWPORT_X} => {MAX_VIEWPORT_X}");
-            c.AddLigne(Color.IndianRed, $"ViewPort Y: {MIN_VIEWPORT_Y} => {MAX_VIEWPORT_Y}");
-
-            c.AddLigne(Color.IndianRed, $"Dernier a droite: {dernierAlienADroite}");
-            c.AddLigne(Color.IndianRed, $"Dernier a gauche: {dernierAlienAGauche}");
-            c.AddLigne(Color.IndianRed, $"Dernier en bas: {dernierAlienEnBas}");
-            c.AddLigne(Color.IndianRed, $"Dernier en haut: {dernierAlienEnHaut}");
-            c.AddLigne(Color.IndianRed, $"Nb Aliens: {_nbAliens}");
+            base.FillConsole(gl);
+            Console console = Console.GetInstance(gl);
+            console.AddLigne(Color.IndianRed, $"Dernier a droite: {dernierAlienADroite}");
+            console.AddLigne(Color.IndianRed, $"Dernier a gauche: {dernierAlienAGauche}");
+            console.AddLigne(Color.IndianRed, $"Dernier en bas: {dernierAlienEnBas}");
+            console.AddLigne(Color.IndianRed, $"Dernier en haut: {dernierAlienEnHaut}");
+            console.AddLigne(Color.IndianRed, $"Nb Aliens: {_nbAliens}");
         }
     }
 }

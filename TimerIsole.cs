@@ -8,7 +8,6 @@ namespace ClockScreenSaverGL
 {
     public class TimerIsole
     {
-        private double _intervalle;
         private DateTime _prochainTick;
         private bool _initial;
 
@@ -19,30 +18,19 @@ namespace ClockScreenSaverGL
         /// <param name="initial">true si le timer est initialement "écoulé"</param>
         public TimerIsole(double intervalle, bool initial = false)
         {
-            _intervalle = intervalle;
+            Intervalle = intervalle;
             _prochainTick = DateTime.Now.AddMilliseconds(intervalle);
             _initial = initial;
         }
 
-        public double Intervalle
-        {
-            get
-            {
-                return _intervalle;
-            }
-
-            set
-            {
-                _intervalle = value;
-            }
-        }
-
+        public double Intervalle { get; set; }
+        
         public bool Ecoule()
         {
             DateTime m = DateTime.Now;
             if (_initial || (m >= _prochainTick))
             {
-                _prochainTick = m.AddMilliseconds(_intervalle);
+                _prochainTick = m.AddMilliseconds(Intervalle);
                 _initial = false;
                 return true;
             }

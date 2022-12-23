@@ -55,16 +55,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public Tunnel(OpenGL gl)
             : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _tailleCubeX = VIEWPORT_X;
             _tailleCubeY = VIEWPORT_Y;
             _tailleCubeZ = VIEWPORT_Z;
             _zCamera = VIEWPORT_Y / 2;
-            TAILLE_ANNEAU = r.Next(TAILLE_ANNEAU_MIN, TAILLE_ANNEAU_MAX + 1);
-            if (r.Next(0, 3) > 0)
+            TAILLE_ANNEAU = random.Next(TAILLE_ANNEAU_MIN, TAILLE_ANNEAU_MAX + 1);
+            if (random.Next(0, 3) > 0)
                 BANDES_PLEINES = TAILLE_ANNEAU + 1;
             else
-                BANDES_PLEINES = r.Next(1, BANDES_PLEINES + 1);
+                BANDES_PLEINES = random.Next(1, BANDES_PLEINES + 1);
 
             _anneaux = new Anneau[NB_ANNEAUX, TAILLE_ANNEAU];
 
@@ -86,29 +86,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
                         _anneaux[i, j].pos.x = px;
                         _anneaux[i, j].pos.y = py;
-                        _anneaux[i, j].changeCouleur = FloatRandom(-1.0f, 1.0f);
+                        _anneaux[i, j].changeCouleur = FloatRandom(0, 0.5f);
                     }
             }
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE_ANNEAU_MIN = c.getParametre("NbFacettesMin", 4);
-                TAILLE_ANNEAU_MAX = c.getParametre("NbFacettesMax", 16);
-                NB_ANNEAUX = c.getParametre("Nombre", 200);
-                VITESSE_ANNEAU = c.getParametre("Vitesse", 2f);
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f);
-                BANDES_PLEINES = c.getParametre("CouleursPleines", 16 + 1);
-                RATIO_DEPLACEMENT = c.getParametre("DeplacementTunnel", 0.5f);
+                c = Configuration.GetCategorie(CAT);
+                TAILLE_ANNEAU_MIN = c.GetParametre("NbFacettesMin", 4);
+                TAILLE_ANNEAU_MAX = c.GetParametre("NbFacettesMax", 16);
+                NB_ANNEAUX = c.GetParametre("Nombre", 200);
+                VITESSE_ANNEAU = c.GetParametre("Vitesse", 2f);
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 10.0f);
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 0.2f);
+                BANDES_PLEINES = c.GetParametre("CouleursPleines", 16 + 1);
+                RATIO_DEPLACEMENT = c.GetParametre("DeplacementTunnel", 0.5f);
                 RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f;
-                PERIODE_DEP_X = c.getParametre("PeriodeDEcalageX", 5f);
-                PERIODE_DEP_Y = c.getParametre("PeriodeDEcalageY", 7f);
-                CHANGE_COULEUR = c.getParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
+                PERIODE_DEP_X = c.GetParametre("PeriodeDEcalageX", 5f);
+                PERIODE_DEP_Y = c.GetParametre("PeriodeDEcalageY", 7f);
+                CHANGE_COULEUR = c.GetParametre("Change couleur", 0.2f, a => { CHANGE_COULEUR = (float)Convert.ToDouble(a); });
             }
             return c;
         }
@@ -157,24 +157,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Disable(OpenGL.GL_CULL_FACE);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-            /*
-            // Lumiere
-            gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_LIGHT0);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, LIGHT_POS);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, SPECULAR_LIGHT);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, AMBIENT_LIGHT);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, DIFFUSE_LIGHT);
-            gl.ShadeModel(OpenGL.GL_FLAT);
-
-
-            gl.Enable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT, COL_AMBIENT);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_EMISSION, COL_EMISSION);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, COL_SPECULAR);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_DIFFUSE, COL_DIFFUSE);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, SHININESS);
-            */
+           
             setGlobalMaterial(gl, couleur);
             changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, _tailleCubeZ * 20);
 
@@ -191,7 +174,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
                     for (int j = 0; j < TAILLE_ANNEAU; j++)
                     {
-                        setColorWithHueChange(gl, cG, _anneaux[i, j].changeCouleur * CHANGE_COULEUR);
+                        SetColorWithLuminanceChange(gl, cG, _anneaux[i, j].changeCouleur * CHANGE_COULEUR);
                         if ((j + 1) % BANDES_PLEINES != 0)
                         {
                             int jPlusUn = j < (TAILLE_ANNEAU - 1) ? j + 1 : 0;

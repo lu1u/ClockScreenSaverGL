@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ClockScreenSaverGL.Config
 {
-    public class Configuration
+    public class Configuration : IDisposable
     {
         private const string REPERTOIRE_DONNEES = "Donnees";
         private const string REPERTOIRE_IMAGES = "Images";
@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL.Config
         private static Configuration _instance;
 
         // Dictionnaire des categories de configuration
-        private Dictionary<string, CategorieConfiguration> _categories;
+        private readonly Dictionary<string, CategorieConfiguration> _categories;
 
         public static Configuration Instance
         {
@@ -34,20 +34,19 @@ namespace ClockScreenSaverGL.Config
         /// </summary>
         /// <param name="nom"></param>
         /// <returns>L'objet CaterogieConfiguration demandé</returns>
-        public static CategorieConfiguration getCategorie(string nom)
+        public static CategorieConfiguration GetCategorie(string nom)
         {
             using (var c = new Chronometre("Configuration " + nom))
             {
                 Configuration conf = Instance;
-                CategorieConfiguration categorie;
-                conf._categories.TryGetValue(nom, out categorie);
+                conf._categories.TryGetValue(nom, out CategorieConfiguration categorie);
                 if (categorie != null)
                     return categorie;
 
                 // Est-ce qu'un fichier existe?
                 try
                 {
-                    string rep = getRepertoire();
+                    string rep = GetRepertoire();
                     string filePath = Path.Combine(rep, nom + CategorieConfiguration.EXTENSION_CONF);
                     if (File.Exists(filePath))
                     {
@@ -58,7 +57,7 @@ namespace ClockScreenSaverGL.Config
                 }
                 catch (Exception)
                 {
-
+                    // Fichier inexistant ou non lisible
                 }
                 // La categorie n'existe pas encore
                 categorie = new CategorieConfiguration(nom);
@@ -76,23 +75,23 @@ namespace ClockScreenSaverGL.Config
 
         ~Configuration()
         {
-            flush();
+            Flush();
         }
 
         /// <summary>
         /// Reecriture de tous les fichiers de configuration qui en ont besoin
         /// </summary>
-        public void flush()
+        public void Flush()
         {
             foreach (CategorieConfiguration cat in _categories.Values)
-                cat.flush();
+                cat.Flush();
         }
 
         /// <summary>
         /// Calcule un repertoire pour stocker les fichiers de conf en utilisant le nom du programme et sa version
         /// </summary>
         /// <returns></returns>
-        public static string getRepertoire()
+        public static string GetRepertoire()
         {
             string res = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(),
             NOM_PROGRAMME, //System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,	
@@ -109,9 +108,9 @@ namespace ClockScreenSaverGL.Config
         /// DIFFERENT du repertoire de la configuration
         /// </summary>
         /// <returns></returns>
-        public static string getDataDirectory() => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, REPERTOIRE_DONNEES);
-        public static string getDataDirectory(string sousrepertoire) => Path.Combine(getDataDirectory(), sousrepertoire);
-        public static string getImagesDirectory() => Path.Combine(getDataDirectory(), REPERTOIRE_IMAGES);
+        public static string GetDataDirectory() => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, REPERTOIRE_DONNEES);
+        public static string GetDataDirectory(string sousrepertoire) => Path.Combine(GetDataDirectory(), sousrepertoire);
+        public static string GetImagesDirectory() => Path.Combine(GetDataDirectory(), REPERTOIRE_IMAGES);
 
 
         /// <summary>
@@ -121,23 +120,23 @@ namespace ClockScreenSaverGL.Config
         /// <param name="nullIfNotExist">Si true: on obtient un nom de fichier null si le chemin n'existe pas,
         /// si false: on obtient le chemin d'une image par defaut</param>
         /// <returns></returns>
-        public static string getImagePath(string imgName, bool nullIfNotExist = false)
+        public static string GetImagePath(string imgName, bool nullIfNotExist = false)
         {
-            string res = Path.Combine(getImagesDirectory(), imgName);
+            string res = Path.Combine(GetImagesDirectory(), imgName);
             if (File.Exists(res))
                 return res;
 
-            Log.instance.warning("Image inexistante: " + imgName);
+            Log.Instance.Warning("Image inexistante: " + imgName);
 
             if (nullIfNotExist)
                 return null;
             else
-                return Path.Combine(getImagesDirectory(), IMAGE_DEFAUT);
+                return Path.Combine(GetImagesDirectory(), IMAGE_DEFAUT);
         }
 
         public void Dispose()
         {
-            flush();
+            Flush();
         }
     }
 }

@@ -35,9 +35,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="gl"></param>
         public TerreOpenGL(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             //_textureTerre.Create(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
-            _tA = new TextureAsynchrone(gl, c.getParametre("Terre", Config.Configuration.getImagePath("terre.png")));
+            _tA = new TextureAsynchrone(gl, c.GetParametre("Terre", Config.Configuration.GetImagePath("terre.png")));
             _tA.Init();
 
             _sphere.CreateInContext(gl);
@@ -55,17 +55,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_TRANCHES = c.getParametre("NbTranches", 64);
-                NB_MERIDIENS = c.getParametre("NbMeridiens", 64);
-                VITESSE = c.getParametre("Vitesse", 5f);
-                LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, (a) => { LONGITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Longitude du drapeau + correction en fonction de la texture
-                LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, (a) => { LATITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Latitude du drapeau
-                DETAILS_DRAPEAU = c.getParametre("Details drapeau", 10);
+                c = Configuration.GetCategorie(CAT);
+                NB_TRANCHES = c.GetParametre("NbTranches", 64);
+                NB_MERIDIENS = c.GetParametre("NbMeridiens", 64);
+                VITESSE = c.GetParametre("Vitesse", 5f);
+                LONGITUDE_DRAPEAU = 270 + c.GetParametre("Longitude", 5.97f, (a) => { LONGITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Longitude du drapeau + correction en fonction de la texture
+                LATITUDE_DRAPEAU = 0 + c.GetParametre("Latitude", 45.28f, (a) => { LATITUDE_DRAPEAU = (float)Convert.ToDouble(a); }); // Latitude du drapeau
+                DETAILS_DRAPEAU = c.GetParametre("Details drapeau", 10);
             }
             return c;
         }
@@ -113,7 +113,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             //gl.Color(col);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
-            _tA.texture.Bind(gl);
+            _tA.Texture.Bind(gl);
             _sphere.PushObjectSpace(gl);
             _sphere.Render(gl, SharpGL.SceneGraph.Core.RenderMode.Render);
             _sphere.PopObjectSpace(gl);

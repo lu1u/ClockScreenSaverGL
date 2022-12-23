@@ -9,7 +9,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     {
         private static Random r = new Random();
         private const int NB_TYPES_FEUILLES = 2;
-        private static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
+        private static int TYPE_FEUILLES = DisplayedObject.random.Next(0, 2);
         private static Bitmap _b;
         public Vecteur3D Position { get; set; }
         public float _taille;
@@ -30,8 +30,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
         public static void InitTexture()
         {
-            TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-            _b = (Bitmap)Bitmap.FromFile(Config.Configuration.getImagePath(TYPE_FEUILLES == 0 ? @"printemps\feuille1.png" : @"printemps\feuille2.png"));
+            TYPE_FEUILLES = DisplayedObject.random.Next(0, 2);
+            _b = (Bitmap)Bitmap.FromFile(Config.Configuration.GetImagePath(TYPE_FEUILLES == 0 ? @"printemps\feuille1.png" : @"printemps\feuille2.png"));
 
             _texture = null;
         }

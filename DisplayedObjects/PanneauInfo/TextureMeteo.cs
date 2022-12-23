@@ -45,7 +45,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                     // Lignes de previsions
                     for (int i = 0; i < nbLignes; i++)
                     {
-                        Y += meteoInfo._lignes[i].affiche(g, fonteTexteMeteo, fonteTexteMeteo, Y, TAILLE_ICONE_METEO);
+                        Y += meteoInfo._lignes[i].Affiche(g, fonteTexteMeteo, fonteTexteMeteo, Y, TAILLE_ICONE_METEO);
                     }
                 }
             }

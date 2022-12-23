@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Utils;
+using SharpGL;
 using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -12,7 +13,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         private float _x, _y, _cap, _vitesse, _dx, _dy;
         private float _dpx, _dpy;
         private float _pheromonesRestantes;
-        private float _distancePerception;
+        private readonly float _distancePerception;
         private int _noImage = 0;
 
         private enum MODE
@@ -41,8 +42,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             set => _y = value;
         }
 
-        public float dX => _dx;
-        public float dY => _dy;
+        public float DX => _dx;
+        public float DY => _dy;
 
         public float Cap
         {
@@ -79,7 +80,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             {
                 case MODE.RECHERCHE_NOURRITURE:
                     {
-                        if (trouveNourriture(monde, _dpx, _dpy))
+                        if (TrouveNourriture(monde, _dpx, _dpy))
                         {
                             // Passer en mode "Retour vers le nid"
                             _mode = MODE.RETOUR_NID;
@@ -88,22 +89,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                         }
                         else
                         // Sinon: si nourriture a proximite: se tourner vers la nourriture
-                        if (nourritureAProximite(monde, _dpx, _dpy))
+                        if (NourritureAProximite(monde, _dpx, _dpy))
                         {
-                            tourneVers(monde.X_NOURRITURE, monde.Y_NOURRITURE);
+                            TourneVers(monde.X_NOURRITURE, monde.Y_NOURRITURE);
                         }
                         else
                         {
                             // Chercher une pheromone de trace de retour de nourriture    
-                            float xMarqueur, yMarqueur;
 
                             // Chercher une piste vers la nourriture
-                            if (monde._grilleRapporteNourriture.chercheMarqueurMax(_x + _dx, _y + _dy, monde.DISTANCE_PERCEPTION, out xMarqueur, out yMarqueur))
+                            if (monde._grilleRapporteNourriture.chercheMarqueurMax(_x + _dx, _y + _dy, monde.DISTANCE_PERCEPTION, out float xMarqueur, out float yMarqueur))
                             {
-                                tourneVers(xMarqueur, yMarqueur);
+                                TourneVers(xMarqueur, yMarqueur);
                                 monde._grilleRapporteNourriture.Renforce(xMarqueur, yMarqueur, monde.VALEUR_RENFORCE);
                             }
-                            else if (nidTrouvé(monde, _dpx, _dpy))
+                            else if (NidTrouvé(monde, _dpx, _dpy))
                             {
                                 // Refait le plein de phéromones
                                 _pheromonesRestantes = PHEROMONES_MAX;
@@ -121,7 +121,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 
                 case MODE.RETOUR_NID:
                     {
-                        if (nidTrouvé(monde, _dpx, _dpy))
+                        if (NidTrouvé(monde, _dpx, _dpy))
                         {
                             // Passer en mode "Recherche nourriture"
                             _mode = MODE.RECHERCHE_NOURRITURE;
@@ -130,17 +130,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
                         }
                         else
                         // Sinon: si nourriture a proximite: se tourner vers la nourriture
-                        if (nidAProximite(monde, _dpx, _dpy))
+                        if (NidAProximite(monde, _dpx, _dpy))
                         {
-                            tourneVers(monde.X_NID, monde.Y_NID);
+                            TourneVers(monde.X_NID, monde.Y_NID);
                         }
                         else
                         {
-                            float xMarqueur, yMarqueur;
                             // Retrouver la pheromone de retour vers le nid la plus forte
-                            if (monde._pheromonesRechercheNourriture.chercheMarqueurMax(_x + _dx, _y + _dy, monde.DISTANCE_PERCEPTION, out xMarqueur, out yMarqueur))
+                            if (monde._pheromonesRechercheNourriture.chercheMarqueurMax(_x + _dx, _y + _dy, monde.DISTANCE_PERCEPTION, out float xMarqueur, out float yMarqueur))
                             {
-                                tourneVers(xMarqueur, yMarqueur);
+                                TourneVers(xMarqueur, yMarqueur);
                                 monde._pheromonesRechercheNourriture.Renforce(xMarqueur, yMarqueur, monde.VALEUR_RENFORCE);
                             }
                         }
@@ -195,8 +194,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             _dy = (float)Math.Sin(_cap) * _vitesse;
 
             // Avancer
-            _x += intervalleDepuisDerniereFrame * dX;
-            _y += intervalleDepuisDerniereFrame * dY;
+            _x += intervalleDepuisDerniereFrame * DX;
+            _y += intervalleDepuisDerniereFrame * DY;
         }
 
         /// <summary>
@@ -217,18 +216,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             _cap += cumulVirage;
         }
 
-        static private bool nourritureAProximite(Monde monde, float x, float y)
+        static private bool NourritureAProximite(Monde monde, float x, float y)
         {
-            float dx = (x - monde.X_NOURRITURE);
-            float dy = (y - monde.Y_NOURRITURE);
-            return monde.DISTANCE_PERCEPTION * 1.5f > Math.Sqrt(dx * dx + dy * dy);
+            return monde.DISTANCE_PERCEPTION * 1.5f > MathUtils.Distance(x,y, monde.X_NOURRITURE, monde.Y_NOURRITURE);
         }
 
-        static private bool nidAProximite(Monde monde, float x, float y)
+        static private bool NidAProximite(Monde monde, float x, float y)
         {
-            float dx = (x - monde.X_NID);
-            float dy = (y - monde.Y_NID);
-            return monde.DISTANCE_PERCEPTION * 1.5f > Math.Sqrt(dx * dx + dy * dy);
+            return monde.DISTANCE_PERCEPTION * 1.5f > MathUtils.Distance(x, y, monde.X_NID, monde.Y_NID);
         }
 
         /// <summary>
@@ -237,7 +232,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// <param name="xMarqueur"></param>
         /// <param name="yMarqueur"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void tourneVers(float xMarqueur, float yMarqueur)
+        private void TourneVers(float xMarqueur, float yMarqueur)
         {
             float dx = xMarqueur - _x;
             float dy = yMarqueur - _y;
@@ -253,12 +248,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// </summary>
         /// <param name="monde"></param>
         /// <returns></returns>
-        static private bool trouveNourriture(Monde monde, float x, float y)
+        static private bool TrouveNourriture(Monde monde, float x, float y)
         {
-            float dx = x - monde.X_NOURRITURE;
-            float dy = y - monde.Y_NOURRITURE;
-
-            return Math.Sqrt((dx * dx) + (dy * dy)) - Math.Sqrt(monde.TAILLE_NOURRITURE * monde.TAILLE_NOURRITURE) < monde.TAILLE_NOURRITURE;
+            return MathUtils.Distance(x,y, monde.X_NOURRITURE, monde.Y_NOURRITURE) < monde.TAILLE_NOURRITURE;
         }
 
         /// <summary>
@@ -266,12 +258,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// </summary>
         /// <param name="monde"></param>
         /// <returns></returns>
-        static private bool nidTrouvé(Monde monde, float x, float y)
+        static private bool NidTrouvé(Monde monde, float x, float y)
         {
-            float dx = x - monde.X_NID;
-            float dy = y - monde.Y_NID;
-
-            return Math.Sqrt((dx * dx) + (dy * dy)) - Math.Sqrt(monde.TAILLE_NID * monde.TAILLE_NID) < monde.TAILLE_NID;
+             return MathUtils.Distance(x, y, monde.X_NID, monde.Y_NID) < monde.TAILLE_NID;
         }
 
         /// <summary>
@@ -296,8 +285,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
             Color couleurFourmi;
             switch (_mode)
             {
-                case MODE.RETOUR_NID: couleurFourmi = couleur.getColorWithHueChange(0.25f); break;
-                default: couleurFourmi = couleur.getColorWithHueChange(-0.25f); break;
+                case MODE.RETOUR_NID: couleurFourmi = couleur.GetColorWithHueChange(0.25f); break;
+                default: couleurFourmi = couleur.GetColorWithHueChange(-0.25f); break;
             }
             gl.Color(couleurFourmi.R, couleurFourmi.G, couleurFourmi.B);
 

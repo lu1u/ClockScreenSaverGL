@@ -19,20 +19,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private SizeF _Taille;
         public TexteCopyright(OpenGL gl, int Px, int Py) : base(gl)
         {
-            getConfiguration();
-            _alpha = c.getParametre("Alpha", (byte)160);
-            _fonte = CreerFonte(c.getParametre("TailleFonte", 80));
-            _trajectoire = new TrajectoireDiagonale(Px, Py, c.getParametre("VX", 4), c.getParametre("VY", 4));
+            GetConfiguration();
+            _alpha = c.GetParametre("Alpha", (byte)160);
+            _fonte = CreerFonte(c.GetParametre("TailleFonte", 80));
+            _trajectoire = new TrajectoireDiagonale(Px, Py, c.GetParametre("VX", 4), c.GetParametre("VY", 4));
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 _Taille = g.MeasureString(_texte, _fonte);
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }

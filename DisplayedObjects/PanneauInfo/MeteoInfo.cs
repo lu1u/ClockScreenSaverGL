@@ -10,7 +10,7 @@ using System.IO;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    internal class MeteoInfo : IDisposable
+    internal class MeteoInfo 
     {
         private const string CAT = "meteo";
         protected CategorieConfiguration c;
@@ -23,11 +23,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         public string _url;
         #endregion MEMBRES_PUBLICS
 
-        private static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
         public MeteoInfo()
         {
-            getConfiguration();
+            GetConfiguration();
 
             _title = "Crolles";
 
@@ -35,15 +35,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             ChargeDonnees();
         }
 
-        private CategorieConfiguration getConfiguration()
+        private void GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                CHEMIN_FICHIER = c.getParametre("chemin fichier", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), "clockscreensaver meteo.txt"));
-                NB_LIGNES_INFO_MAX = c.getParametre("nb lignes info", 5);
+                c = Configuration.GetCategorie(CAT);
+                CHEMIN_FICHIER = c.GetParametre("chemin fichier", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), "clockscreensaver meteo.txt"));
+                NB_LIGNES_INFO_MAX = c.GetParametre("nb lignes info", 5);
             }
-            return c;
         }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private void LitCorrespondancesMeteo()
         {
             _liensIcones.Clear();
-            string fichierSources = Path.Combine(Configuration.getDataDirectory(), "icones meteo.txt");
+            string fichierSources = Path.Combine(Configuration.GetDataDirectory(), "icones meteo.txt");
             StreamReader file = new StreamReader(fichierSources);
             string line;
             while ((line = file.ReadLine()) != null)
@@ -76,21 +75,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// </summary>
         /// <param name="imageSurLeSite"></param>
         /// <returns></returns>
-        public static string getIcone(string imageSurLeSite)
+        public static string GetIcone(string imageSurLeSite)
         {
-            string valeur;
-            if (_liensIcones.TryGetValue(imageSurLeSite, out valeur))
+            if (_liensIcones.TryGetValue(imageSurLeSite, out string valeur))
                 return valeur;
 
             return imageSurLeSite;
         }
 
-        public void Dispose()
-        {
-            if (_lignes != null)
-                foreach (LignePrevisionMeteo l in _lignes)
-                    l.Dispose();
-        }
 
         /// <summary>
         /// Lecture des previsions meteo en multithreading
@@ -108,22 +100,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                 foreach (string ligne in lignes)
                 {
                     if (ligne.StartsWith("URL"))
-                        _url = deuxiemePartie(ligne);
+                        _url = DeuxiemePartie(ligne);
                     else
                         if (ligne.StartsWith("TITRE"))
-                        _title = deuxiemePartie(ligne);
+                        _title = DeuxiemePartie(ligne);
                     else
                         if (ligne.StartsWith("JOUR"))
                     {
                         if (_lignes.Count < NB_LIGNES_INFO_MAX)
-                            _lignes.Add(CreateLigne(deuxiemePartie(ligne)));
+                            _lignes.Add(CreateLigne(DeuxiemePartie(ligne)));
                     }
                 }
             }
             catch (Exception e)
             {
-                Log.instance.error("Meteo Info: impossible de charger les données");
-                Log.instance.error(e.Message);
+                Log.Instance.Error("Meteo Info: impossible de charger les données");
+                Log.Instance.Error(e.Message);
             }
         }
 
@@ -141,25 +133,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             foreach (string token in tokens)
             {
                 if (token.StartsWith("DATE"))
-                    date = deuxiemePartie(token);
+                    date = DeuxiemePartie(token);
                 else
                     if (token.StartsWith("PREVISION"))
-                    texte = deuxiemePartie(token);
+                    texte = DeuxiemePartie(token);
                 else
                     if (token.StartsWith("PIC"))
-                    icone = getIcone(deuxiemePartie(token));
+                    icone = GetIcone(DeuxiemePartie(token));
                 else
                     if (token.StartsWith("TEMPMIN"))
-                    tempmin = deuxiemePartie(token);
+                    tempmin = DeuxiemePartie(token);
                 else
                     if (token.StartsWith("TEMPMAX"))
-                    tempmax = deuxiemePartie(token);
+                    tempmax = DeuxiemePartie(token);
             }
 
             return new LignePrevisionMeteo(icone, date, $"Min:{tempmin}, max:{tempmax}", texte, vent, pluie);
         }
 
-        private string deuxiemePartie(string ligne)
+        private string DeuxiemePartie(string ligne)
         {
             int index = ligne.IndexOf('=');
             if (index == -1)

@@ -19,8 +19,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public GravitationParticules(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            AjouteTexture(c.getParametre("Particule", Configuration.getImagePath("particuleTexture.png")), 1);
+            GetConfiguration();
+            AjouteTexture(c.GetParametre("Particule", Configuration.GetImagePath("particuleTexture.png")), 1);
 
             AjouteEmetteur(new EmetteurGravitation(G, MULT_DIST, TIMER_CREATE));
 
@@ -30,16 +30,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurRecentre(VITESSE_RECENTRE));
             AjouteModificateur(new ModificateurExclusion(MIN_X * 1.5f, MIN_Y * 1.5f, MAX_X * 1.5f, MAX_Y * 1.5f, ModificateurExclusion.Exclusions.EXCLURE_TOUT));
         }
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                NB_MAX_PARTICULES = c.getParametre("Nb particules", 200);
-                TIMER_CREATE = c.getParametre("Delai creation particule", 200);
-                G = c.getParametre("G", 0.01f);
-                MULT_DIST = c.getParametre("Mult dist", 10.0f);
-                VITESSE_RECENTRE = c.getParametre("Vitesse recentre", 0.2f);
+                c = Configuration.GetCategorie(CAT);
+                NB_MAX_PARTICULES = c.GetParametre("Nb particules", 200);
+                TIMER_CREATE = c.GetParametre("Delai creation particule", 200);
+                G = c.GetParametre("G", 0.01f);
+                MULT_DIST = c.GetParametre("Mult dist", 10.0f);
+                VITESSE_RECENTRE = c.GetParametre("Vitesse recentre", 0.2f);
             }
             return c;
         }

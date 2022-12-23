@@ -1,5 +1,6 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -31,22 +32,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float[] _amplitude;
         private float[] _changementPhase;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                AFFICHER_AXES = c.getParametre("Afficher axes", true, a => { AFFICHER_AXES = Convert.ToBoolean(a); });
-                FONDU_AU_NOIR = c.getParametre("Fondu au noir", true, a => { FONDU_AU_NOIR = Convert.ToBoolean(a); });
-                NB_SEGMENTS = c.getParametre("Nb Segments", 400, a => { NB_SEGMENTS = Convert.ToInt32(a); });
-                NB_COURBES = c.getParametre("Nb Courbes", 5);
-                ALPHA_COURBE = c.getParametre("Alpha Courbe", (byte)64, a => { ALPHA_COURBE = Convert.ToByte(a); });
-                ALPHA_TOTAL = c.getParametre("Alpha Total", (byte)255, a => { ALPHA_COURBE = Convert.ToByte(a); });
-                TAILLE_TOTALE = c.getParametre("Taille totale", 1.0f);
-                PHASE_MIN = c.getParametre("Phase min", 0.2f);
-                PHASE_MAX = c.getParametre("Phase max", 1.0f);
-                FREQUENCE_MIN = c.getParametre("Fréquence min", 6f);
-                FREQUENCE_MAX = c.getParametre("Fréquence max", 24f);
+                c = Configuration.GetCategorie(CAT);
+                AFFICHER_AXES = c.GetParametre("Afficher axes", true, a => { AFFICHER_AXES = Convert.ToBoolean(a); });
+                FONDU_AU_NOIR = c.GetParametre("Fondu au noir", true, a => { FONDU_AU_NOIR = Convert.ToBoolean(a); });
+                NB_SEGMENTS = c.GetParametre("Nb Segments", 400, a => { NB_SEGMENTS = Convert.ToInt32(a); });
+                NB_COURBES = c.GetParametre("Nb Courbes", 5);
+                ALPHA_COURBE = c.GetParametre("Alpha Courbe", (byte)64, a => { ALPHA_COURBE = Convert.ToByte(a); });
+                ALPHA_TOTAL = c.GetParametre("Alpha Total", (byte)255, a => { ALPHA_COURBE = Convert.ToByte(a); });
+                TAILLE_TOTALE = c.GetParametre("Taille totale", 1.0f);
+                PHASE_MIN = c.GetParametre("Phase min", 0.2f);
+                PHASE_MAX = c.GetParametre("Phase max", 1.0f);
+                FREQUENCE_MIN = c.GetParametre("Fréquence min", 6f);
+                FREQUENCE_MAX = c.GetParametre("Fréquence max", 24f);
             }
             return c;
         }
@@ -57,7 +58,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="gl"></param>
         protected override void Init(OpenGL gl)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
             _frequence = new float[NB_COURBES];
             _phase = new float[NB_COURBES];
             _amplitude = new float[NB_COURBES];
@@ -81,7 +82,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Sinusoides(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
@@ -89,7 +90,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 1 };
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -102,7 +102,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             using (new Viewport2D(gl, -1.0f, -1.0f, 1.0f, 1.0f))
             {
                 if (AFFICHER_AXES)
-                    dessineAxes(gl, couleur);
+                    DessineAxes(gl, couleur);
 
                 // Difference de couleur entre les courbes
                 float hueChange = 1.0f / NB_COURBES;
@@ -110,17 +110,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 // Dessiner les courbes
                 for (int i = 0; i < NB_COURBES; i++)
                 {
-                    getCourbe(valeurs, _frequence[i], _phase[i], _amplitude[i]);
+                    GetCourbe(valeurs, _frequence[i], _phase[i], _amplitude[i]);
 
                     // Ajouter les valeurs au total
                     for (int j = 0; j < NB_SEGMENTS; j++)
                         sommes[j] += valeurs[j];
 
-                    Color couleurCourbe = cG.getColorWithHueChange(i * hueChange);
-                    dessineCourbe(gl, valeurs, couleurCourbe, ALPHA_COURBE);
+                    Color couleurCourbe = cG.GetColorWithHueChange(i * hueChange);
+                    DessineCourbe(gl, valeurs, couleurCourbe, ALPHA_COURBE);
                 }
 
-                dessineCourbe(gl, sommes, couleur, ALPHA_TOTAL);
+                DessineCourbe(gl, sommes, couleur, ALPHA_TOTAL);
             }
 
 #if TRACER
@@ -129,10 +129,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
 
         // Dessine les axes horizontaux
-        private void dessineAxes(OpenGL gl, Color couleur)
+        private void DessineAxes(OpenGL gl, Color couleur)
         {
             // Dessiner l'axe X
-            Color alpha = getCouleurAvecAlpha(couleur, ALPHA_TOTAL);
+            Color alpha = OpenGLColor.GetCouleurAvecAlpha(couleur, ALPHA_TOTAL);
             gl.Begin(OpenGL.GL_LINES);
             for (float y = -TAILLE_TOTALE; y <= TAILLE_TOTALE; y += TAILLE_TOTALE * 0.25f)
             {
@@ -142,12 +142,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.End();
         }
 
-        private void dessineCourbe(OpenGL gl, float[] valeurs, Color couleur, byte alpha)
+        private void DessineCourbe(OpenGL gl, float[] valeurs, Color couleur, byte alpha)
         {
             gl.Begin(OpenGL.GL_QUAD_STRIP);
             for (int i = 0; i < valeurs.Length; i++)
             {
-                float x = getX(i);
+                float x = GetX(i);
                 if (FONDU_AU_NOIR)
                     gl.Color(0, 0, 0, 0);
                 else
@@ -164,12 +164,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] private float getX(int i) => -1.01f + (2.02f / NB_SEGMENTS) * i;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] private float GetX(int i) => -1.01f + (2.02f / NB_SEGMENTS) * i;
 
-        private void getCourbe(float[] valeurs, float longueurOnde, float phase, float amplitude)
+        private void GetCourbe(float[] valeurs, float longueurOnde, float phase, float amplitude)
         {
             for (int i = 0; i < NB_SEGMENTS; i++)
-                valeurs[i] = (float)Math.Sin((getX(i) * longueurOnde) + phase) * amplitude;
+                valeurs[i] = (float)Math.Sin((GetX(i) * longueurOnde) + phase) * amplitude;
         }
 
         public override bool ClearBackGround(OpenGL gl, Color c)

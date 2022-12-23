@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private float _angle = 0;
         public ADN(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             float y = MAX_Y;
             float angle = 0;
             for (int i = 0; i < NB_ETAGES; i++)
@@ -72,17 +72,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
 
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, (a) => { RAYON_SPHERE = (float)Convert.ToDouble(a); });
-                LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, (a) => { LONGUEUR_RAYON = (float)Convert.ToDouble(a); });
-                NB_ETAGES = c.getParametre("Nb Etages", 20);
-                MIN_Y = c.getParametre("MinY", -18.0f, (a) => { MIN_Y = (float)Convert.ToDouble(a); });
-                MAX_Y = c.getParametre("Max", 18.0f, (a) => { MAX_Y = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                RAYON_SPHERE = c.GetParametre("Rayon Sphere", 1.5f, (a) => { RAYON_SPHERE = (float)Convert.ToDouble(a); });
+                LONGUEUR_RAYON = c.GetParametre("Longueur Rayon", 10.0f, (a) => { LONGUEUR_RAYON = (float)Convert.ToDouble(a); });
+                NB_ETAGES = c.GetParametre("Nb Etages", 20);
+                MIN_Y = c.GetParametre("MinY", -18.0f, (a) => { MIN_Y = (float)Convert.ToDouble(a); });
+                MAX_Y = c.GetParametre("Max", 18.0f, (a) => { MAX_Y = (float)Convert.ToDouble(a); });
             }
             return c;
         }

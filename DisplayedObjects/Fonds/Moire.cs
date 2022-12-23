@@ -1,4 +1,5 @@
 ﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -8,7 +9,7 @@ using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-    internal class Moire : Fond, IDisposable
+    internal class Moire : Fond
     {
         #region Parametres
         public const string CAT = "Moire";
@@ -29,23 +30,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         private Couche[] _couches;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                LARGEUR_BITMAP = 400;//.getParametre("Largeur Bitmap", 2000);
-                HAUTEUR_BITMAP = 400;//c.getParametre("Hauteur Bitmap", 2000);
-                ECART_MOIRE = c.getParametre("Ecart Moire", 10);
-                LARGEUR_MOIRE = c.getParametre("Largeur Moire", 5);
-                NB_COUCHES = 4;// c.getParametre("Nb Couches", 2);
+                c = Configuration.GetCategorie(CAT);
+                LARGEUR_BITMAP = 3000;//.GetParametre("Largeur Bitmap", 2000);
+                HAUTEUR_BITMAP = 3000;//c.GetParametre("Hauteur Bitmap", 2000);
+                ECART_MOIRE = c.GetParametre("Ecart Moire", 10);
+                LARGEUR_MOIRE = c.GetParametre("Largeur Moire", 5);
+                NB_COUCHES = c.GetParametre("Nb Couches", 2);
             }
             return c;
         }
 
         public Moire(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             InitGrille(gl);
             InitCouches();
         }
@@ -56,10 +57,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             for (int i = 0; i < NB_COUCHES; i++)
             {
                 _couches[i] = new Couche();
-                _couches[i].x = FloatRandom(0.4f, 0.6f);
-                _couches[i].y = FloatRandom(0.4f, 0.6f);
+                _couches[i].x = FloatRandom(-0.1f,0.1f);
+                _couches[i].y = FloatRandom(-0.1f,0.1f);
                 _couches[i].angle = FloatRandom(0, 360);
-                _couches[i].vitesse = FloatRandom(-5, 5);
+                _couches[i].vitesse = FloatRandom(1, 5)*SigneRandom();
             }
         }
 
@@ -78,7 +79,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
                 // Dessine le moire
-                using (Pen p = new Pen(Color.White, LARGEUR_MOIRE))
+                using (Pen p = new Pen(Color.Black, LARGEUR_MOIRE))
                     for (int x = 0; x < LARGEUR_BITMAP; x += ECART_MOIRE)
                     {
                         //g.FillRectangle(Brushes.Yellow, x, 0, LARGEUR_MOIRE, HAUTEUR_BITMAP);
@@ -117,24 +118,39 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
-            gl.Translate(LARGEUR_BITMAP / 2, HAUTEUR_BITMAP / 2, 0);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
-
-            foreach (Couche c in _couches)
+            using (new Viewport2D(gl, 0, 0, 1, 1))
             {
-                gl.Translate(c.x, c.y, 0);
-                gl.Rotate(0, 0, c.angle);
-                gl.Begin(OpenGL.GL_QUADS);
-                gl.TexCoord(0.0f, 0.0f); gl.Vertex(-LARGEUR_BITMAP, +HAUTEUR_BITMAP);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(+LARGEUR_BITMAP, +HAUTEUR_BITMAP);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(+LARGEUR_BITMAP, -HAUTEUR_BITMAP);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(-LARGEUR_BITMAP, -HAUTEUR_BITMAP);
-                gl.End();
-                gl.Rotate(0, 0, -c.angle);
-                gl.Translate(-c.x, -c.y, 0);
+                gl.Translate(0.5f, 0.5f,0);
+                _textureMoire.Bind(gl);
+                gl.PushAttrib(SharpGL.Enumerations.AttributeMask.All);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
+                //
+                foreach (Couche c in _couches)
+                {
+                    gl.Translate(c.x, c.y, 0);
+                    gl.Rotate(0, 0, c.angle);
+                    gl.Begin(OpenGL.GL_QUADS);
+                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(-1.4f, +1.4f);
+                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(+1.4f, +1.4f);
+                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(+1.4f, -1.4f);
+                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(-1.4f, -1.4f);
+                    gl.End();
+                    gl.Rotate(0, 0, -c.angle);
+                    gl.Translate(-c.x, -c.y, 0);
+                }
+
+                gl.PopAttrib();
             }
+        }
+
+        public override bool ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(c.R / 512.0f, c.G / 512.0f, c.B / 512.0f, 1.0f);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
+            return true;
         }
     }
 }

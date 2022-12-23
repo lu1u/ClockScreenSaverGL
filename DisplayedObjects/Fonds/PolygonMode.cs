@@ -5,9 +5,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     internal class PolygonMode : IDisposable
     {
-        private int[] _polyMode = new int[1];
-        private float[] _lineWidth = new float[1];
-        private OpenGL _gl;
+        private readonly int[] _polyMode = new int[1];
+        private readonly float[] _lineWidth = new float[1];
+        private readonly OpenGL _gl;
 
         public PolygonMode(OpenGL gl, uint polyMode, float lineWidth)
         {

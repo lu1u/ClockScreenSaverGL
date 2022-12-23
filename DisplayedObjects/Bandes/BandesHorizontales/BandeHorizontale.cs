@@ -20,33 +20,31 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
     {
         public const string CAT = "BandeHorizontale";
         protected CategorieConfiguration c;
-        private OpenGLFonte _glFonte;
+        private readonly OpenGLFonte _glFonte;
 
         protected BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur)
             : base(gl, valMax, intervalle, largeurcase, origineX, largeur)
 
         {
-            getConfiguration();
+            GetConfiguration();
             _glFonte = new OpenGLFonte(gl, "0123456789", _hauteurFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre("VY", 20f));
+            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.GetParametre("VY", 20f));
             _taillebande = new SizeF(largeur, _hauteurFonte * 2);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                _hauteurFonte = c.getParametre("TailleFonte", 30);
+                c = Configuration.GetCategorie(CAT);
+                _hauteurFonte = c.GetParametre("TailleFonte", 30);
             }
             return c;
         }
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
-            float decalage, valeur;
-            getValue(maintenant, out valeur, out decalage);
-
+            GetValue(maintenant, out float valeur, out float decalage);
 
             float Decalage = _origine - (decalage * _largeurCase);
             float X = Decalage;
@@ -67,13 +65,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
             while (val < 0)
                 val += _valeurMax;
 
-            string texte;
             // Tracer les graduations
             while (X < (tailleEcran.Width))
             {
                 if (val % _intervalleTexte == 0)
                 {
-                    texte = val.ToString();
                     _glFonte.drawOpenGL(gl, val.ToString(), X, Y, couleur);
                     gl.Begin(OpenGL.GL_LINES);
                     gl.Vertex(X, Y);
@@ -89,7 +85,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
                 }
 
                 X += _largeurCase;
-                val = (val + 1);
+                val++;
 
                 while (val > _valeurMax)
                     val -= _valeurMax;

@@ -12,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
 {
     public class GLBegin : IDisposable
     {
-        private OpenGL _gl;
+        private readonly OpenGL _gl;
         /// <summary>
         /// Constructeur
         /// Parametres: coordonnees "logiques" des coins du viewport

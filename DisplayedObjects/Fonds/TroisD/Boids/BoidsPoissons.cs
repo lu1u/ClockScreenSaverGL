@@ -1,4 +1,5 @@
 ﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -20,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         public BoidsPoissons(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             HAUTEUR_CORPS = 0.5f * TAILLE;
             LONGUEUR_TETE = 0.75f * TAILLE;
             LONGUEUR_CORPS = 1.25f * TAILLE;
@@ -35,27 +36,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         public override bool ClearBackGround(OpenGL gl, Color couleur)
         {
-            couleur = getCouleurOpaqueAvecAlpha(couleur, 32);
+            couleur = OpenGLColor.GetCouleurOpaqueAvecAlpha(couleur, 32);
             gl.ClearColor(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             return true;
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
 
-                NB = c.getParametre("Nb", 400);
-                FOG_DENSITY = c.getParametre("Fog density", 0.015f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-                MAX_SPEED = c.getParametre("Max Speed", 0.95f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
-                MAX_FORCE = c.getParametre("Max force", 0.011f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
-                TAILLE = c.getParametre("Taille", 0.17f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
-                DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
-                SEPARATION = c.getParametre("Separation", 3.7f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
-                VITESSE_ANIMATION = c.getParametre("Vitesse animation", 0.9f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
+                NB = c.GetParametre("Nb", 400);
+                FOG_DENSITY = c.GetParametre("Fog density", 0.015f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                MAX_SPEED = c.GetParametre("Max Speed", 0.95f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); });
+                MAX_FORCE = c.GetParametre("Max force", 0.011f, (a) => { MAX_FORCE = (float)Convert.ToDouble(a); });
+                TAILLE = c.GetParametre("Taille", 0.17f, (a) => { TAILLE = (float)Convert.ToDouble(a); });
+                DISTANCE_VOISINS = c.GetParametre("Distance voisins", 25.0f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); });
+                SEPARATION = c.GetParametre("Separation", 3.7f, (a) => { SEPARATION = (float)Convert.ToDouble(a); });
+                VITESSE_ANIMATION = c.GetParametre("Vitesse animation", 0.9f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); });
             }
             return c;
         }

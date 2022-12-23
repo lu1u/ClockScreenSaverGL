@@ -27,7 +27,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         protected override void InitAsynchrone()
         {
             _ephemeride = new Ephemeride(LATITUDE, LONGITUDE, TIMEZONE, HEURE_ETE);
-            _bitmap = _ephemeride.getBitmap(TAILLE_TEXTE_EPHEMERIDE);
+            _bitmap = _ephemeride.GetBitmap(TAILLE_TEXTE_EPHEMERIDE);
             _bitmap = DisplayedObject.BitmapInvert(_bitmap);
         }
     }

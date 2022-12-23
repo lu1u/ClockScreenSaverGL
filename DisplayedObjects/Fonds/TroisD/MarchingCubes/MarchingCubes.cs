@@ -27,7 +27,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
         private int nbVertex;
         public MarchingCubes(OpenGL gl) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
             _cubes = new float[TAILLE_X, TAILLE_Y, TAILLE_Z];
 
             PerlinNoise p = new PerlinNoise(TAILLE_X);
@@ -53,21 +53,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.MarchingCubes
             changement = false;
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                SEUIL = c.getParametre("Seuil", 0.5f, (a) => { SEUIL = (float)Convert.ToDouble(a); changement = true; });
-                TAILLE_X = c.getParametre("Taille X", 40);
-                TAILLE_Y = c.getParametre("Taille Y", 40);
-                TAILLE_Z = c.getParametre("Taille Z", 40);
-                OCTAVES = c.getParametre("Octeves", 4);
-                FOG_DENSITY = c.getParametre("Fog Density", 0.5f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
-                LINE_WIDTH = c.getParametre("Largeur Lignes", 1.0f, (a) => { LINE_WIDTH = (float)Convert.ToDouble(a); });
-                VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
-                FOG_END = c.getParametre("Fog End", 0.5f, (a) => { FOG_END = (float)Convert.ToDouble(a); });
-                EPAISSEUR_LIGNES = c.getParametre("Epaisseur lignes", 1.5f, (a) => { EPAISSEUR_LIGNES = (float)Convert.ToDouble(a); });
+                c = Configuration.GetCategorie(CAT);
+                SEUIL = c.GetParametre("Seuil", 0.5f, (a) => { SEUIL = (float)Convert.ToDouble(a); changement = true; });
+                TAILLE_X = c.GetParametre("Taille X", 40);
+                TAILLE_Y = c.GetParametre("Taille Y", 40);
+                TAILLE_Z = c.GetParametre("Taille Z", 40);
+                OCTAVES = c.GetParametre("Octeves", 4);
+                FOG_DENSITY = c.GetParametre("Fog Density", 0.5f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); });
+                LINE_WIDTH = c.GetParametre("Largeur Lignes", 1.0f, (a) => { LINE_WIDTH = (float)Convert.ToDouble(a); });
+                VITESSE_ROTATION = c.GetParametre("Vitesse Rotation", 0.5f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); });
+                FOG_END = c.GetParametre("Fog End", 0.5f, (a) => { FOG_END = (float)Convert.ToDouble(a); });
+                EPAISSEUR_LIGNES = c.GetParametre("Epaisseur lignes", 1.5f, (a) => { EPAISSEUR_LIGNES = (float)Convert.ToDouble(a); });
             }
             return c;
         }

@@ -41,11 +41,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// </summary>
         public Metaballes(OpenGL gl) : base(gl)
         {
-            getConfiguration();
-            CategorieConfiguration c = getConfiguration();
-            RATIO_COULEURS = c.getParametre("RatioCouleur", 0.3f);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
-            COULEUR_INVERSES = c.getParametre(COULEURS_INVERSE, false);
-            NEGATIF_COULEURS = c.getParametre(NEGATIF, false);
+            GetConfiguration();
+            CategorieConfiguration c = GetConfiguration();
+            RATIO_COULEURS = c.GetParametre("RatioCouleur", 0.3f);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
+            COULEUR_INVERSES = c.GetParametre(COULEURS_INVERSE, false);
+            NEGATIF_COULEURS = c.GetParametre(NEGATIF, false);
 
 
             GetPreferences(ref Largeur, ref Hauteur, ref NbMetaballes, ref NiveauxCouleurs);
@@ -57,14 +57,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             ConstruitMetaballes();
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                RATIO_COULEURS = c.getParametre("Ratio couleurs", 0.3f, (a) => { RATIO_COULEURS = (float)Convert.ToDouble(a); });
-                COULEUR_INVERSES = c.getParametre(COULEURS_INVERSE, false, (a) => { COULEUR_INVERSES = Convert.ToBoolean(a); });
-                NEGATIF_COULEURS = c.getParametre(NEGATIF, false, (a) => { NEGATIF_COULEURS = Convert.ToBoolean(a); });
+                c = Configuration.GetCategorie(CAT);
+                RATIO_COULEURS = c.GetParametre("Ratio couleurs", 0.3f, (a) => { RATIO_COULEURS = (float)Convert.ToDouble(a); });
+                COULEUR_INVERSES = c.GetParametre(COULEURS_INVERSE, false, (a) => { COULEUR_INVERSES = Convert.ToBoolean(a); });
+                NEGATIF_COULEURS = c.GetParametre(NEGATIF, false, (a) => { NEGATIF_COULEURS = Convert.ToBoolean(a); });
             }
             return c;
         }
@@ -77,21 +77,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// <param name="C"></param>
         protected virtual void GetPreferences(ref int L, ref int H, ref int N, ref int C)
         {
-            CategorieConfiguration c = getConfiguration();
-            L = c.getParametre("Largeur", 400);
-            H = c.getParametre("Hauteur", 300);
-            N = c.getParametre("Nombre", 8);
-            C = c.getParametre("NiveauxCouleur", 255);
+            CategorieConfiguration c = GetConfiguration();
+            L = c.GetParametre("Largeur", 400);
+            H = c.GetParametre("Hauteur", 300);
+            N = c.GetParametre("Nombre", 8);
+            C = c.GetParametre("NiveauxCouleur", 255);
         }
 
         protected virtual void ConstruitMetaballes()
         {
-            CategorieConfiguration c = getConfiguration();
+            CategorieConfiguration c = GetConfiguration();
 
-            float TailleMax = c.getParametre("TailleMax", 200);
-            float TailleMin = c.getParametre("TailleMin", 70);
-            float IntensiteMax = c.getParametre("IntensiteMax", 0.8f);
-            float IntensiteMin = c.getParametre("IntensiteMin", 0.2f);
+            float TailleMax = c.GetParametre("TailleMax", 200);
+            float TailleMin = c.GetParametre("TailleMin", 70);
+            float IntensiteMax = c.GetParametre("IntensiteMax", 0.8f);
+            float IntensiteMin = c.GetParametre("IntensiteMin", 0.2f);
 
             for (int i = 0; i < NbMetaballes; i++)
                 _metaballes[i] = new MetaBalle(FloatRandom(IntensiteMin, IntensiteMax), // Intensite

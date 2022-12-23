@@ -25,12 +25,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
         #region Fonds
         public enum FONDS
         {
-            ESPACE, TROISDPIPES, COURONNES, GRILLE, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, SNAKE, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE,
+            ESPACE, TROISDPIPES, COURONNES, GRILLE, PARTICULES_GRAVITATION, METABALLES, ASTEROID,
+            BOIDS_OISEAUX, SNAKE, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE,
             CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE, LIFE, TERRE, TETRIS,
             BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, SPACE_INVADERS,
             VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, PONG,
             BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES,
-            MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, /*MOIRE,*//*DONJON, */ ADN, LIFE_SIM, FOURMIS, SINUSOIDE
+            MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, MOIRE,/*DONJON, */ ADN, LIFE_SIM, FOURMIS, SINUSOIDE
         };
 
         public const FONDS PREMIER_FOND = FONDS.ESPACE;
@@ -42,14 +43,14 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// Retourne la saison, (calcul tres approximatif)
         /// </summary>
         /// <returns></returns>
-        private static SAISON getSaison()
+        private static SAISON GetSaison()
         {
-            CategorieConfiguration c = Configuration.getCategorie(CAT);
-            int PRINTEMPS = c.getParametre("Printemps", 80);
-            int ETE = c.getParametre("Ete", 172);
-            int AUTOMNE = c.getParametre("Automne", 265);
-            int HIVER = c.getParametre("Hiver", 356);
-            int forceSaison = c.getParametre("Force saison", -1);
+            CategorieConfiguration c = Configuration.GetCategorie(CAT);
+            int PRINTEMPS = c.GetParametre("Printemps", 80);
+            int ETE = c.GetParametre("Ete", 172);
+            int AUTOMNE = c.GetParametre("Automne", 265);
+            int HIVER = c.GetParametre("Hiver", 356);
+            int forceSaison = c.GetParametre("Force saison", -1);
 
             if (forceSaison != -1)
                 // Forcage de la saison
@@ -76,13 +77,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
             return SAISON.HIVER;
         }
-        public static Fond getObjetFond(OpenGL gl, FONDS Type, bool initial, bool fondDeSaison)
+        public static Fond GetObjetFond(OpenGL gl, FONDS Type, bool initial, bool fondDeSaison)
         {
             if (fondDeSaison && initial)
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
                 // Note: il n'apparaissent plus dans le cycle de changement du fond
-                switch (getSaison())
+                switch (GetSaison())
                 {
                     case SAISON.HIVER:
                         return new Hiver(gl);
@@ -95,8 +96,28 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 }
             }
 
-            Type = FONDS.SPACE_INVADERS;
+            //Type = FONDS.MOIRE;
+            return CreerFond(gl, Type);
+        }
 
+        public static Fond CreerFondAleatoire(OpenGL gl, Random r)
+        {
+            FONDS Type;
+            do
+            {
+                Type = (FONDS)r.Next((int)DERNIER_FOND);
+            }
+            while ((Type == FONDS.MULTICHAINES)
+            || (Type == FONDS.COULEUR)
+            || (Type == FONDS.VIELLES_TELES)
+            || (Type == FONDS.MARCHING_CUBES)
+            || (Type == FONDS.NOIR) ); // CreerFondAleatoire est utilisé pour le fond ChainesMultiples, on risquerait une recursion infinie!, les autres ne fonctionnent pas 
+
+            return CreerFond(gl, Type );
+        }
+
+        private static Fond CreerFond(OpenGL gl, FONDS Type)
+        {
             switch (Type)
             {
                 case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -139,7 +160,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 case FONDS.EPICYCLE2: return new Epicycle2(gl);
                 case FONDS.DOUBLE_PENDULE: return new PenduleDouble(gl);
                 case FONDS.TROISDPIPES: return new TroisDPipes(gl);
-                //case FONDS.MOIRE: return new Moire(gl);
+                case FONDS.MOIRE: return new Moire(gl);
                 case FONDS.TURING: return new MachineDeTuring(gl);
                 case FONDS.SINUSOIDE: return new Sinusoides(gl);
                 //case FONDS.DONJON: return new Donjon(gl);
@@ -150,34 +171,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 case FONDS.PONG: return new Pong(gl);
                 case FONDS.SNAKE: return new Snake(gl);
                 case FONDS.SPACE_INVADERS: return new SpaceInvaders(gl);
-                default:
-                    return new Metaballes.Metaballes(gl);
-            }
-
-        }
-
-        public static DisplayedObject InitObjet(OpenGL gl, Random r)
-        {
-            switch (r.Next(18))
-            {
-                case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 2: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case 3: return new Life(gl);
-                case 4: return new Couronnes(gl);
-                case 5: return new Nuages2(gl);
-                case 6: return new Tunnel(gl);
-                case 7: return new CarresEspace(gl);
-                case 8: return new GravitationParticules(gl);
-                case 9: return new TerreOpenGL(gl);
-                case 10: return new ParticulesGalaxie(gl);
-                case 11: return new ParticulesFusees(gl);
-                case 12: return new FeuDArtifice(gl);
-                case 13: return new AttracteurParticules(gl);
-                case 14: return new Engrenages(gl);
-                case 15: return new ADN(gl);
-                case 16: return new Cubes(gl);
-                case 17: return new Moto(gl);
+                case FONDS.ASTEROID: return new Asteroids(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

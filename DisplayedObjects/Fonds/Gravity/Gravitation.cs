@@ -30,16 +30,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public int DELAI_CHANGE_CAMERA;
         public static float ANGLE_VISION = 70;
         private TimerIsole _changeCamera;
+        private readonly Texture _textureTop;
+        private readonly Texture _textureBottom;
+        private readonly Texture _textureLeft;
+        private readonly Texture _textureRight;
+        private readonly Texture _textureFront;
+        private readonly Texture _textureBack;
 
-        private Texture _textureTop, _textureBottom, _textureLeft, _textureRight, _textureFront, _textureBack;
-        private readonly float[] COL_AMBIENT = { 0.5f, 0.5f, 0.5f, 1.0f };//{ 0.1f, 0.1f, 0.1f, 1.0f };
-        private readonly float[] COL_DIFFUSE = { 1.0f, 1.0f, 1.0f, 1.0f };
-        private readonly float[] COL_SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };// { 0.8f, 0.8f, 0.8f, 1.0f };
         private readonly float[] COL_LIGHTPOS = { -2, 1.5f, -2.5f, 1 };
         private bool DESSINE_CROIX = false;
-        private static readonly float[] SPECULAR_LIGHT = { 0.5f, 0.5f, 0.5f, 1.0f };
-        private static readonly float[] AMBIENT_LIGHT = { 1.0f, 1.0f, 1.0f, 1.0f };
-        private static readonly float[] DIFFUSE_LIGHT = { 1.0f, 1.0f, 1.0f, 1.0f };
 
         public static List<Planete> Corps;
         private static readonly List<Primitive3D> _primitives = new List<Primitive3D>();
@@ -48,20 +47,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         private int nbAsteroides;
         public Gravitation(OpenGL gl) : base(gl, 0, 0, 0, 0)
         {
-            getConfiguration();
+            GetConfiguration();
             _changeCamera = new TimerIsole(DELAI_CHANGE_CAMERA);
             _textureTop = new Texture();
-            _textureTop.Create(gl, c.getParametre("Universe top", Config.Configuration.getImagePath("universe_top.png")));
+            _textureTop.Create(gl, c.GetParametre("Universe top", Config.Configuration.GetImagePath("universe_top.png")));
             _textureBottom = new Texture();
-            _textureBottom.Create(gl, c.getParametre("Universe bottom", Config.Configuration.getImagePath("universe_bottom.png")));
+            _textureBottom.Create(gl, c.GetParametre("Universe bottom", Config.Configuration.GetImagePath("universe_bottom.png")));
             _textureLeft = new Texture();
-            _textureLeft.Create(gl, c.getParametre("Universe left", Config.Configuration.getImagePath("universe_left.png")));
+            _textureLeft.Create(gl, c.GetParametre("Universe left", Config.Configuration.GetImagePath("universe_left.png")));
             _textureRight = new Texture();
-            _textureRight.Create(gl, c.getParametre("Universe right", Config.Configuration.getImagePath("universe_right.png")));
+            _textureRight.Create(gl, c.GetParametre("Universe right", Config.Configuration.GetImagePath("universe_right.png")));
             _textureFront = new Texture();
-            _textureFront.Create(gl, c.getParametre("Universe front", Config.Configuration.getImagePath("universe_front.png")));
+            _textureFront.Create(gl, c.GetParametre("Universe front", Config.Configuration.GetImagePath("universe_front.png")));
             _textureBack = new Texture();
-            _textureBack.Create(gl, c.getParametre("Universe back", Config.Configuration.getImagePath("universe_back.png")));
+            _textureBack.Create(gl, c.GetParametre("Universe back", Config.Configuration.GetImagePath("universe_back.png")));
 
             #region AjouteCorps
             Planete.InitPlanetes(gl);
@@ -147,12 +146,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraCible = Corps[corpsSuivi]._position;
 
             ChangePlaneteCible();
-            int to = r.Next(Corps.Count);
+            int to = random.Next(Corps.Count);
 
             int from;
             do
             {
-                from = r.Next(Corps.Count);
+                from = random.Next(Corps.Count);
             }
             while (from == corpsSuivi);
 
@@ -161,25 +160,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraTo = new Vecteur3Ddbl(Corps[to]._position);
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
                 RAYON_UNIVERS = 10;// c.getParametre("Rayon Univers", 8);
-                RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, (a) => { RATIO_RAYON = Convert.ToDouble(a); });
-                RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, (a) => { RATIO_DISTANCES = Convert.ToDouble(a); });
-                VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, (a) => { VITESSE_SUIVI_TO = Convert.ToDouble(a); });
-                VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, (a) => { VITESSE_SUIVI_FROM = Convert.ToDouble(a); });
-                DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, (a) => { DISTANCE_MIN_CAMERA = Convert.ToDouble(a); });
-                VITESSE = c.getParametre("Vitesse", 0.001, (a) => { VITESSE = Convert.ToDouble(a); });
-                DETAILS = c.getParametre("Details", 5, (a) => { DETAILS = Convert.ToInt32(a); });
-                DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, (a) => { DETAILS_ASTEROIDS = Convert.ToInt32(a); });
-                NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, (a) => { NIVEAU_DETAIL = Convert.ToInt32(a); });
-                NB_ROCHEUSES = c.getParametre("Nb Rocheuses", 4);
-                NB_ASTEROIDES = c.getParametre("Nb Asteroides", 300);
-                NB_GAZEUSES = c.getParametre("Nb Gazeuses", 4);
-                DELAI_CHANGE_CAMERA = c.getParametre("Delai Change Camera", 40000);
+                RATIO_RAYON = c.GetParametre("Ratio rayon planetes", 0.0005, (a) => { RATIO_RAYON = Convert.ToDouble(a); });
+                RATIO_DISTANCES = c.GetParametre("Ratio distance planetes", 0.5, (a) => { RATIO_DISTANCES = Convert.ToDouble(a); });
+                VITESSE_SUIVI_TO = c.GetParametre("Vitesse ciblage", 0.4, (a) => { VITESSE_SUIVI_TO = Convert.ToDouble(a); });
+                VITESSE_SUIVI_FROM = c.GetParametre("Vitesse camera", 0.005, (a) => { VITESSE_SUIVI_FROM = Convert.ToDouble(a); });
+                DISTANCE_MIN_CAMERA = c.GetParametre("Distance min camera", 0.01, (a) => { DISTANCE_MIN_CAMERA = Convert.ToDouble(a); });
+                VITESSE = c.GetParametre("Vitesse", 0.001, (a) => { VITESSE = Convert.ToDouble(a); });
+                DETAILS = c.GetParametre("Details", 5, (a) => { DETAILS = Convert.ToInt32(a); });
+                DETAILS_ASTEROIDS = c.GetParametre("Details asteroides", 30, (a) => { DETAILS_ASTEROIDS = Convert.ToInt32(a); });
+                NIVEAU_DETAIL = c.GetParametre("Niveau detail", 800, (a) => { NIVEAU_DETAIL = Convert.ToInt32(a); });
+                NB_ROCHEUSES = c.GetParametre("Nb Rocheuses", 4);
+                NB_ASTEROIDES = c.GetParametre("Nb Asteroides", 300);
+                NB_GAZEUSES = c.GetParametre("Nb Gazeuses", 4);
+                DELAI_CHANGE_CAMERA = c.GetParametre("Delai Change Camera", 40000);
             }
             return c;
         }
@@ -235,7 +234,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 double rayonOrbite = FloatRandom(4.5f, 5.5f) * RATIO_DISTANCES;
                 float posOrbite = FloatRandom((float)(Math.PI * -2.0), (float)(Math.PI * 2.0));
                 double vOrbite = CalculeVitesseOrbitale(Corps[0]._attraction, rayonOrbite);
-                Corps.Add(new Asteroide(gl, FloatRandom(10, 30) * SigneRandom(), FloatRandom(-30, 30), r.Next(Planete.ASTEROIDE_MIN, Planete.ASTEROIDE_MAX), (float)rayonOrbite, posOrbite, (float)vOrbite, FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), 0));
+                Corps.Add(new Asteroide(gl, FloatRandom(10, 30) * SigneRandom(), FloatRandom(-30, 30), random.Next(Planete.ASTEROIDE_MIN, Planete.ASTEROIDE_MAX), (float)rayonOrbite, posOrbite, (float)vOrbite, FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), 0));
                 nbAsteroides++;
             }
             gl.ClearColor(0, 0, 0, 1);
@@ -282,7 +281,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
             DessineUnivers(gl);
             if (DESSINE_CROIX)
-                SignaleCible(gl, _primitives);
+                SignaleCible(gl);
 
             _primitives.Sort(delegate (Primitive3D p1, Primitive3D p2)
             {
@@ -312,7 +311,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 if (pr.ALPHABLEND)
                     pr.dessine(gl);
 
-            Console c = Console.getInstance(gl);
+            Console c = Console.GetInstance(gl);
             c.AddLigne(Color.Green, "Gravitation");
             c.AddLigne(Color.Green, "Nombre de corps " + Corps.Count + ", nb asteroides " + nbAsteroides);
             c.AddLigne(Color.Green, "Niveau détail" + NIVEAU_DETAIL);
@@ -337,7 +336,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         }
 
 
-        private void SignaleCible(OpenGL gl, List<Primitive3D> primitives)
+        private void SignaleCible(OpenGL gl)
         {
             DessineCroix(gl, cameraCible, Planete.modeles[Corps[corpsSuivi]._type].tailleMax() * 2.0f, Color.Green);
 
@@ -450,7 +449,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             if (maintenant.intervalleDepuisDerniereFrame < (1.0f / 40.0))
             {
                 NIVEAU_DETAIL++;
-                c.setParametre("Niveau detail", NIVEAU_DETAIL);
+                c.SetParametre("Niveau detail", NIVEAU_DETAIL);
                 construitAffiche();
             }
             else
@@ -458,7 +457,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 if (NIVEAU_DETAIL > 10)
                 {
                     NIVEAU_DETAIL--;
-                    c.setParametre("Niveau detail", NIVEAU_DETAIL);
+                    c.SetParametre("Niveau detail", NIVEAU_DETAIL);
                     construitAffiche();
                 }
         }
@@ -473,12 +472,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             if (Probabilite(0.5f))
             {
                 // on admet la possibilite de suivre un asteroide
-                corpsSuivi = r.Next(Corps.Count);
+                corpsSuivi = random.Next(Corps.Count);
             }
             else
                 do
                 {
-                    corpsSuivi = r.Next(Corps.Count);
+                    corpsSuivi = random.Next(Corps.Count);
                 }
                 while (IsAsteroide(Corps[corpsSuivi]._type));
 
@@ -622,41 +621,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             }
             gl.PopAttrib();
         }
-
-        private static void GetViewport(OpenGL gl, out float Largeur, out float Hauteur)
-        {
-            int[] Params = new int[4];
-            gl.GetInteger(OpenGL.GL_VIEWPORT, Params);
-
-            Largeur = Params[2];
-            Hauteur = Params[3];
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////
-        // Obtient la position 2D a l'ecran d'un point en 3D, avec en plus la position
-        // Z buffer
-        // ENTREES:	Position 3D
-        // SORTIES:	X et Y a l'ecran, Z dans le Z-Buffer
-        ///////////////////////////////////////////////////////////////////////////////
-        private static void GetPositionEcran(OpenGL gl, Vecteur3Ddbl Pos, out float X, out float Y, out float Z)
-        {
-            double[] modelMatrix = new double[16];
-            double[] projMatrix = new double[16];
-            int[] viewport = new int[4];
-
-            gl.GetDouble(OpenGL.GL_MODELVIEW_MATRIX, modelMatrix);
-            gl.GetDouble(OpenGL.GL_PROJECTION_MATRIX, projMatrix);
-            gl.GetInteger(OpenGL.GL_VIEWPORT, viewport);
-
-            double[] sx = new double[1];
-            double[] sy = new double[1];
-            double[] sz = new double[1];
-            gl.Project(Pos.x, Pos.y, Pos.z, modelMatrix, projMatrix, viewport, sx, sy, sz); // Find position of light on screen
-            X = (float)sx[0];
-            Y = (float)sy[0];
-            Z = (float)sz[0];
-        }
-
     }
 
 }

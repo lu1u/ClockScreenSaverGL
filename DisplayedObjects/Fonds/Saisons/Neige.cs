@@ -8,6 +8,7 @@
  */
 using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -57,7 +58,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private readonly Flocon[] _flocons;
 
         private float _xWind = 0;
-        private static float _xRotation;
+        private float _xRotation;
         private static DateTime debut = DateTime.Now;
         private const float VIEWPORT_X = 2f;
         private const float VIEWPORT_Y = 2f;
@@ -65,12 +66,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private const float TAILLE_FLOCON = 0.5f;
         private const int NB_TYPES_FLOCONS = 3;
         private const float DECALAGE_TEXTURE = 1.0f / NB_TYPES_FLOCONS;
-        private Texture texture = new Texture();
+        private readonly Texture texture = new Texture();
 
         public Hiver(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            getConfiguration();
+            GetConfiguration();
             _xRotation = _tailleCubeX * 0.75f;
 
             _flocons = new Flocon[NB_FLOCONS];
@@ -89,23 +90,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _flocons[i].ax = FloatRandom(0, 360);
                 _flocons[i].ay = FloatRandom(0, 360);
                 _flocons[i].az = FloatRandom(0, 360);
-                _flocons[i].type = r.Next(0, NB_TYPES_FLOCONS);
+                _flocons[i].type = random.Next(0, NB_TYPES_FLOCONS);
             }
 
-            texture.Create(gl, c.getParametre("Flocons", Config.Configuration.getImagePath("flocons.png")));
+            texture.Create(gl, c.GetParametre("Flocons", Config.Configuration.GetImagePath("flocons.png")));
         }
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f);
-                PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f);
-                VITESSE_Y = c.getParametre("VitesseChute", 5);
-                VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
-                MAX_VENT = c.getParametre("MaxVent", 3f);
-                NB_FLOCONS = c.getParametre("NbFlocons", 5000);
+                c = Configuration.GetCategorie(CAT);
+                VITESSE_ROTATION = c.GetParametre("VitesseRotation", 0.2f);
+                PERIODE_ROTATION = c.GetParametre("PeriodeRotation", 20.0f);
+                VITESSE_Y = c.GetParametre("VitesseChute", 5);
+                VITESSE_DELTA_VENT = c.GetParametre("VitesseDeltaVent", 1f);
+                MAX_VENT = c.GetParametre("MaxVent", 3f);
+                NB_FLOCONS = c.GetParametre("NbFlocons", 5000);
             }
             return c;
         }
@@ -131,7 +132,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             f.ax = FloatRandom(0, 360);
             f.ay = FloatRandom(0, 360);
             f.az = FloatRandom(0, 360);
-            f.type = r.Next(0, NB_TYPES_FLOCONS);
+            f.type = random.Next(0, NB_TYPES_FLOCONS);
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 gl.PushMatrix();
                 gl.Translate(o.x, o.y, o.z);
                 gl.Rotate(o.ax, o.ay, o.az);
-                gl.Begin(OpenGL.GL_QUADS);
+                using (new GLBegin(gl, OpenGL.GL_QUADS))
                 {
                     float tX = DECALAGE_TEXTURE * o.type;
                     float tXP1 = DECALAGE_TEXTURE * (o.type + 1);
@@ -185,7 +186,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                     gl.TexCoord(tXP1, 1.0f); gl.Vertex(TAILLE_FLOCON, TAILLE_FLOCON, 0);
                     gl.TexCoord(tXP1, 0.0f); gl.Vertex(TAILLE_FLOCON, -TAILLE_FLOCON, 0);
                 }
-                gl.End();
                 gl.PopMatrix();
             }
 

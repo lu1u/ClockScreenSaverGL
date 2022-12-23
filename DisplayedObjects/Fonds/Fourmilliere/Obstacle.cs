@@ -6,7 +6,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 {
     internal class Obstacle
     {
-        private float _x, _y, _taille, _nuance;
+        private readonly float _x;
+        private readonly float _y;
+        private readonly float _taille;
+        private readonly float _nuance;
+
         public Obstacle(float x, float y, float taille, float nuance)
         {
             _x = x;
@@ -22,7 +26,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// <param name="couleur"></param>
         internal void Affiche(OpenGL gl, CouleurGlobale couleur, int details)
         {
-            Color c = CouleurGlobale.Light(couleur.getColorWithHueChange(_nuance), 0.4f);
+            Color c = CouleurGlobale.Light(couleur.GetColorWithHueChange(_nuance), 0.4f);
             gl.Color(c.R, c.G, c.B, (byte)128);
             DisplayedObject.DessineCercle(gl, _x, _y, _taille, details);
         }

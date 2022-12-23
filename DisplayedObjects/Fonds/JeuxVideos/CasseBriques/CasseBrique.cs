@@ -16,10 +16,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float BALLE_VX = 0.015f;
         private float BALLE_VY = 0.012f;
         private float MARGE_BRIQUE = 0.45f;
-        private float MIN_VIEWPORT_X = 0;
-        private float MIN_VIEWPORT_Y = 0;
-        private float MAX_VIEWPORT_X = 1.0f;
-        private float MAX_VIEWPORT_Y = 1.0f;
+        private readonly float MIN_VIEWPORT_X = 0;
+        private readonly float MIN_VIEWPORT_Y = 0;
+        private readonly float MAX_VIEWPORT_X = 1.0f;
+        private readonly float MAX_VIEWPORT_Y = 1.0f;
         private float TAILLE_BALLE = 0.01f;
         private int NB_BRIQUES_PAR_LIGNE = 20;
         private int NB_BRIQUES_PAR_COLONNES = 10;
@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float TAILLE_PARTICULE = 0.0025f;
         #endregion
 
-        private class Particule
+        sealed private class Particule
         {
             public float x, y, vx, vy, alpha;
             public Color Couleur;
@@ -37,11 +37,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         // Balle
         private Balle _balle;
-        private Brique[] _briques;
+        private readonly Brique[] _briques;
         private int _nbBriques;
-        private List<Particule> _particules = new List<Particule>();
+        private readonly List<Particule> _particules = new List<Particule>();
 
-        private class BriqueTombante : Brique
+        sealed private class BriqueTombante : Brique
         {
             public BriqueTombante(Brique b, float vx, float vy, float vr) : base(b.X, b.Y, b.Largeur, b.Hauteur, b.ChangeCouleur)
             {
@@ -55,39 +55,39 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             internal float Vr;
         }
 
-        private List<BriqueTombante> _briquesTombantes = new List<BriqueTombante>();
-        private TextureAsynchrone _textureBalle;
-        private TextureAsynchrone _textureBrique;
+        private readonly List<BriqueTombante> _briquesTombantes = new List<BriqueTombante>();
+        private readonly TextureAsynchrone _textureBalle;
+        private readonly TextureAsynchrone _textureBrique;
         private TimerIsole _timerReinit;
         private int _ligneCourante;
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
-                TAILLE_BALLE = c.getParametre("Taille balle", 0.01f);
-                NB_BRIQUES_PAR_LIGNE = c.getParametre("Nb briques par ligne", 20);
-                NB_BRIQUES_PAR_COLONNES = c.getParametre("Nb briques par colonne", 10);
+                c = Configuration.GetCategorie(CAT);
+                TAILLE_BALLE = c.GetParametre("Taille balle", 0.01f);
+                NB_BRIQUES_PAR_LIGNE = c.GetParametre("Nb briques par ligne", 20);
+                NB_BRIQUES_PAR_COLONNES = c.GetParametre("Nb briques par colonne", 10);
                 NB_BRIQUES = NB_BRIQUES_PAR_COLONNES * NB_BRIQUES_PAR_LIGNE;
-                NB_MAX_PARTICULE = c.getParametre("Nb max particules", 10000, a => NB_MAX_PARTICULE = Convert.ToInt32(a));
-                NB_PARTICULE_EXPLOSION = c.getParametre("Nb particules par explosion", 200, a => NB_PARTICULE_EXPLOSION = Convert.ToInt32(a));
-                TAILLE_PARTICULE = c.getParametre("Taille particule", 0.0025f);
-                BALLE_VX = c.getParametre("Vitesse balle X", 0.015f);
-                BALLE_VY = c.getParametre("Vitesse balle Y", 0.016f);
-                MARGE_BRIQUE = c.getParametre("Marge brique", 0.45f);
+                NB_MAX_PARTICULE = c.GetParametre("Nb max particules", 10000, a => NB_MAX_PARTICULE = Convert.ToInt32(a));
+                NB_PARTICULE_EXPLOSION = c.GetParametre("Nb particules par explosion", 200, a => NB_PARTICULE_EXPLOSION = Convert.ToInt32(a));
+                TAILLE_PARTICULE = c.GetParametre("Taille particule", 0.0025f);
+                BALLE_VX = c.GetParametre("Vitesse balle X", 0.015f);
+                BALLE_VY = c.GetParametre("Vitesse balle Y", 0.016f);
+                MARGE_BRIQUE = c.GetParametre("Marge brique", 0.45f);
             }
             return c;
         }
 
         public CasseBrique(OpenGL gl) : base(gl)
         {
-            c = getConfiguration();
+            c = GetConfiguration();
             _balle = new Balle(FloatRandom(MIN_VIEWPORT_X, MAX_VIEWPORT_X), MIN_VIEWPORT_Y, BALLE_VX, BALLE_VY, TAILLE_BALLE, TAILLE_BALLE);
 
-            _textureBalle = new TextureAsynchrone(gl, Configuration.getImagePath("balle.png"));
+            _textureBalle = new TextureAsynchrone(gl, Configuration.GetImagePath("balle.png"));
             _textureBalle.Init();
-            _textureBrique = new TextureAsynchrone(gl, Configuration.getImagePath("brique.png"));
+            _textureBrique = new TextureAsynchrone(gl, Configuration.GetImagePath("brique.png"));
             _textureBrique.Init();
 
             float LargeurColonne = (MAX_VIEWPORT_X - MIN_VIEWPORT_X) / NB_BRIQUES_PAR_LIGNE;
@@ -139,14 +139,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
                     gl.Disable(OpenGL.GL_BLEND);
-                    _textureBrique.texture.Bind(gl);
+                    _textureBrique.Texture.Bind(gl);
                     foreach (Brique brique in _briques)
                     {
                         if (brique.Visible)
                         {
                             if ((_balle == null) || (_balle.Collision(brique) == Balle.COLLISION.RIEN))
                             {
-                                brique.Couleur = getColorWithHueChange(couleur, brique.ChangeCouleur);
+                                brique.Couleur = GetColorWithHueChange(couleur, brique.ChangeCouleur);
                                 gl.Color(brique.Couleur.R / 256.0f, brique.Couleur.G / 256.0f, brique.Couleur.B / 256.0f, 1.0f);
                             }
                             else
@@ -165,8 +165,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     // Briques tombantes
                     foreach (BriqueTombante brique in _briquesTombantes)
                     {
-                        Color Couleur = getColorWithHueChange(couleur, brique.ChangeCouleur);
-                        gl.Color(brique.Couleur.R / 256.0f, brique.Couleur.G / 256.0f, brique.Couleur.B / 256.0f, 1.0f);
+                        SetColorWithHueChange(gl, couleur, brique.ChangeCouleur);
                         gl.PushMatrix();
                         gl.Translate(brique.X, brique.Y, 0);
                         gl.Rotate(0, 0, brique.Rotation);
@@ -186,7 +185,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.Enable(OpenGL.GL_TEXTURE_2D);
                     gl.Enable(OpenGL.GL_BLEND);
                     gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-                    _textureBalle.texture.Bind(gl);
+                    _textureBalle.Texture.Bind(gl);
                     gl.Begin(OpenGL.GL_QUADS);
                     gl.TexCoord(0.0f, 0.0f); gl.Vertex(_balle.Gauche, _balle.Bas);
                     gl.TexCoord(0.0f, 1.0f); gl.Vertex(_balle.Gauche, _balle.Haut);
@@ -211,6 +210,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.End();
                 }
             }
+
+            LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif

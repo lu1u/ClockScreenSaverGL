@@ -24,15 +24,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 
         public Bacteries(OpenGL gl, int cx, int cy) : base(gl)
         {
-            getConfiguration();
+            GetConfiguration();
         }
 
 
-        public override CategorieConfiguration getConfiguration()
+        public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
             {
-                c = Configuration.getCategorie(CAT);
+                c = Configuration.GetCategorie(CAT);
             }
             return c;
         }
@@ -47,17 +47,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         {
 
             base.GetPreferences(ref L, ref H, ref N, ref C);
-            L = c.getParametre("Largeur", 400);
-            H = c.getParametre("Hauteur", 300);
-            N = c.getParametre("Nombre", 30);
-            C = c.getParametre("Niveaux", 512);
+            L = c.GetParametre("Largeur", 400);
+            H = c.GetParametre("Hauteur", 300);
+            N = c.GetParametre("Nombre", 30);
+            C = c.GetParametre("Niveaux", 512);
         }
 
         protected override void ConstruitMetaballes()
         {
-            TailleMax = c.getParametre("TailleMax", 30f);
-            TailleMin = c.getParametre("TailleMin", 20f);
-            IntensiteMax = c.getParametre("IntensiteMax", 1.0f);
+            TailleMax = c.GetParametre("TailleMax", 30f);
+            TailleMin = c.GetParametre("TailleMin", 20f);
+            IntensiteMax = c.GetParametre("IntensiteMax", 1.0f);
             IntensiteMin = IntensiteMax / 2.0f;
 
             for (int i = 0; i < NbMetaballes; i++)
@@ -84,7 +84,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             if (UnSur % 8 == 0)
             {
                 // Changer la trajectoire d'une bacterie
-                int Indice = r.Next(NbMetaballes);
+                int Indice = random.Next(NbMetaballes);
 
                 _metaballes[Indice]._Vx = FloatRandom(-5, 5);
                 _metaballes[Indice]._Vy = FloatRandom(-5, 5);
