@@ -10,8 +10,7 @@ Features:
 - 50+ different backgrounds
 
 
-![Screenshot](screenshots/sans-titre-1.png)
-![Screenshot](screenshots/sans-titre-2.png)
+![Screenshot](screenshots/sans-titre-1.png)![Screenshot](screenshots/sans-titre-2.png)
 ![Screenshot](screenshots/sans-titre-3.png)
 ![Screenshot](screenshots/sans-titre-4.png)
 ![Screenshot](screenshots/sans-titre-5.png)
