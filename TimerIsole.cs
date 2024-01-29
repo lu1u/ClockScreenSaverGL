@@ -24,7 +24,7 @@ namespace ClockScreenSaverGL
         }
 
         public double Intervalle { get; set; }
-        
+
         public bool Ecoule()
         {
             DateTime m = DateTime.Now;

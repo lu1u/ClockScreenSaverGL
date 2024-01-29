@@ -65,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
                 _y = FloatRandom(0.01f, -0.1f);
                 _alpha = 1.0f;
                 _sX = FloatRandom(0.1f, 0.2f) * -_y;
-                _sY = FloatRandom(0.002f, 0.004f); 
+                _sY = FloatRandom(0.002f, 0.004f);
                 //_vx = FloatRandom(-0.01f, 0.01f);
                 _vy = -0.005f;
                 _dalpha = 0.99f;

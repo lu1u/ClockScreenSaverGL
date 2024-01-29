@@ -13,10 +13,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #region Configuration
         private const string CAT = "Asteroid";
         private CategorieConfiguration c;
-        int NB_ASTEROID_DEPART;
-        float ROTATION_ASTEROID;
-        float LARGEUR_LIGNE;
-        float TAILLE_POINT;
+        private int NB_ASTEROID_DEPART;
+        private float ROTATION_ASTEROID;
+        private float LARGEUR_LIGNE;
+        private float TAILLE_POINT;
         private int NB_MAX_PARTICULE;
         private int NB_PARTICULE_EXPLOSION;
         private float PROBA_POUSSEE;
@@ -29,21 +29,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private readonly float MIN_VIEWPORT_Y = -1;
         private readonly float MAX_VIEWPORT_X = 1.3f;
         private readonly float MAX_VIEWPORT_Y = 1.0f;
-        List<Asteroid> _asteroids;
-        TimerIsole _timerEcran;
-        Vaisseau _vaisseau;
+        private List<Asteroid> _asteroids;
+        private TimerIsole _timerEcran;
+        private Vaisseau _vaisseau;
         private readonly TextureAsynchrone _textureStart;
         private readonly TextureAsynchrone _textureComplete;
 
-        enum MODE_JEU { START, NORMAL, COMPLETE };
-        MODE_JEU _modeJeu;
+        private enum MODE_JEU { START, NORMAL, COMPLETE };
+
+        private MODE_JEU _modeJeu;
 
         sealed private class Particule
         {
             public float x, y, vx, vy, alpha;
         }
 
-        List<Particule> _particules;
+        private List<Particule> _particules;
 
         public override CategorieConfiguration GetConfiguration()
         {
@@ -173,7 +174,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Disable(OpenGL.GL_BLEND);
             OpenGLColor.Couleur(gl, couleur, 0.5f);
             foreach (Asteroid a in _asteroids)
-                a?.Affiche(gl);
+                a?.Affiche(gl, LARGEUR_LIGNE);
 
             if (_textureStart.Pret)
             {
@@ -193,6 +194,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             }
         }
 
+        /// <summary>
+        /// Affichage de l'ecran "niveau complet"
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="couleur"></param>
         private void AfficheComplete(OpenGL gl, Color couleur)
         {
             if (_textureComplete.Pret)
@@ -216,6 +222,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             // Particules
             gl.Enable(OpenGL.GL_BLEND);
+            OpenGLColor.ColorWithLuminance(gl, couleur, 0.1f);
             using (new GLBegin(gl, OpenGL.GL_POINTS))
                 foreach (Particule p in _particules)
                 {
@@ -228,11 +235,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             OpenGLColor.ColorWithLuminance(gl, couleur, -0.1f);
             gl.LineWidth(LARGEUR_LIGNE);
             foreach (Asteroid a in _asteroids)
-                a?.Affiche(gl);
+                a?.Affiche(gl, LARGEUR_LIGNE);
 
             // Vaisseau et ses tirs
             OpenGLColor.ColorWithLuminance(gl, couleur, 0.2f);
-            _vaisseau?.Affiche(gl);
+            _vaisseau?.Affiche(gl, LARGEUR_LIGNE);
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
@@ -381,7 +388,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         AjouteParticules(asteroide.X, asteroide.Y, asteroide.Dx, asteroide.Dy);
                         if (asteroide.Niveau < Asteroid.NIVEAU_MAX)
                         {
-                            // Si l'asteroide n'est pas deja petit, placer deux asteroides plus petits au meme endroit
+                            // Si l'asteroide n'est pas deja au minimum, placer deux asteroides plus petits au meme endroit
                             _asteroids.Add(new Asteroid(asteroide.Niveau + 1, asteroide.X, asteroide.Y, asteroide.VRot, -asteroide.Dx, asteroide.Dy, random));
                             _asteroids.Add(new Asteroid(asteroide.Niveau + 1, asteroide.X, asteroide.Y, -asteroide.VRot, asteroide.Dx, -asteroide.Dy, random));
                         }
@@ -419,10 +426,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     x = x,
                     y = y,
                     vx = dx + vitesse * (float)Math.Cos(angle),
-                    vy = dy + vitesse * (float)Math.Sin(angle)
+                    vy = dy + vitesse * (float)Math.Sin(angle),
+                    alpha = 1.0f
                 };
                 _particules.Add(p);
             }
+        }
+
+        public override string DumpRender()
+        {
+            return base.DumpRender() + $" Nb particules {_particules.Count}";
         }
     }
 }

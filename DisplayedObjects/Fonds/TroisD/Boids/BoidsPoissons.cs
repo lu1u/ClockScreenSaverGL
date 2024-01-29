@@ -136,7 +136,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             gl.End();
         }
 
-        protected override Boid newBoid()
+        protected override Boid NewBoid()
         {
             return new BoidPoisson(FloatRandom(-MAX_X, MAX_X), FloatRandom(-MAX_Y, MAX_Y), FloatRandom(-MAX_Z, MAX_Z), TAILLE, LONGUEUR_TETE, HAUTEUR_CORPS, LONGUEUR_CORPS, LONGUEUR_QUEUE, HAUTEUR_QUEUE);
         }
@@ -154,7 +154,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 HAUTEUR_QUEUE = hauteurQueue;
             }
 
-            public override void dessine(OpenGL gl)
+            public override void Dessine(OpenGL gl)
             {
                 double angle = _image * 2.0 * Math.PI;
 

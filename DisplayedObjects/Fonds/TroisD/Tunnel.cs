@@ -157,7 +157,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Disable(OpenGL.GL_CULL_FACE);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-           
+
             setGlobalMaterial(gl, couleur);
             changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, _tailleCubeZ * 20);
 

@@ -12,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private const string CAT = "Pong";
         private CategorieConfiguration c;
         private float COEFF_ACCELERATION_RAQUETTE, VITESSE_BALLE_X, VITESSE_BALLE_Y;
-        float CHANGE_LUMINANCE_TERRAIN;
+        private float CHANGE_LUMINANCE_TERRAIN;
         #endregion
 
         private const float MIN_VIEWPORT_X = -1;

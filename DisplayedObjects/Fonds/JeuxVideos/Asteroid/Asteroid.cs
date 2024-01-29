@@ -2,6 +2,7 @@
 using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
@@ -11,13 +12,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public static float TAILLE_MAX;
         public static int NIVEAU_MAX;
         public static int NB_COINS;
-        readonly float _taille;
-        readonly float _dx, _dy;
-        readonly float _vrot;
-        readonly int _niveau;
-        readonly float[] _rayons;
-        float _x, _y;
-        float _rot;
+        private readonly float _taille;
+        private readonly float _dx, _dy;
+        private readonly float _vrot;
+        private readonly int _niveau;
+        private readonly float[] _rayons;
+        private float _x, _y;
+        private float _rot;
 
         public int Niveau { get => _niveau; }
         public float Dx { get => _dx; }
@@ -28,7 +29,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Asteroid(int niveau, float x, float y, float vrot, float dx, float dy, Random r)
         {
-            _taille = TAILLE_MAX / (float)(niveau + 1);
+            _taille = TAILLE_MAX / (niveau + 1);
             _niveau = niveau;
             _x = x;
             _y = y;
@@ -47,13 +48,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// Afficher l'asteroid
         /// </summary>
         /// <param name="gl"></param>
-        public void Affiche(OpenGL gl)
+        public void Affiche(OpenGL gl, float LargeurLigne)
         {
-            using (new GLBegin(gl, OpenGL.GL_LINE_LOOP))
-            {
-                for (int i = 0; i < NB_COINS; i++)
-                    gl.Vertex(GetX(i), GetY(i));
-            }
+            //    using (new GLBegin(gl, OpenGL.GL_LINE_LOOP))
+            //{
+            //    for (int i = 0; i < NB_COINS; i++)
+            //        gl.Vertex(GetX(i), GetY(i));
+            //}
+
+            PointF[] points = new PointF[NB_COINS + 1];
+            for (int i = 0; i < NB_COINS; i++)
+                points[i] = new PointF((float)GetX(i), (float)GetY(i));
+
+            points[NB_COINS] = points[0];
+
+            GLLines.DessinePolyLine(gl, points, LargeurLigne);
         }
         /// <summary>
         /// Retrouve la coordonnee X du coin donné en parametre

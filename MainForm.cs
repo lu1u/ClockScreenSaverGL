@@ -54,7 +54,7 @@ namespace ClockScreenSaverGL
         private bool _afficheDebug = c.GetParametre("Debug", true);
         private DateTime lastFrame = DateTime.Now;
         private PanneauMessage _panneau;
-        private readonly Process currentProc = Process.GetCurrentProcess();
+        //private readonly Process currentProc = Process.GetCurrentProcess();
 #endif
         #region Preview API's
 
@@ -190,11 +190,14 @@ namespace ClockScreenSaverGL
 
             try
             {
+                DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
                 console.AddLigne(Color.White, (1000.0 / NbMillisec).ToString("0.0") + " FPS\n\n");
                 console.AddLigne(Color.White, "Couleur: " + _couleur.ToString() + "\n\n");
+                console.AddLigne(Color.White, "Fond courant: " + _listeObjets[INDICE_FOND].GetType().Name + ":" + (int)Type + "/" + (int)DisplayedObjectFactory.DERNIER_FOND + "\n");
                 //console.AddLigne(Color.White, "CPU " + cpuCounter.NextValue().ToString("00") + "%\n");
                 //console.AddLigne(Color.White, "Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n");
-                console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
+                // console.AddLigne(Color.White, "Utilisation mémoire " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
+                //console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
             }
             catch (Exception e)
             {
@@ -317,6 +320,9 @@ namespace ClockScreenSaverGL
                             fond.FillConsole(gl);
 
                     DisplayedObjects.Console console = DisplayedObjects.Console.GetInstance(gl);
+                    if (_texteErreur != null)
+                        console.AddLigne(Color.Red, _texteErreur);
+
                     console.Trace(gl, Bounds);
                     console.Clear();
                 }
@@ -325,7 +331,9 @@ namespace ClockScreenSaverGL
             }
             catch (Exception e)
             {
-                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                // _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                _texteErreur = e.ToString();
+                _afficheDebug = true;
                 log.Error("Exception dans MainForm.createAllObjects");
                 log.Error(e.Message);
                 log.Error(e.StackTrace);
@@ -371,7 +379,7 @@ namespace ClockScreenSaverGL
                 // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
                 INDICE_FOND = 0;
                 _listeObjets.Add(CreateBackgroundObject((DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0), true));
-                //
+                
                 INDICE_TRANSITION = 1;
                 _listeObjets.Add(new Transition(gl));
 
@@ -385,7 +393,7 @@ namespace ClockScreenSaverGL
                 _listeObjets.Add(new PanneauInfo2(gl));
                 _listeObjets.Add(new Actualites(gl));
 
-                using ( new Chronometre("Initialisations"))
+                using (new Chronometre("Initialisations"))
                 {
                     for (int i = 1; i < _listeObjets.Count; i++)
                     {
@@ -399,7 +407,9 @@ namespace ClockScreenSaverGL
             }
             catch (Exception e)
             {
-                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                //_panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                _texteErreur = e.ToString();
+                _afficheDebug = true;
                 log.Error("Exception dans MainForm.createAllObjects");
                 log.Error(e.Message);
                 log.Error(e.StackTrace);
@@ -410,9 +420,9 @@ namespace ClockScreenSaverGL
 
         private void OnTimerChangeBackground(object sender, EventArgs e)
         {
-            DisplayedObjectFactory.FONDS Type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
-            Type = ProchainFond(Type);
-            ChangeFond(Type);
+            DisplayedObjectFactory.FONDS type = (DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0);
+            type = ProchainFond(type);
+            ChangeFond(type);
         }
 
         private static DisplayedObjectFactory.FONDS ProchainFond(DisplayedObjectFactory.FONDS type)
@@ -502,6 +512,7 @@ namespace ClockScreenSaverGL
                         {
                             _panneau.SetMessage(openGLControl.OpenGL, "Console");
                             _afficheDebug = !_afficheDebug;
+                            _texteErreur = null;
                             c.SetParametre("Debug", _afficheDebug);
                         }
                         break;
@@ -542,6 +553,8 @@ namespace ClockScreenSaverGL
         private Point OriginalLocation = new Point(int.MaxValue, int.MaxValue);
         private bool _effacerFond = true;
         private bool _initTermine = false;
+        private string _texteErreur;
+
         //private bool _frameInitiale = true;
 
         public void OnMouseMove(object sender, MouseEventArgs e)

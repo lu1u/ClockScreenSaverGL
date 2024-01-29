@@ -124,7 +124,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             return true;
         }
 
-        protected override Boid newBoid()
+        protected override Boid NewBoid()
         {
             return new BoidOiseau(FloatRandom(-MAX_X, MAX_X), FloatRandom(-MAX_Y, MAX_Y), FloatRandom(-MAX_Z, MAX_Z));
         }
@@ -135,7 +135,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             {
             }
 
-            public override void dessine(OpenGL gl)
+            public override void Dessine(OpenGL gl)
             {
                 double angle = _image * 2.0 * Math.PI;
 
@@ -154,12 +154,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 gl.End();
             }
 
-            public override void update(Temps maintenant)
+            public override void Update(Temps maintenant)
             {
                 _Acceleration.y *= DIMINUE_ACCELERATION_V;
                 _Vitesse.y *= DIMINUE_VITESSE_V;
                 _couleur = Color.Black;
-                base.update(maintenant);
+                base.Update(maintenant);
             }
         }
     }

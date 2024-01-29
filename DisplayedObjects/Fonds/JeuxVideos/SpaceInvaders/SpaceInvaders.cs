@@ -121,7 +121,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 DELAI_TIMER_MISSILES_BASE = c.GetParametre("Timer deplacement missiles", 50, a => { DELAI_TIMER_MISSILES_BASE = Convert.ToInt32(a); _timerMissilesBase = new TimerIsole(DELAI_TIMER_MISSILES_BASE); });
                 DELAI_TIMER_MISSILES = c.GetParametre("Timer lance missiles", 800, a => { DELAI_TIMER_MISSILES = Convert.ToInt32(a); _timerMissile = new TimerIsole(DELAI_TIMER_MISSILES); });
                 DELAI_EXPLOSION = c.GetParametre("Delai explosions", 600, a => DELAI_EXPLOSION = Convert.ToInt32(a));
-                NB_MAX_MISSILES = c.GetParametre("Nb max missiles", 2, a => NB_MAX_MISSILES =Convert.ToInt32(a));
+                NB_MAX_MISSILES = c.GetParametre("Nb max missiles", 2, a => NB_MAX_MISSILES = Convert.ToInt32(a));
                 DECALAGE_ALIENS = c.GetParametre("Decalage aliens", 0.01f, a => DECALAGE_ALIENS = (float)Convert.ToDouble(a));
                 DECALAGE_HAUT_ALIENS = c.GetParametre("Decalage haut aliens", 0.1f);
             }
@@ -211,13 +211,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 int ligneAlien, colonneAlien;
                 if (collisionMissileAlien(p, out colonneAlien, out ligneAlien))
                 {
+                    _missilesBase.RemoveAt(i);
                     _explosions.Add(new Explosion(_aliens[colonneAlien, ligneAlien].X, _aliens[colonneAlien, ligneAlien].Y, IMAGE_EXPLOSION, DELAI_EXPLOSION));
 
                     // Alien touché! Supprimer du tableau
                     SupprimeAlien(colonneAlien, ligneAlien);
-
-                    // Ajouter explosion
-                    _missilesBase.RemoveAt(i);
                 }
                 else
                 if (p.Y > MIN_VIEWPORT_Y)
@@ -235,12 +233,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             // Chercher la premiere colonne non vide a gauche
             dernierAlienAGauche = 0;
-            while (dernierAlienAGauche < NB_COLONNES_ALIENS && ColonneVide(dernierAlienAGauche))
+            while (dernierAlienAGauche < NB_COLONNES_ALIENS - 1 && ColonneVide(dernierAlienAGauche))
                 dernierAlienAGauche++;
 
             // Chercher la premiere colonne non vide a droite
             dernierAlienADroite = NB_COLONNES_ALIENS - 1;
-            while (dernierAlienADroite >= 0 && ColonneVide(dernierAlienADroite))
+            while (dernierAlienADroite > 0 && ColonneVide(dernierAlienADroite))
                 dernierAlienADroite--;
 
             // Chercher la premier ligne non vide en bas
@@ -342,7 +340,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     break;
 
                 case SensDeplacement.GAUCHE:
-                    if (xGauche + DECALAGE_ALIENS + DECALAGE_ALIENS> MIN_VIEWPORT_X)
+                    if (xGauche + DECALAGE_ALIENS > MIN_VIEWPORT_X)
                     {
                         dx = -DECALAGE_ALIENS;
                         dy = 0;
@@ -428,7 +426,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         private void LancerMissile()
         {
-            if ( _missilesBase.Count< NB_MAX_MISSILES)
+            if (_missilesBase.Count < NB_MAX_MISSILES)
                 // Ajouter un missile
                 _missilesBase.Add(new Missile(_base.X, _base.Y, IMAGE_MISSILE));
         }

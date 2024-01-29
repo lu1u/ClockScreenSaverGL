@@ -22,16 +22,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     /// </summary>
     public abstract class Fond : DisplayedObject
     {
+        private CategorieConfiguration c;
+        private TextureAsynchrone _textureArcade, _textureEcran;
+        private float DERIVE_Y, ALPHA_ARCADE;
+        private float RATIO_TEXTURE;
+        private bool APPLIQUER_LOOK_ARCADE;
 
-        TextureAsynchrone _textureArcade, _textureEcran;
-        float DERIVE_Y, ALPHA_ARCADE;
-        bool APPLIQUER_LOOK_ARCADE;
-        public Fond(OpenGL gl) : base(gl)
+        protected Fond(OpenGL gl) : base(gl)
         {
-            CategorieConfiguration c = GetConfiguration();
-            DERIVE_Y = c.GetParametre("Arcade Dérive Y", 0.01f, a => DERIVE_Y = (float)Convert.ToDouble(a));
-            ALPHA_ARCADE = c.GetParametre("Arcade Alpha", 0.5f, a => ALPHA_ARCADE = (float)Convert.ToDouble(a));
-            APPLIQUER_LOOK_ARCADE = c.GetParametre("Arcade Appliquer", true, a => APPLIQUER_LOOK_ARCADE = Convert.ToBoolean(a));
         }
 
         public override bool ClearBackGround(OpenGL gl, Color c)
@@ -50,15 +48,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             //getConfiguration()?.fillConsole(gl);
             string[] lignes = GetConfiguration().GetLignesParametres();
-            Console c = Console.GetInstance(gl);
-            c.AddLigne(Color.LightGreen, "");
+            Console console = Console.GetInstance(gl);
+            console.AddLigne(Color.LightGreen, "");
             //c.AddLigne(Color.LightGreen, getConfiguration().);
-            c.AddLigne(Color.LightGreen, "");
-            c.AddLigne(Color.LightGreen, "F1..F6: changer couleur");
-            c.AddLigne(Color.LightGreen, "8/2 : changer le parametre courant");
-            c.AddLigne(Color.LightGreen, "4/6 : modifier la valeur du parametre courant");
-            c.AddLigne(Color.LightGreen, "Les valeurs en gris nécessitent de redémarrer le fond (touche R)");
-            c.AddLigne(Color.LightGreen, "");
+            console.AddLigne(Color.LightGreen, "");
+            console.AddLigne(Color.LightGreen, "F1..F6: changer couleur");
+            console.AddLigne(Color.LightGreen, "8/2 : changer le parametre courant");
+            console.AddLigne(Color.LightGreen, "4/6 : modifier la valeur du parametre courant");
+            console.AddLigne(Color.LightGreen, "Les valeurs en gris nécessitent de redémarrer le fond (touche R)");
+            console.AddLigne(Color.LightGreen, "");
 
             foreach (string ligne in lignes)
                 if (ligne.Length > 1)
@@ -76,14 +74,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                             col = Color.Gray; break;
                     }
 
-                    c.AddLigne(col, ligne.Substring(1));
+                    console.AddLigne(col, ligne.Substring(1));
                 }
         }
 
         public override bool KeyDown(Form f, Keys k)
         {
-            CategorieConfiguration c = GetConfiguration();
-            if (c?.KeyDown(k) == true)
+            CategorieConfiguration conf = GetConfiguration();
+            if (conf?.KeyDown(k) == true)
                 return true;
 
             return base.KeyDown(f, k);
@@ -113,10 +111,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         protected void LookArcade(OpenGL gl, Color couleur)
         {
+            if (c == null)
+            {
+                c = GetConfiguration();
+                APPLIQUER_LOOK_ARCADE = c.GetParametre("Arcade Appliquer", true, a => APPLIQUER_LOOK_ARCADE = Convert.ToBoolean(a));
+                DERIVE_Y = c.GetParametre("Arcade Dérive Y", 0.01f, a => DERIVE_Y = (float)Convert.ToDouble(a));
+                ALPHA_ARCADE = c.GetParametre("Arcade Alpha", 0.5f, a => ALPHA_ARCADE = (float)Convert.ToDouble(a));
+                RATIO_TEXTURE = c.GetParametre("Arcade Ratio texture", 16.0f, a => RATIO_TEXTURE = (float)Convert.ToDouble(a));
+            }
+
             if (!APPLIQUER_LOOK_ARCADE)
                 return;
 
-            if (_textureArcade==null)
+            if (_textureArcade == null)
             {
                 _textureArcade = new TextureAsynchrone(gl, Configuration.GetImagePath("Arcade\\arcade.png"));
                 _textureArcade.Init();
@@ -140,7 +147,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.Color(0, 0, 0, ALPHA_ARCADE);
                     using (new GLBegin(gl, OpenGL.GL_QUADS))
                     {
-                        float yCoord = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 16.0f;
+                        float yCoord = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / RATIO_TEXTURE;
                         gl.TexCoord(0.0f, yCoord); gl.Vertex(0, FloatRandom(1 - DERIVE_Y, 1 + DERIVE_Y));
                         gl.TexCoord(1.0f, yCoord); gl.Vertex(1, FloatRandom(1 - DERIVE_Y, 1 + DERIVE_Y));
                         gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, FloatRandom(0 - DERIVE_Y, 0 + DERIVE_Y));
@@ -150,7 +157,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                 if (_textureEcran.Pret)
                 {
-                    OpenGLColor.Couleur(gl, couleur,0.5f);
+                    OpenGLColor.Couleur(gl, couleur, 0.5f);
                     _textureEcran.Texture.Bind(gl);
                     using (new GLBegin(gl, OpenGL.GL_QUADS))
                     {

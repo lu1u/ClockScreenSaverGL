@@ -10,7 +10,7 @@ using System.IO;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    internal class MeteoInfo 
+    internal class MeteoInfo
     {
         private const string CAT = "meteo";
         protected CategorieConfiguration c;

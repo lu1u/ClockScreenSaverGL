@@ -2,7 +2,6 @@
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -57,10 +56,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             for (int i = 0; i < NB_COUCHES; i++)
             {
                 _couches[i] = new Couche();
-                _couches[i].x = FloatRandom(-0.1f,0.1f);
-                _couches[i].y = FloatRandom(-0.1f,0.1f);
+                _couches[i].x = FloatRandom(-0.1f, 0.1f);
+                _couches[i].y = FloatRandom(-0.1f, 0.1f);
                 _couches[i].angle = FloatRandom(0, 360);
-                _couches[i].vitesse = FloatRandom(1, 5)*SigneRandom();
+                _couches[i].vitesse = FloatRandom(1, 5) * SigneRandom();
             }
         }
 
@@ -120,7 +119,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Color(col);
             using (new Viewport2D(gl, 0, 0, 1, 1))
             {
-                gl.Translate(0.5f, 0.5f,0);
+                gl.Translate(0.5f, 0.5f, 0);
                 _textureMoire.Bind(gl);
                 gl.PushAttrib(SharpGL.Enumerations.AttributeMask.All);
                 gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);

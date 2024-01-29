@@ -208,7 +208,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             switch (i)
             {
                 case 0: return new PieceTetris(O, O, O, O, COULEUR_CHANGE_O);
-                case 1: return new PieceTetris(I_1, I_2, I_1, I_2, COULEUR_CHANGE_I); 
+                case 1: return new PieceTetris(I_1, I_2, I_1, I_2, COULEUR_CHANGE_I);
                 case 2: return new PieceTetris(S_1, S_2, S_1, S_2, COULEUR_CHANGE_S);
                 case 3: return new PieceTetris(Z_1, Z_2, Z_1, Z_2, COULEUR_CHANGE_Z);
                 case 4: return new PieceTetris(L_1, L_2, L_3, L_4, COULEUR_CHANGE_L);

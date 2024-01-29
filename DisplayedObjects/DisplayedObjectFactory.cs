@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE, LIFE, TERRE, TETRIS,
             BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, SPACE_INVADERS,
             VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, PONG,
-            BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES,
+            BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES, FLUIDE,
             MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, MOIRE,/*DONJON, */ ADN, LIFE_SIM, FOURMIS, SINUSOIDE
         };
 
@@ -96,7 +96,6 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 }
             }
 
-            //Type = FONDS.MOIRE;
             return CreerFond(gl, Type);
         }
 
@@ -111,13 +110,14 @@ namespace ClockScreenSaverGL.DisplayedObjects
             || (Type == FONDS.COULEUR)
             || (Type == FONDS.VIELLES_TELES)
             || (Type == FONDS.MARCHING_CUBES)
-            || (Type == FONDS.NOIR) ); // CreerFondAleatoire est utilisé pour le fond ChainesMultiples, on risquerait une recursion infinie!, les autres ne fonctionnent pas 
+            || (Type == FONDS.NOIR)); // CreerFondAleatoire est utilisé pour le fond ChainesMultiples, on risquerait une recursion infinie!, les autres ne fonctionnent pas 
 
-            return CreerFond(gl, Type );
+            return CreerFond(gl, Type);
         }
 
         private static Fond CreerFond(OpenGL gl, FONDS Type)
         {
+            //Type = FONDS.FLUIDE;
             switch (Type)
             {
                 case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -172,6 +172,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 case FONDS.SNAKE: return new Snake(gl);
                 case FONDS.SPACE_INVADERS: return new SpaceInvaders(gl);
                 case FONDS.ASTEROID: return new Asteroids(gl);
+                case FONDS.FLUIDE: return new Fluide(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

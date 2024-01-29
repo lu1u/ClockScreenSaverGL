@@ -186,10 +186,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     T_CASE casePiece = piece.Case(colonne - PieceX, ligne - PieceY);
                     if (casePiece != CASE_VIDE && _cases[ligne, colonne].contenu == CASE_VIDE)
-                        {
-                            _cases[ligne, colonne].contenu = casePiece;
-                            _cases[ligne, colonne].changeCouleur = changeCouleur;
-                        }
+                    {
+                        _cases[ligne, colonne].contenu = casePiece;
+                        _cases[ligne, colonne].changeCouleur = changeCouleur;
+                    }
                 }
             }
         }

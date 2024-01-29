@@ -147,8 +147,8 @@
     </Reference>
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    <Reference Include="System.Drawing.Common, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Drawing.Common.7.0.0\lib\net462\System.Drawing.Common.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
@@ -175,6 +175,7 @@
     <Compile Include="DisplayedObjects\DisplayedObjectFactory.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\Ephemeride.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\LeverCoucherSoleil.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Fluide.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroid.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroids.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Vaisseau.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\TroisDPipes.cs" />
     <Compile Include="DisplayedObjects\Fonds\Utils\MathUtils.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\GlBegin.cs" />
+    <Compile Include="DisplayedObjects\OpenGLUtils\GLLines.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\OpenGLColor.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Vecteur2D.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Viewport2D.cs" />

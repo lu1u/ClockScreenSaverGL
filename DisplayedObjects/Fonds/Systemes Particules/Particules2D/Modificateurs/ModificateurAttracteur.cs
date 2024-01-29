@@ -1,5 +1,4 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Utils;
-using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs

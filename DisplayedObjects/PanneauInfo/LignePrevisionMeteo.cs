@@ -10,7 +10,7 @@ using System.Drawing;
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     public class LignePrevisionMeteo
-    { 
+    {
         private readonly Image _bmp;
         private readonly string _date;
         private readonly string _temperature;

@@ -34,9 +34,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float[] _angleSegments;
         private float[] _vitesseSegments;
         private int _nbTraces;
-        private float[] _xTrace;
-        private float[] _yTrace;
-
+        //private float[] _xTrace;
+        //private float[] _yTrace;
+        private PointF[] _traces;
         private bool frameInitiale = true;  // Ne pas tracer la frame initiale, pb dus au temps d'initialisation du programme
         private TimerIsole _timerTrace;
 
@@ -113,8 +113,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             // Traces
             _nbTraces = 0;
-            _xTrace = new float[NB_MAX_TRACE];
-            _yTrace = new float[NB_MAX_TRACE];
+            //_xTrace = new float[NB_MAX_TRACE];
+            //_yTrace = new float[NB_MAX_TRACE];
+            _traces = new PointF[NB_MAX_TRACE];
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
@@ -146,14 +147,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         // Supprimer la plus ancienne trace
                         for (int i = 0; i < NB_MAX_TRACE - 1; i++)
                         {
-                            _xTrace[i] = _xTrace[i + 1];
-                            _yTrace[i] = _yTrace[i + 1];
+                            _traces[i] = _traces[i + 1];
+                            //_xTrace[i] = _xTrace[i + 1];
+                            //_yTrace[i] = _yTrace[i + 1];
                         }
                         _nbTraces--;
                     }
 
-                    _xTrace[_nbTraces] = x;
-                    _yTrace[_nbTraces] = y;
+                    _traces[_nbTraces] = new PointF(x, y);
+                    //_xTrace[_nbTraces] = x;
+                    //_yTrace[_nbTraces] = y;
                     _nbTraces++;
                 }
             }
@@ -183,56 +186,78 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Disable(OpenGL.GL_DEPTH);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
                 gl.Enable(OpenGL.GL_LINE_SMOOTH);
-
-                // Dessine les segments traceurs
-                PointF[] p = getMultilinePolygon();
                 gl.Color(1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT, 1.0f * ALPHA_SEGMENT);
-                using (new GLBegin(gl, OpenGL.GL_TRIANGLES))
-                    for (int i = 0; i < _nbSegments; i++)
+
+
+                //PointF p1 = new PointF();
+                //PointF p2 = new PointF();
+
+                //PointF[] p = getMultilinePolygon();
+                ////using (new GLBegin(gl, OpenGL.GL_TRIANGLES))
+                //    for (int i = 0; i < _nbSegments; i++)
+                //{
+                //    int POINT = i * 4;
+
+                //    // P0 P1 P3
+                //    gl.Vertex(p[POINT].X, p[POINT].Y);
+                //    gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
+                //    gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
+
+                //    // P3 P1 P2
+                //    gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
+                //    gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
+                //    gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
+
+                //    if (i < _nbSegments - 1)
+                //    {
+                //        // Tracer le joint entre les lignes
+                //        // P1 P4 P7
+                //        gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
+                //        gl.Vertex(p[POINT + 4].X, p[POINT + 4].Y);
+                //        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
+
+                //        // P1 P2 P7
+                //        gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
+                //        gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
+                //        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
+
+                //        // P2 P4 P7
+                //        gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
+                //        gl.Vertex(p[POINT + 4].X, p[POINT + 4].Y);
+                //        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
+                //    }
+                //}
+
+                PointF[] points = new PointF[_nbSegments + 1];
+                float x = 0;
+                float y = 0;
+                for (int i = 0; i < _nbSegments; i++)
                 {
-                    int POINT = i * 4;
-
-                    // P0 P1 P3
-                    gl.Vertex(p[POINT].X, p[POINT].Y);
-                    gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
-                    gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
-
-                    // P3 P1 P2
-                    gl.Vertex(p[POINT + 3].X, p[POINT + 3].Y);
-                    gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
-                    gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
-
-                    if (i < _nbSegments - 1)
-                    {
-                        // Tracer le joint entre les lignes
-                        // P1 P4 P7
-                        gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
-                        gl.Vertex(p[POINT + 4].X, p[POINT + 4].Y);
-                        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
-
-                        // P1 P2 P7
-                        gl.Vertex(p[POINT + 1].X, p[POINT + 1].Y);
-                        gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
-                        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
-
-                        // P2 P4 P7
-                        gl.Vertex(p[POINT + 2].X, p[POINT + 2].Y);
-                        gl.Vertex(p[POINT + 4].X, p[POINT + 4].Y);
-                        gl.Vertex(p[POINT + 7].X, p[POINT + 7].Y);
-                    }
+                    PointF p = new PointF();
+                    p.X = x;
+                    p.Y = y;
+                    x += (float)Math.Sin(_angleSegments[i]) * _longueurSegments[i];
+                    y += (float)Math.Cos(_angleSegments[i]) * _longueurSegments[i];
+                    points[i] = p;
                 }
-                
+                points[_nbSegments] = new PointF(x, y);
+
+                GLLines.DessinePolyLine(gl, points, TAILLE_LIGNE_SEGMENTS);
+
                 // Les traces
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
                 gl.LineWidth(TAILLE_LIGNE_TRACES);
-                //gl.Begin(OpenGL.GL_LINE_STRIP);
-                using (new GLBegin(gl,OpenGL.GL_LINE_STRIP))
+                //points = new PointF[2];
+                //using (new GLBegin(gl,OpenGL.GL_LINE_STRIP))
                 {
-                    for (int i = 0; i < _nbTraces; i++)
+                    for (int i = 0; i < _nbTraces - 1; i++)
                     {
                         gl.Color(1.0f, 1.0f, 1.0f, i / (float)_nbTraces);
-                        gl.Vertex(_xTrace[i], _yTrace[i]);
+                        //points[0] = _traces[i];
+                        //points[1] = _traces[i+1];
+                        GLLines.DessineLigne(gl, _traces[i], _traces[i + 1], TAILLE_LIGNE_TRACES);
+                        //gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
                 }
                 //gl.End();

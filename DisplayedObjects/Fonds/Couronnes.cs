@@ -63,7 +63,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 cour.periodeRayon = FloatRandom(0.001f, 20);
                 cour.vitesseRayon = FloatRandom(0.010f, 0.1f) * SigneRandom();
                 cour.changeCouleur = FloatRandom(-1.0f, 1.0f);
-                
+
                 _couronnes[i] = cour;
             }
 
@@ -102,7 +102,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             //float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 0.4f };
 
             gl.LoadIdentity();
-            float ratio = (float)tailleEcran.Width / (float)tailleEcran.Height;
+            float ratio = tailleEcran.Width / (float)tailleEcran.Height;
             using (new Viewport2D(gl, -ratio, -1, ratio, 1))
             {
                 gl.Disable(OpenGL.GL_LIGHTING);

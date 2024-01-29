@@ -3,7 +3,6 @@ using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
@@ -58,9 +57,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 c = Configuration.GetCategorie(CAT);
                 NB_LIGNES = c.GetParametre("Nb lignes", 30);
                 NB_COLONNES = c.GetParametre("Nb Colonnes", 40);
-                NB_POMMES = c.GetParametre("Nb Pommes", 10);
                 LARGEUR_CASE = (MAX_VIEWPORT_X - MIN_VIEWPORT_X) / NB_COLONNES;
                 HAUTEUR_CASE = (MAX_VIEWPORT_Y - MIN_VIEWPORT_Y) / NB_LIGNES;
+                NB_POMMES = c.GetParametre("Nb Pommes", 10);
                 DELAI_TIMER_JEUX = c.GetParametre("Timer jeux", 300, a => { DELAI_TIMER_JEUX = Convert.ToInt32(a); _timerJeu = new TimerIsole(DELAI_TIMER_JEUX); });
                 NB_STEP = c.GetParametre("Nb Etapes couleur", 100, a => { NB_STEP = Convert.ToInt32(a); });
             }
@@ -120,9 +119,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            using (new Viewport2D(gl, MIN_VIEWPORT_X, MAX_VIEWPORT_Y, MAX_VIEWPORT_X, MIN_VIEWPORT_Y))
-            {
-                if (_texture.Pret)
+            if (_texture.Pret)
+                using (new Viewport2D(gl, MIN_VIEWPORT_X, MAX_VIEWPORT_Y, MAX_VIEWPORT_X, MIN_VIEWPORT_Y))
                 {
                     gl.Disable(OpenGL.GL_LIGHTING);
                     gl.Disable(OpenGL.GL_DEPTH);
@@ -131,41 +129,35 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
                     _texture.Texture.Bind(gl);
-                    gl.Begin(OpenGL.GL_QUADS);
-
                     for (int ligne = 0; ligne < NB_LIGNES; ligne++)
                         for (int colonne = 0; colonne < NB_COLONNES; colonne++)
                         {
                             if (_cases[ligne, colonne]._case != CASE.VIDE)
                             {
-                                Color Couleur;
+                                using (new GLBegin(gl, OpenGL.GL_QUADS))
+                                {
+                                    Color Couleur;
 
-                                if (_mode == MODE_JEU.PERDU && _clignotePerdu)
-                                    Couleur = Color.White;
-                                else
-                                    Couleur = GetColorWithHueChange(couleur, _cases[ligne, colonne].changeCouleur);
+                                    if (_mode == MODE_JEU.PERDU && _clignotePerdu)
+                                        Couleur = Color.White;
+                                    else
+                                        Couleur = GetColorWithHueChange(couleur, _cases[ligne, colonne].changeCouleur);
 
-                                gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 1.0f);
+                                    gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 1.0f);
 
-                                float image = (float)_cases[ligne, colonne]._case;
+                                    float image = (float)_cases[ligne, colonne]._case;
+                                    float imageG = image / NB_IMAGES_TEXTURE;
+                                    float imageD = (image + 1.0f) / NB_IMAGES_TEXTURE;
 
-                                float imageG = (float)image / NB_IMAGES_TEXTURE;
-                                float imageD = (float)(image + 1) / NB_IMAGES_TEXTURE;
-
-                                gl.TexCoord(imageG, 1.0f); gl.Vertex(colonne * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
-                                gl.TexCoord(imageD, 1.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
-                                gl.TexCoord(imageD, 0.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, ligne * HAUTEUR_CASE);
-                                gl.TexCoord(imageG, 0.0f); gl.Vertex(colonne * LARGEUR_CASE, ligne * HAUTEUR_CASE);
+                                    gl.TexCoord(imageG, 1.0f); gl.Vertex(colonne * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
+                                    gl.TexCoord(imageD, 1.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, (ligne + 1.0f) * HAUTEUR_CASE);
+                                    gl.TexCoord(imageD, 0.0f); gl.Vertex((colonne + 1.0f) * LARGEUR_CASE, ligne * HAUTEUR_CASE);
+                                    gl.TexCoord(imageG, 0.0f); gl.Vertex(colonne * LARGEUR_CASE, ligne * HAUTEUR_CASE);
+                                }
                             }
                         }
-
-                    gl.End();
                 }
 
-                gl.End();
-            }
-
-            OpenGLColor.Couleur(gl, couleur);
             LookArcade(gl, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -288,6 +280,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             _stepCouleur++;
             if (_stepCouleur > NB_STEP)
                 _stepCouleur = 0;
+
             _cases[_yTete, _xTete].changeCouleur = NB_STEP / (_stepCouleur + 1.0f);
 
             // Avancer
@@ -473,7 +466,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
 
 
-        
+
         private void Perdu()
         {
             _mode = MODE_JEU.PERDU;

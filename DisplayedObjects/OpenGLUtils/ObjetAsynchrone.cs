@@ -14,6 +14,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
     public abstract class ObjetAsynchrone
     {
         private bool _initAsynchroneTerminé, _initSynchroneTerminé, _initLancé;
+        private readonly object _lock = new object();
         protected abstract void InitAsynchrone();       // Partie asynchrone de l'initialisation (tache de fond)
         protected abstract void InitSynchrone();        // Partie synchrone de l'initialisation (thread principal)
         protected ThreadPriority _priorité;
@@ -59,7 +60,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
         {
             get
             {
-                lock (this)
+                lock (_lock)
                 {
                     if (!_initLancé)
                     {

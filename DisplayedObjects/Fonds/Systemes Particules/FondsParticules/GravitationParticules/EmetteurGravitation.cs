@@ -6,14 +6,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
     internal class EmetteurGravitation : Emetteur2D
     {
-        private static float _G;
-        private static float _multDist;
-        private TimerIsole _timer;
-        private float _taille = 0.01f;
+        private readonly float _G;
+        private readonly float _multDist;
+        private readonly TimerIsole _timer;
+        private readonly float _taille = 0.01f;
 
         public EmetteurGravitation(float G, float MultDist, int delaiCreation)
         {
-            _G = G * 2.0f;
+            _G = G;
             _multDist = MultDist;
             _timer = new TimerIsole(delaiCreation);
         }
@@ -28,8 +28,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
                 s._particules[indice].x = (float)(Math.Sin(angle) * distance);
                 s._particules[indice].y = (float)(Math.Cos(angle) * distance);
-                s._particules[indice].vx = (float)(Math.Sin(angle + (float)(Math.PI / 2.0)) / Math.Sqrt(distance * _multDist)) * _G;
-                s._particules[indice].vy = (float)(Math.Cos(angle + (float)(Math.PI / 2.0)) / Math.Sqrt(distance * _multDist)) * _G;
+                s._particules[indice].vx = (float)(Math.Sin(angle + (float)(Math.PI / 2.0)) / Math.Sqrt(distance * _multDist)) * _G * 2.0f;
+                s._particules[indice].vy = (float)(Math.Cos(angle + (float)(Math.PI / 2.0)) / Math.Sqrt(distance * _multDist)) * _G * 2.0f;
                 s._particules[indice].alpha = 1f;
                 s._particules[indice].debutVie = maintenant.totalMilliSecondes;
 

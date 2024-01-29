@@ -218,7 +218,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
 
         static private bool NourritureAProximite(Monde monde, float x, float y)
         {
-            return monde.DISTANCE_PERCEPTION * 1.5f > MathUtils.Distance(x,y, monde.X_NOURRITURE, monde.Y_NOURRITURE);
+            return monde.DISTANCE_PERCEPTION * 1.5f > MathUtils.Distance(x, y, monde.X_NOURRITURE, monde.Y_NOURRITURE);
         }
 
         static private bool NidAProximite(Monde monde, float x, float y)
@@ -250,7 +250,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// <returns></returns>
         static private bool TrouveNourriture(Monde monde, float x, float y)
         {
-            return MathUtils.Distance(x,y, monde.X_NOURRITURE, monde.Y_NOURRITURE) < monde.TAILLE_NOURRITURE;
+            return MathUtils.Distance(x, y, monde.X_NOURRITURE, monde.Y_NOURRITURE) < monde.TAILLE_NOURRITURE;
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Fourmilliere
         /// <returns></returns>
         static private bool NidTrouvé(Monde monde, float x, float y)
         {
-             return MathUtils.Distance(x, y, monde.X_NID, monde.Y_NID) < monde.TAILLE_NID;
+            return MathUtils.Distance(x, y, monde.X_NID, monde.Y_NID) < monde.TAILLE_NID;
         }
 
         /// <summary>

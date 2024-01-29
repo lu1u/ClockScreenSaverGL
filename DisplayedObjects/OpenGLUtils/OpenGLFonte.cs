@@ -8,7 +8,7 @@ namespace ClockScreenSaverGL
 {
     internal class OpenGLFonte : IDisposable
     {
-        public const String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyzàéèôïöë0123456789,;:!?./*=&é\"'{([-|è`_\\ç^à@)]=}><+";
+        public const String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyzàéèôïöë0123456789,;:!?./*=#&é\"'{([-|è`_\\ç^à@)]=}><+";
         private readonly OpenGL _gl;
         private readonly string _caracteres;
         private readonly float _hauteurSymbole;

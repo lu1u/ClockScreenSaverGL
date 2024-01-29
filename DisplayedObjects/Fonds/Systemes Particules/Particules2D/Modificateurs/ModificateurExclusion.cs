@@ -1,7 +1,10 @@
-﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
+﻿using System;
+
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
     internal class ModificateurExclusion : Modificateur
     {
+        [Flags]
         public enum Exclusions
         {
             EXCLURE_AU_DESSUS = 1,
@@ -13,8 +16,8 @@
             EXCLURE_TOUT = 15
         }
 
-        private Exclusions exclusions; // Une combinaison des constantes EXCLURE_*
-        private float _MinX, _MinY, _MaxX, _MaxY;
+        private readonly Exclusions exclusions; // Une combinaison des constantes EXCLURE_*
+        private readonly float _MinX, _MinY, _MaxX, _MaxY;
 
         public ModificateurExclusion(float MinX, float MinY, float MaxX, float MaxY, Exclusions excl)
         {
@@ -25,7 +28,7 @@
             exclusions = excl;
 
         }
-        public override void Applique(SystemeParticules2D s, Temps m)
+        public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             int NbParticules = s._nbParticules;
             for (int i = 0; i < NbParticules; i++)
@@ -41,7 +44,7 @@
                     if (((exclusions & Exclusions.EXCLURE_EN_DESSOUS) != 0))
                     {
                         // Exclure la particule si elle est en dessous du rectangle
-                        if (s._particules[i].y < _MinX)
+                        if (s._particules[i].y < _MinY)
                             s._particules[i].active = false;
                     }
 

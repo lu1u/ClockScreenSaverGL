@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         private const string CAT = "DateTexte";
         protected CategorieConfiguration c;
-        
+
 
         public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte) : base(gl)
         {
@@ -41,7 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         }
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            texte = maintenant.temps.ToLongDateString(); 
+            texte = maintenant.temps.ToLongDateString();
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 return g.MeasureString(texte, _fonte);
         }

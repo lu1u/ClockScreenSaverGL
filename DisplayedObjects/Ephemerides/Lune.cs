@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL
     {
         private readonly int _ageLune = -1;
         private DateTime _maintenant;
-        
+
         private static int JulianDate(int d, int m, int y)
         {
             int mm, yy;

@@ -128,21 +128,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 {
                     //if (File.Exists(_fichier))
                     //{
-                        //using (var reader = File.OpenText("Words.txt"))
-                        //{
-                        //    var fileText = await reader.ReadToEndAsync();
-                        //    return fileText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                        //}
+                    //using (var reader = File.OpenText("Words.txt"))
+                    //{
+                    //    var fileText = await reader.ReadToEndAsync();
+                    //    return fileText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    //}
 
-                        using (StreamReader file = new StreamReader(_cheminFichier))
-                        {
-                            source = file.ReadLine();
-                            date = file.ReadLine() + " " + file.ReadLine();
-                            titre = file.ReadLine();
-                            description = file.ReadLine();
-                            file.Close();
-                        }
-                   // }
+                    using (StreamReader file = new StreamReader(_cheminFichier))
+                    {
+                        source = file.ReadLine();
+                        date = file.ReadLine() + " " + file.ReadLine();
+                        titre = file.ReadLine();
+                        description = file.ReadLine();
+                        file.Close();
+                    }
+                    // }
                     //else
                     //{
                     //    titre = "Impossible de lire l'information";

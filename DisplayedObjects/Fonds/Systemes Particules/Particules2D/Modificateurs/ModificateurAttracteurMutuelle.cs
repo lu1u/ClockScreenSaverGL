@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
@@ -7,9 +6,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
     {
         private readonly float _g;
         private readonly float _multDist;
-        private const float SEUIL = 2.0f;
-        private static RectangleF bounds = new RectangleF(SystemeParticules2D.MIN_X, SystemeParticules2D.MIN_Y, SystemeParticules2D.LARGEUR, SystemeParticules2D.HAUTEUR);
-        private static SizeF tailleEmetteur = new SizeF(0.1f, 0.1f);
+        private const float SEUIL = 0.5f;
         public ModificateurAttracteurMutuelle(float G, float MultDist)
         {
             _g = G;
@@ -19,7 +16,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
         public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             int NbParticules = s._nbParticules;
-            float dG = _g * maintenant.intervalleDepuisDerniereFrame;
 
             for (int i = 0; i < NbParticules; i++)
             {
@@ -33,7 +29,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                             float distX = (s._particules[i].x - s._particules[j].x) * _multDist;
                             float distY = (s._particules[i].y - s._particules[j].y) * _multDist;
                             double dist = Math.Sqrt((distX * distX) + (distY * distY));
-                            if (dist > (s._particules[i].taille + s._particules[j].taille) * SEUIL)
+                            if (dist > (s._particules[i].taille + s._particules[j].taille) * SEUIL * _multDist)
                             {
                                 // ================================================== Calcul de la distance
                                 float Distance = (float)Math.Sqrt((distX * distX) + (distY * distY));
@@ -41,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
 
                                 if (DistanceCube != 0)
                                 {
-                                    float DistanceCubeDivDelaiImage = DistanceCube / maintenant.intervalleDepuisDerniereFrame;
+                                    float DistanceCubeDivDelaiImage = _g * DistanceCube / maintenant.intervalleDepuisDerniereFrame;
                                     s._particules[i].vx -= s._particules[j].taille * (distX / DistanceCubeDivDelaiImage);
                                     s._particules[j].vx += s._particules[i].taille * (distX / DistanceCubeDivDelaiImage);
 

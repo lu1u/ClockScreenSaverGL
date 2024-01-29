@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
-    internal abstract class Boids : MateriauGlobal, IDisposable
+    internal abstract class Boids : MateriauGlobal
     {
         #region Parametres
 
@@ -18,14 +19,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         protected List<Boid> _boids;
         protected float _angleCamera = 0;
         //uint _genLists = 0;
-        public Boids(OpenGL gl) : base(gl)
+        protected Boids(OpenGL gl) : base(gl)
         {
             GetConfiguration();
             _boids = new List<Boid>();
             InitBoids(_boids);
         }
 
-        protected abstract Boid newBoid();
+        protected abstract Boid NewBoid();
         /// <summary>
         /// Initialisation du tableau de boids
         /// </summary>
@@ -52,7 +53,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 #endif         
             if (_boids.Count < NB_BOIDS)
             {
-                Boid b = newBoid();
+                Boid b = NewBoid();
                 b._couleur = couleur;
                 _boids.Add(b);
             }
@@ -62,20 +63,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             InitOpenGL(gl, maintenant, couleur);
 
             FrustumCulling frustum = new FrustumCulling(gl);
-            foreach (Boid b in _boids)
-                if (frustum.isVisible(b._Position, TAILLE))
-                {
-                    float theta = b._Vitesse.Heading2D();
-                    theta = (float)(theta / Math.PI * 180.0);// - 90.0f;
-                    gl.Color(b._couleur.R / 256.0f, b._couleur.G / 256.0f, b._couleur.B / 256.0f);
-                    gl.PushMatrix();
-                    {
-                        gl.Translate(b._Position.x, b._Position.y, b._Position.z);
-                        gl.Rotate(0, 0, theta);
-                        b.dessine(gl);// gl.CallList(_genLists + (uint)b._image);
-                    }
-                    gl.PopMatrix();
-                }
+            foreach (var b in _boids.Where(b => frustum.isVisible(b._Position, TAILLE)))
+            {
+                float theta = b._Vitesse.Heading2D();
+                theta = (float)(theta / Math.PI * 180.0);// - 90.0f;
+                gl.Color(b._couleur.R / 256.0f, b._couleur.G / 256.0f, b._couleur.B / 256.0f);
+                gl.PushMatrix();
+                gl.Translate(b._Position.x, b._Position.y, b._Position.z);
+                gl.Rotate(0, 0, theta);
+                b.Dessine(gl);// gl.CallList(_genLists + (uint)b._image);
+
+                gl.PopMatrix();
+            }
 
 
 
@@ -99,12 +98,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             _angleCamera += maintenant.intervalleDepuisDerniereFrame * 1.0f;
 
             foreach (Boid b in _boids)
-                b.flock(_boids);
+                b.Flock(_boids);
 
             float dImage = maintenant.intervalleDepuisDerniereFrame * VITESSE_ANIMATION;
             foreach (Boid b in _boids)
             {
-                b.update(maintenant);
+                b.Update(maintenant);
                 b._image += dImage * b._vitesseAnimation;
             }
 #if TRACER
@@ -125,7 +124,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             public float _image;
             public float _vitesseAnimation;
             public Color _couleur;
-            public Boid(float x, float y, float z)
+            protected Boid(float x, float y, float z)
             {
                 _Acceleration = new Vecteur3D(0, 0);
                 _image = FloatRandom(0, (float)(Math.PI * 2.0));
@@ -137,10 +136,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             }
 
             // We accumulate a new acceleration each time based on three rules
-            public void flock(List<Boid> boids)
+            public void Flock(List<Boid> boids)
             {
-                Vecteur3D separation, alignement, cohesion;
-                flocking(boids, out separation, out alignement, out cohesion);
+                Flocking(boids, out Vecteur3D separation, out Vecteur3D alignement, out Vecteur3D cohesion);
 
                 // Arbitrarily weight these forces
                 separation.Multiplier_par(1.5f);
@@ -152,7 +150,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _Acceleration.Additionner(cohesion);
             }
 
-            private void flocking(List<Boid> boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
+            private void Flocking(List<Boid> boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
             {
                 sep = new Vecteur3D();
                 ali = new Vecteur3D();
@@ -218,12 +216,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 if (countCoh > 0)
                 {
                     coh.Diviser_par(countCoh);
-                    coh = seek(coh);
+                    coh = Seek(coh);
                 }
             }
 
             // Method to update location
-            public virtual void update(Temps maintenant)
+            public virtual void Update(Temps maintenant)
             {
                 // Update velocity
                 _Vitesse.Additionner(_Acceleration);
@@ -245,7 +243,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             private void Restreint(ref float v, float max)
             {
-                max = max * 1.5f;
+                max *= 1.5f;
                 while (v > max)
                     v = -max;
 
@@ -255,7 +253,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             // A method that calculates and applies a steering force towards a target
             // STEER = DESIRED MINUS VELOCITY
-            private Vecteur3D seek(Vecteur3D target)
+            private Vecteur3D Seek(Vecteur3D target)
             {
                 Vecteur3D desired = target - _Position;  // A vector pointing from the location to the target
                                                          // Scale to maximum speed
@@ -268,7 +266,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 return steer;
             }
 
-            public abstract void dessine(OpenGL gl);
+            public abstract void Dessine(OpenGL gl);
 
         }
     }

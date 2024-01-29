@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System.Drawing;
 
@@ -32,7 +33,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
             if (_bitmap != null)
             {
                 _texture = new Texture();
-                _texture.Create(_gl, _bitmap);
+                if (!_texture.Create(_gl, _bitmap))
+                {
+                    Log.Instance.Error("TextureAsynchrone: erreur de chargement de la texture: " + _nomFichier);
+                }
                 _bitmap = null;// Plus besoin de la bitmap
             }
         }

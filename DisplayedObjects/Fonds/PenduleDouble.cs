@@ -204,7 +204,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
                 gl.LineWidth(TAILLE_LIGNE_TRACES);
-                using (new GLBegin(gl,OpenGL.GL_LINE_STRIP))
+                using (new GLBegin(gl, OpenGL.GL_LINE_STRIP))
                 {
                     for (int i = 0; i < _nbTraces; i++)
                     {
@@ -212,7 +212,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         gl.Vertex(_xTrace[i], _yTrace[i]);
                     }
                 }
-                
+
                 // Tiges des pendules
                 PointF[] p = GetMultilinePolygon();
                 gl.Color(0, 0, 0, ALPHA_SEGMENT);

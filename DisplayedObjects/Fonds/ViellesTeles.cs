@@ -1,14 +1,10 @@
 ﻿using ClockScreenSaverGL.Config;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
-using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -173,7 +169,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 tv.Bind(gl);
                 gl.Enable(OpenGL.GL_BLEND);
                 gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-                
+
                 foreach (Quad q in quads)
                     DessineRectangleTV(gl, q);
             }

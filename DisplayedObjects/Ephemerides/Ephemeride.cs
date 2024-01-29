@@ -105,14 +105,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Ephemerides
                 if (char.IsLetter(v[i]))
                 {
                     if (debutDeMot)
-                        res.Append( char.ToUpper(v[i]));
+                        res.Append(char.ToUpper(v[i]));
                     else
-                        res.Append( char.ToLower(v[i]));
+                        res.Append(char.ToLower(v[i]));
                     debutDeMot = false;
                 }
                 else
                 {
-                    res.Append( v[i]);
+                    res.Append(v[i]);
                     debutDeMot = true;
                 }
             }

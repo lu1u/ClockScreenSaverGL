@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
+﻿namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs
 {
     internal class ModificateurVitesseLineaire : Modificateur
     {
-        private DateTime _derniere = DateTime.Now;
-
         public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             for (int i = 0; i < s._nbParticules; i++)

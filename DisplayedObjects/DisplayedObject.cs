@@ -62,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const float PI_SUR_DEUX = (float)(0.5 * Math.PI);
         public const float RADIAN_TO_DEG = 180.0f / (float)Math.PI;
 
-        static readonly public Random random = new Random();
+        static readonly public Random random = new Random((int)DateTime.Now.Ticks);
         static protected bool _initASynchroneTerminé = false;
         #endregion Public Fields
 

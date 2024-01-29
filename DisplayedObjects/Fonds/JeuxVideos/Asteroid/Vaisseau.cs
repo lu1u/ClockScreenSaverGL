@@ -3,6 +3,7 @@ using ClockScreenSaverGL.DisplayedObjects.OpenGLUtils;
 using SharpGL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -15,15 +16,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public static float VROT_MAX = 3f;
         public static float FREINAGE_INERTIEL = 0.97f;
         public static int NB_MAX_TIRS = 5;
-        
-        readonly float _taille;
-        readonly List<Tir> _tirs = new List<Tir>();
-
-        float _x, _y;
-        float _rotationRadians;
-        float _dx, _dy;
-        float _vrot;
-        float _poussee = 0;
+        private readonly float _taille;
+        private readonly List<Tir> _tirs = new List<Tir>();
+        private float _x, _y;
+        private float _rotationRadians;
+        private float _dx, _dy;
+        private float _vrot;
+        private float _poussee = 0;
 
 
         public class Tir
@@ -52,7 +51,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
 
 
-        public void Affiche(OpenGL gl)
+        public void Affiche(OpenGL gl, float LargeurLignes)
         {
             // Tirs
             using (new GLBegin(gl, OpenGL.GL_POINTS))
@@ -63,24 +62,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.PushMatrix();
             gl.Translate(_x, _y, 0);
             gl.Rotate(0, 0, _rotationRadians * DisplayedObject.RADIAN_TO_DEG);
-            gl.Scale(_taille, _taille, _taille);
 
-            using (new GLBegin(gl, OpenGL.GL_LINE_LOOP))
             {
-                gl.Vertex(0, -1);
-                gl.Vertex(0.6f, 0.75);
-                gl.Vertex(0, 0.25f);
-                gl.Vertex(-0.6, 0.75f);
+                PointF p1 = new PointF(0 * _taille, -1 * _taille);
+                PointF p2 = new PointF(0.6f * _taille, 0.75f * _taille);
+                PointF p3 = new PointF(0 * _taille, 0.25f * _taille);
+                PointF p4 = new PointF(-0.6f * _taille, 0.75f * _taille);
 
+                GLLines.DessineLigne(gl, p1, p2, LargeurLignes);
+                GLLines.DessineLigne(gl, p2, p3, LargeurLignes);
+                GLLines.DessineLigne(gl, p3, p4, LargeurLignes);
+                GLLines.DessineLigne(gl, p4, p1, LargeurLignes);
             }
 
+
             if (_poussee > 0)
-                using (new GLBegin(gl, OpenGL.GL_LINE_STRIP))
-                {
-                    gl.Vertex(0.25f, 0.5f);
-                    gl.Vertex(0, 1.5f);
-                    gl.Vertex(-0.25f, 0.5f);
-                }
+            {
+                PointF p1 = new PointF(0.25f * _taille, 0.5f * _taille);
+                PointF p2 = new PointF(0.00f * _taille, 1.5f * _taille);
+                PointF p3 = new PointF(-0.25f * _taille, 0.5f * _taille);
+                GLLines.DessineLigne(gl, p2, p1, LargeurLignes);
+                GLLines.DessineLigne(gl, p2, p3, LargeurLignes);
+
+            }
 
             gl.PopMatrix();
         }

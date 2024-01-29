@@ -1,9 +1,11 @@
 ﻿using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Utils;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
+using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -31,7 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private float ATTRACTION_MIN;
         #endregion
 
-        private class Particule
+        sealed private class Particule
         {
             public int couleur;
             public float ax, ay;
@@ -141,8 +143,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
                 foreach (Particule p in _particules)
                 {
-                    CouleurParticule c = _couleursAffichees[p.couleur];
-                    gl.Color(c.R, c.G, c.B, (byte)255);
+                    CouleurParticule col = _couleursAffichees[p.couleur];
+                    gl.Color(col.R, col.G, col.B, (byte)255);
 
                     gl.TexCoord(0.0f, 0.0f); gl.Vertex(p.x - TAILLE_PARTICULE, p.y - TAILLE_PARTICULE, 0);
                     gl.TexCoord(0.0f, 1.0f); gl.Vertex(p.x - TAILLE_PARTICULE, p.y + TAILLE_PARTICULE, 0);
@@ -164,11 +166,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="couleur"></param>
         private void RemplitCouleurs(Color couleur)
         {
-            CouleurGlobale c = new CouleurGlobale(couleur);
+            CouleurGlobale clr = new CouleurGlobale(couleur);
 
             for (int i = 0; i < NB_COULEURS; i++)
             {
-                Color col = c.GetColorWithHueChange(i / (float)NB_COULEURS);
+                Color col = clr.GetColorWithHueChange(i / (float)NB_COULEURS);
                 _couleursAffichees[i].R = col.R;
                 _couleursAffichees[i].G = col.G;
                 _couleursAffichees[i].B = col.B;
@@ -216,36 +218,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 // Appliquer l'acceleration
                 a.vx += a.ax * FLUIDITE;
                 a.vy += a.ay * FLUIDITE;
-
-                // Garder les particules a l'écran
-                if (a.x < MIN_VIEWPORT_X)
-                {
-                    //a.vx = SignePlus(a.vx);
-                    a.x += LARGEUR_VIEWPORT;
-                }
-                else
-                if (a.x > MAX_VIEWPORT_X)
-                {
-                    //a.vx = SigneMoins(a.vx);
-                    a.x -= 2;
-                }
-
-                if (a.y < MIN_VIEWPORT_Y)
-                {
-                    //a.vy = SignePlus(a.vy);
-                    a.y += HAUTEUR_VIEWPORT;
-                }
-                else
-                    if (a.y > MAX_VIEWPORT_Y)
-                {
-
-                    //a.vy = SigneMoins(a.vy);
-                    a.y -= HAUTEUR_VIEWPORT;
-                }
-
                 // Appliquer le mouvement
                 a.x += a.vx * maintenant.intervalleDepuisDerniereFrame;
                 a.y += a.vy * maintenant.intervalleDepuisDerniereFrame;
+                MathUtils.ContraintTore(ref a.x, MIN_VIEWPORT_X, MAX_VIEWPORT_X);
+                MathUtils.ContraintTore(ref a.y, MIN_VIEWPORT_Y, MAX_VIEWPORT_Y);
 
                 // Frein
                 a.vx *= FLUIDITE;
@@ -263,16 +240,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public override void FillConsole(OpenGL gl)
         {
             base.FillConsole(gl);
-            Console c = Console.GetInstance(gl);
+            Console console = Console.GetInstance(gl);
             for (int i = 0; i < NB_COULEURS; i++)
             {
-                String s = "";
+                StringBuilder s = new StringBuilder();
                 for (int j = 0; j < NB_COULEURS; j++)
                 {
-                    s += String.Format("{0,-8:0.0000}", _regles[i, j]) + "  ";
+                    s.Append(string.Format("{0,-8:0.0000}", _regles[i, j]) + "  ");
                 }
 
-                c.AddLigne(Color.AliceBlue, s);
+                console.AddLigne(Color.AliceBlue, s.ToString());
             }
         }
     }
