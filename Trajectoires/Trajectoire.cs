@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using System.Drawing;
 namespace ClockScreenSaverGL
 {
@@ -28,6 +29,11 @@ namespace ClockScreenSaverGL
                 _Px = value.X;
                 _Py = value.Y;
             }
+        }
+
+        public Vecteur2D vecteur()
+        {
+            return new Vecteur2D(_Px, _Py);
         }
     }
 }

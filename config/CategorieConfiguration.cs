@@ -375,6 +375,7 @@ namespace ClockScreenSaverGL.Config
             return (float)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_FLOAT, defaut, actionModif));
         }
 
+
         public double GetParametre(string name, double defaut, Action<object> actionModif = null)
         {
             return (double)(GetParametre(name, Parametre.TYPE_PARAMETRE.T_DOUBLE, defaut, actionModif));

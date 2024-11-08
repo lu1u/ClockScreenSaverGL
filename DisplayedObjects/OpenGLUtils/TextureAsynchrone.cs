@@ -1,6 +1,7 @@
 ﻿using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
@@ -22,7 +23,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.OpenGLUtils
         /// </summary>
         protected override void InitAsynchrone()
         {
-            _bitmap = (Bitmap)Image.FromFile(_nomFichier);// Charger la bitmap depuis un fichier
+            try
+            {
+                _bitmap = (Bitmap)Image.FromFile(_nomFichier);// Charger la bitmap depuis un fichier
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error(ex.Message);
+                Log.Instance.Error(ex.StackTrace);
+                Log.Instance.Error("Erreur dans TextureAsynchrone.InitAsynchrone");
+                _bitmap = null;
+            }
         }
 
         /// <summary>

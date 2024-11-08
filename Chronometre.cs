@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 // Pour chronometrer une operation, et afficher le resultat sur la console
 // Utilisation:

@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 
+// Inspiré de "Science Etonnante" : Lenia
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     internal class Fluide : Fond
@@ -30,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         #endregion
 
         private float _valeursTotalesFiltre;
-        private readonly float[,] _particules, _particulesCalcul;
+        private float[,] _cellules, _cellulesCalcul;
         private float[,] _filtre;
         private int _ligneEnCours = 0;
         private Texture _textureBitmap;
@@ -39,19 +40,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         public Fluide(OpenGL gl) : base(gl)
         {
+
+        }
+        protected override void Init(OpenGL gl)
+        {
+            base.Init(gl);
             GetConfiguration();
 
             // Filtre
             ChargeFiltre();
 
             // Tableau des particules
-            _particules = new float[LARGEUR, HAUTEUR];
-            _particulesCalcul = new float[LARGEUR, HAUTEUR];
+            _cellules = new float[LARGEUR, HAUTEUR];
+            _cellulesCalcul = new float[LARGEUR, HAUTEUR];
             for (int i = 0; i < LARGEUR; i++)
                 for (int j = 0; j < HAUTEUR; j++)
                 {
-                    _particules[i, j] = FloatRandom(0.0f, 1.0f);
-                    _particulesCalcul[i, j] = _particules[i, j];
+                    _cellules[i, j] = FloatRandom(0.0f, 1.0f);
+                    _cellulesCalcul[i, j] = _cellules[i, j];
                 }
 
             _changerTexture = false;
@@ -59,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
 
         /// <summary>
-        /// Charge l'image de filtre et en fait un tableau de float a 2 dimensions, 
+        /// Creer un tableau pour le filtre, tableau a 2 dimensions
         /// valeurs de 0 à 1
         /// </summary>
         private void ChargeFiltre()
@@ -69,24 +75,32 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             int centreX = (LARGEUR_FILTRE + 1) / 2;
             int centreY = (HAUTEUR_FILTRE + 1) / 2;
-            float distanceMax = Math.Min(LARGEUR_FILTRE, HAUTEUR) / 4.0f;
+            float distanceMax = Math.Min(LARGEUR_FILTRE, HAUTEUR) / ((float)Math.PI);
 
             for (int i = 0; i < LARGEUR_FILTRE; i++)
                 for (int j = 0; j < HAUTEUR_FILTRE; j++)
                 {
                     float distance = MathUtils.Distance(centreX, centreY, i, j) / distanceMax;
-                    distance = Math.Abs(distance - 1.0f);
-                    _filtre[i, j] = 1.0f - distance;
-
-                    if (_filtre[i, j] < 0)
-                        _filtre[i, j] = 0;
-                    else
-                    if (_filtre[i, j] > 1.0f)
-                        _filtre[i, j] = 1.0f;
+                    //if (distance > distanceMax)
+                    //    _filtre[i, j] = 0;
+                    //else
+                    _filtre[i, j] = 1.0f - (float)Math.Cos(distance);
+                    //distance = Math.Abs(distance - 1.0f);
+                    //_filtre[i, j] = 1.0f - distance;
+                    //
+                    //if (_filtre[i, j] < 0)
+                    //    _filtre[i, j] = 0;
+                    //else
+                    //if (_filtre[i, j] > 1.0f)
+                    //    _filtre[i, j] = 1.0f;
                     _valeursTotalesFiltre += _filtre[i, j];
                 }
         }
 
+        /// <summary>
+        /// Chargement de la configuration
+        /// </summary>
+        /// <returns></returns>
         public override CategorieConfiguration GetConfiguration()
         {
             if (c == null)
@@ -102,7 +116,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 REPETITION_TEXTURE = c.GetParametre("Répétition texture", 4f, (a) => { REPETITION_TEXTURE = (float)Convert.ToDouble(a); });
                 VITESSE_PROGRESSION_CLOCHE = c.GetParametre("Vitesse progression cloche", 1f, (a) => { VITESSE_PROGRESSION_CLOCHE = (float)Convert.ToDouble(a); });
                 MIN_PROGRESSION_CLOCHE = c.GetParametre("Minimum progression cloche", 0.2f, (a) => { MIN_PROGRESSION_CLOCHE = (float)Convert.ToDouble(a); });
-                VITESSE_ANGLE = c.GetParametre("Vitesse Angle", 2.0f);
+                VITESSE_ANGLE = c.GetParametre("Vitesse Angle", 2.0f, (a) => { VITESSE_ANGLE = (float)Convert.ToDouble(a); });
 
                 LOOK_AT_X = c.GetParametre("LookAtX", 0.1f, (a) => { LOOK_AT_X = (float)Convert.ToDouble(a); });
                 LOOK_AT_Y = c.GetParametre("LookAtY", 0.02f, (a) => { LOOK_AT_Y = (float)Convert.ToDouble(a); });
@@ -111,6 +125,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             return c;
         }
 
+        /// <summary>
+        /// Affichage
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
+        /// <param name="couleur"></param>
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -155,6 +176,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         /// <summary>
         /// Creation de la nouvelle texture OpenGL pour representer les cellules
+        /// (appelé chaque fois qu'on a fait le calcul sur tout le tableau)
         /// </summary>
         /// <param name="gl"></param>
         private void CreerNouvelleTexture(OpenGL gl, Color col)
@@ -198,32 +220,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         VITESSE_PROGRESSION_CLOCHE = Math.Abs(VITESSE_PROGRESSION_CLOCHE);
                     }
 
-                    // => affichage                    
                     for (int i = 0; i < LARGEUR; i++)
                         for (int j = 0; j < HAUTEUR; j++)
-                            _particules[i, j] = _particulesCalcul[i, j];
+                            _cellules[i, j] = _cellulesCalcul[i, j];
 
                     _changerTexture = true;
                     _ligneEnCours = 0;
                 }
 
-                // Une ligne a la fois
+                // Calcul, une ligne a la fois
                 for (int i = 0; i < LARGEUR; i++)
                 {
                     float score = CalculeScore(i, _ligneEnCours);
-                    _particulesCalcul[i, _ligneEnCours] = EvolueCase(_particules[i, _ligneEnCours], score, maintenant.intervalleDepuisDerniereFrame);
+                    _cellulesCalcul[i, _ligneEnCours] = EvolueCase(_cellules[i, _ligneEnCours], score, maintenant.intervalleDepuisDerniereFrame);
                 }
             }
 
-            // Montrer le filtre (DEBUG)
-            //for (int i = 0; i < LARGEUR_FILTRE; i++)
-            //    for (int j = 0; j < HAUTEUR_FILTRE; j++)
-            //        _particules[i+10, j+10] = _filtre[i, j];
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
         }
 
+        /// <summary>
+        /// Calcule le nouvel état de la particule
+        /// </summary>
+        /// <param name="particule"></param>
+        /// <param name="score"></param>
+        /// <param name="intervalleFrame"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private float EvolueCase(float particule, float score, float intervalleFrame)
         {
@@ -253,8 +277,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             for (int x = 0; x < LARGEUR_FILTRE; x++)
                 for (int y = 0; y < HAUTEUR_FILTRE; y++)
                 {
-                    score += _particules[LimiteX(x + debutX), LimiteY(y + debutY)] * _filtre[x, y];
+                    score += _cellules[LimiteX(x + debutX), LimiteY(y + debutY)] * _filtre[x, y];
                 }
+
+            // Normaliser la moyenne
             score /= _valeursTotalesFiltre;
             return score;
         }
@@ -265,6 +291,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="bmpd"></param>
         protected unsafe Bitmap UpdateFrame(Color col)
         {
+            // Montrer le filtre (DEBUG)
+            //for (int i = 0; i < LARGEUR_FILTRE; i++)
+            //    for (int j = 0; j < HAUTEUR_FILTRE; j++)
+            //        _cellules[i+10, j+10] = _filtre[i, j];            
+
             Bitmap bmp = new Bitmap(LARGEUR, HAUTEUR, PixelFormat.Format32bppRgb);
             BitmapData bmpd = bmp.LockBits(new Rectangle(0, 0, LARGEUR, HAUTEUR), ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
 
@@ -278,10 +309,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 {
                     //Color Couleur = GetColorWithHueChange(col, _particules[x, y]);
                     //*pixels++ = (Couleur.R << 16) | ((Couleur.G) << 8) | Couleur.B;
-                    int couleur = (int)(_particules[x, y] * 255.0f);
-                    *pixels++ = (couleur << 16) | ((couleur) << 8) | couleur;
+                    Color c = Couleur.GetColorWithHueChange(col, _cellules[x, y]);
+                    //int couleur = (int)(_cellules[x, y] * 255.0f);
+                    *pixels++ = (c.R << 16) | ((c.G) << 8) | c.B;
+                    //*pixels++ = (couleur << 16) | ((couleur) << 8) | couleur;
                 }
             }
+
+
+
             bmp.UnlockBits(bmpd);
             return bmp;
         }

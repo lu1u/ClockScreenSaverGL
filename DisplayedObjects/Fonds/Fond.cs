@@ -108,7 +108,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Color(cG.R / 256.0f, cG.G / 256.0f, cG.B / 256.0f, cG.A / 256.0f);
         }
 
+        protected void DessineCroix(OpenGL gl, float x, float y, float z, float s)
+        {
+            gl.Disable(OpenGL.GL_COLOR_MATERIAL);
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.LineWidth(4);
+            gl.Disable(OpenGL.GL_CULL_FACE);
+            gl.Translate(x, y, z);
 
+            using (new GLBegin(gl, OpenGL.GL_LINES))
+            {
+                gl.Color(1.0f, 0.0f, 0.0f); gl.Vertex(s, 0, 0); gl.Vertex(-s, 0, 0);
+                gl.Color(0.0f, 1.0f, 0.0f); gl.Vertex(0, s, 0); gl.Vertex(0, -s, 0);
+                gl.Color(0.0f, 0.0f, 1.0f); gl.Vertex(0, 0, s); gl.Vertex(0, 0, -s);
+
+            }
+            gl.Translate(-x, -y, -z);
+        }
         protected void LookArcade(OpenGL gl, Color couleur)
         {
             if (c == null)

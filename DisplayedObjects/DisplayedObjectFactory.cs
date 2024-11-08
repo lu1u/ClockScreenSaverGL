@@ -29,8 +29,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
             BOIDS_OISEAUX, SNAKE, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE,
             CARRE_ESPACE, ENCRE, REBOND, ESCALIER, TUNNEL, NEIGE_META, DOUBLE_PENDULE, LIFE, TERRE, TETRIS,
             BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, SPACE_INVADERS,
-            VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, PONG,
-            BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES, FLUIDE,
+            VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, PONG, AUTOMATE,
+            BOIDS_POISSONS, EPICYCLE2, CASSE_BRIQUES, FLUIDE, GRENOBLE, SILLAGE, PHOTOS_WEB,
             MYRIADE, CONSOLE, MOTO, MARCHING_CUBES, TRIANGLES, EPICYCLE, TURING, MOIRE,/*DONJON, */ ADN, LIFE_SIM, FOURMIS, SINUSOIDE
         };
 
@@ -117,7 +117,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         private static Fond CreerFond(OpenGL gl, FONDS Type)
         {
-            //Type = FONDS.FLUIDE;
+            //Type = FONDS.PHOTOS_WEB;  // Forcer le fond, pour le debug
             switch (Type)
             {
                 case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -173,6 +173,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 case FONDS.SPACE_INVADERS: return new SpaceInvaders(gl);
                 case FONDS.ASTEROID: return new Asteroids(gl);
                 case FONDS.FLUIDE: return new Fluide(gl);
+                case FONDS.AUTOMATE: return new Automate(gl);
+                case FONDS.GRENOBLE: return new Grenoble(gl);
+                case FONDS.SILLAGE: return new Sillage(gl);
+                case FONDS.PHOTOS_WEB: return new PhotosWeb(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

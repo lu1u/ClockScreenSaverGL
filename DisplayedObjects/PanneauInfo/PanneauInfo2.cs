@@ -62,6 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 gl.Vertex(X_FIN, 0, 0);
                 gl.End();
 
+                couleur = new CouleurGlobale(couleur).GetColorWithHueChange(DEUX_PI);
                 float[] colE = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f };
                 gl.Color(colE);
 

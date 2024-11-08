@@ -150,6 +150,7 @@
     <Reference Include="System.Drawing.Common, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Drawing.Common.7.0.0\lib\net462\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -175,6 +176,7 @@
     <Compile Include="DisplayedObjects\DisplayedObjectFactory.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\Ephemeride.cs" />
     <Compile Include="DisplayedObjects\Ephemerides\LeverCoucherSoleil.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Automate.cs" />
     <Compile Include="DisplayedObjects\Fonds\Fluide.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroid.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Asteroid\Asteroids.cs" />
@@ -204,13 +206,16 @@
     <Compile Include="DisplayedObjects\Fonds\LifeSim.cs" />
     <Compile Include="DisplayedObjects\Fonds\Moire.cs" />
     <Compile Include="DisplayedObjects\Fonds\PenduleDouble.cs" />
+    <Compile Include="DisplayedObjects\Fonds\PhotosWeb\PhotosWeb.cs" />
     <Compile Include="DisplayedObjects\Fonds\PolygonMode.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Sillage.cs" />
     <Compile Include="DisplayedObjects\Fonds\Sinusoides.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Tetris\PieceTetris.cs" />
     <Compile Include="DisplayedObjects\Fonds\JeuxVideos\Tetris\Tetris.cs" />
     <Compile Include="DisplayedObjects\Fonds\Triangles.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Donjon.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Escaliers.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Grenoble.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Grille.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\MarchingCubes\MarchingCubes.calculs.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\MarchingCubes\MarchingCubes.cs" />
@@ -221,6 +226,7 @@
     <Compile Include="DisplayedObjects\Fonds\Utils\MathUtils.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\GlBegin.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\GLLines.cs" />
+    <Compile Include="DisplayedObjects\OpenGLUtils\HeightmapAsynchrone.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\OpenGLColor.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Vecteur2D.cs" />
     <Compile Include="DisplayedObjects\OpenGLUtils\Viewport2D.cs" />
@@ -341,10 +347,12 @@
     <Compile Include="Trajectoires\Trajectoire.cs" />
     <Compile Include="Trajectoires\TrajectoireDiagonale.cs" />
     <Compile Include="Trajectoires\TrajectoireOvale.cs" />
+    <Compile Include="Utils\FichiersUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="ClockScreenSaverGL_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

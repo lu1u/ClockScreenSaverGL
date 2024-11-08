@@ -115,6 +115,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             // Lumiere
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
+            gl.Disable(OpenGL.GL_LIGHT1);
+            gl.Disable(OpenGL.GL_LIGHT2);
             float[] model_ambient = { 0.4f, 0.4f, 0.4f, 1.0f };
             gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, model_ambient);
 
@@ -127,10 +129,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.ShadeModel(OpenGL.GL_SMOOTH);
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
 
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, COL_SPECULAR);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT, COL_AMBIENT);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_DIFFUSE, COL_DIFFUSE);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, SHININESS);
+            gl.Material(OpenGL.GL_FRONT, OpenGL.GL_SPECULAR, COL_SPECULAR);
+            gl.Material(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT, COL_AMBIENT);
+            gl.Material(OpenGL.GL_FRONT, OpenGL.GL_DIFFUSE, COL_DIFFUSE);
+            gl.Material(OpenGL.GL_FRONT, OpenGL.GL_SHININESS, SHININESS);
 
             gl.Color(COL_COLOR[0] * R, COL_COLOR[1] * G, COL_COLOR[2] * B);
         }

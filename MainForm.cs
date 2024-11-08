@@ -199,9 +199,9 @@ namespace ClockScreenSaverGL
                 // console.AddLigne(Color.White, "Utilisation mémoire " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
                 //console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                _panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                //_panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
             }
 
             foreach (DisplayedObject b in _listeObjets)
@@ -367,6 +367,7 @@ namespace ClockScreenSaverGL
             try
             {
                 OpenGL gl = openGLControl.OpenGL;
+                _panneau = PanneauMessage.Instance;
                 //int TailleHorloge = c.getParametre("TailleCadran", 400);
                 //if (IsPreviewMode)
                 //{
@@ -379,7 +380,7 @@ namespace ClockScreenSaverGL
                 // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
                 INDICE_FOND = 0;
                 _listeObjets.Add(CreateBackgroundObject((DisplayedObjectFactory.FONDS)c.GetParametre(PARAM_TYPEFOND, 0), true));
-                
+
                 INDICE_TRANSITION = 1;
                 _listeObjets.Add(new Transition(gl));
 
@@ -403,11 +404,10 @@ namespace ClockScreenSaverGL
                         }
                     }
                 }
-                _panneau = PanneauMessage.Instance;
             }
             catch (Exception e)
             {
-                //_panneau.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
+                _panneau?.SetMessage(openGLControl.OpenGL, "Exception:" + e.ToString());
                 _texteErreur = e.ToString();
                 _afficheDebug = true;
                 log.Error("Exception dans MainForm.createAllObjects");

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -243,6 +244,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
             using (Graphics g = Graphics.FromImage(_bitmap))
             {
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.SingleBitPerPixel;
                 RectangleF rect = new RectangleF(0, 0, _rectCitation.Width, _rectCitation.Height);
                 using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Regular, GraphicsUnit.Pixel))
                     g.DrawString(_citation, fonte, Brushes.White, rect);
@@ -294,6 +297,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         void IDisposable.Dispose()
         {
             _bitmap?.Dispose();
+        }
+
+        protected override void drawOpenGL(OpenGL gl, Rectangle tailleEcran, Color couleur, Temps maintenant)
+        {
+            couleur = new CouleurGlobale(couleur).GetColorWithHueChange(DEUX_PI);
+            base.drawOpenGL(gl, tailleEcran, couleur, maintenant);
         }
     }
 }
